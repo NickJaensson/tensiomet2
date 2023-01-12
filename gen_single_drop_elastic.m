@@ -83,7 +83,7 @@ for ii = 1:length(frac)+1
   u = ones(3*N+2,1); b = ones(3*N+2,1); % solution vector and RHS
   iter = 0; crash = 0; 
 
-  while sqrt((u*u')/length(u)) > 1e-10
+  while rms(u) > 1e-10
 
     iter = iter + 1;
     
@@ -344,7 +344,7 @@ for ii = 1:length(frac)+1
       C = C+alpha*u(3*N+1);
     end
 
-    if sqrt((b*b')/length(b))>1e3
+    if rms(b)>1e3
       crash = 1; break;
     end
 
