@@ -43,8 +43,6 @@ for ii = 1:length(frac)+1
 
   % determine the current target volume
   if ~elastic
-    % predict the maximum length of the interface (empirical Nagel)
-    smax = sqrt(sigmaprime)*2.0/0.8701;
     volumeprime = volume0prime;
   else
     % volume/area given by compression ratios
@@ -56,25 +54,65 @@ for ii = 1:length(frac)+1
     end
   end
 
-  % get the differentation/integration matrices and the grid
-  [D,~,w,s] = dif1D('cheb',0,smax,N,5);
+  % find the initial guess of the droplet shape
+  if  deltarho*grav*volume0/(2*pi*sigma*rneedle) > 0.14
 
-  % predict the shape of the interface (empirical Nagel)
-  z = -4/3*smax/pi*(cos(pi*3/4*s/smax));
-  z = z - max(z);
-  r = 4/3*smax/pi*(sin(pi*3/4*s/smax));
-  psi = pi*3/4*s/smax;
+    % predict the droplet shape using the emperical approach from Nagel
+    
+    % predict the maximum length of the interface (empirical Nagel)
+    smax = sqrt(sigmaprime)*2.0/0.8701;
 
-  % initialize the surface strains ans tresses
-  lamp = ones(N,1); lams = lamp;
-  taus = sigmaprime*ones(N,1); taup = taus;
+    % get the differentation/integration matrices and the grid
+    [D,~,w,s] = dif1D('cheb',0,smax,N,5);
 
-  if ~elastic
-    C = 1; % initial stretch parameter
-    r0 = r;
+    % predict the shape of the interface (empirical Nagel)
+    z = -4/3*smax/pi*(cos(pi*3/4*s/smax));
+    z = z - max(z);
+    r = 4/3*smax/pi*(sin(pi*3/4*s/smax));
+    psi = pi*3/4*s/smax;
+
+    p0 = sqrt(sigmaprime)*1.5; % predict the pressure (empirical Nagel)
+
+  else
+    
+    % predict the droplet shape using a quarter of a period of a cosine
+    % with similar volume as imposed
+
+    % find the initial guess of the droplet shape
+    Ntemp = 1000;
+    Rtemp = 1.0; 
+    r_guess = linspace(0,Rtemp,Ntemp);
+    z_guess = -sqrt(2*volume0prime/(pi*Rtemp))*cos(pi*r_guess/(2*Rtemp));
+
+    % determine the curve length
+    ds_guess = zeros(size(r_guess));
+    ds_guess(2:end) = sqrt((r_guess(2:end)-r_guess(1:Ntemp-1)).^2 + ...
+                           (z_guess(2:end)-z_guess(1:Ntemp-1)).^2);
+    s_guess = cumsum(ds_guess);
+    smax = s_guess(end);
+
+    % get the differentation/integration matrices and the grid
+    [D,~,w,s] = dif1D('cheb',0,smax,N,5);
+
+    % interpolate the shape in the Chebyshev points
+    r = interp1(s_guess,r_guess,s);
+    z = interp1(s_guess,z_guess,s);
+
+    psi = atan2(D*z,D*r);      % intial psi value 
+    p0 = 2*Rtemp*sigmaprime;   % predict the pressure
+    
   end
 
-  p0 = sqrt(sigmaprime)*1.5; % predict the pressure (empirical Nagel)
+  if ~elastic
+
+    % initialize the surface strains ans tresses
+    lamp = ones(N,1); lams = lamp;
+    taus = sigmaprime*ones(N,1); taup = taus;
+
+    C = 1; % initial stretch parameter
+    r0 = r;
+
+  end
 
   % initialize some variables 
   Z = zeros(N);            % matrix filled with zeros
