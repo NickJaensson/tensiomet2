@@ -163,10 +163,6 @@ while rms(u) > 1e-10
 
 end
 
-% calculate the Chebyshev coefficients
-coefr = fchebt(r,Ncheb,0);
-coefz = fchebt(z,Ncheb,0);
-
 toc
 
 % compute volume and area (scaled back to dimensionfull)

@@ -446,7 +446,3 @@ for ii = 1:length(frac)+1
   end
   
 end
-
-% calculate the Chebyshev coefficients
-coefr = fchebt(r,Ncheb,0);
-coefz = fchebt(z,Ncheb,0);
