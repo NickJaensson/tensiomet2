@@ -27,6 +27,8 @@ volume0prime = volume0/rneedle^3;
 
 % find the initial guess of the droplet shape
 if  deltarho*grav*volume0/(2*pi*sigma*rneedle) > 0.14
+
+    % predict the droplet shape using the emperical approach from Nagel
     
     % predict the maximum length of the interface (empirical Nagel)
     smax = sqrt(sigmaprime)*2.0/0.8701;
@@ -45,38 +47,32 @@ if  deltarho*grav*volume0/(2*pi*sigma*rneedle) > 0.14
 
 else
     
-    % find the roots for the polynomial of a spherical cap
-    rts = roots([pi/6 0 pi/2 -volume0prime]);    
-    h0 = real(rts(3));
-    
-    [Rguess,xcyc] = fit_circle_through_3_points([1 0; 0 -h0; -1 0]);
-    
-    % get the opening angle of the circle
-    if xcyc(2) < 0
-      theta = acos(1/Rguess);
-    else
-      theta = -acos(1/Rguess);
-    end
-        
-    % predict the maximum length of the interface
-    smax = Rguess*(2*theta+pi);
+    % predict the droplet shape using a quarter of a period of a cosine
+    % with similar volume as imposed
+
+    % find the initial guess of the droplet shape
+    Ntemp = 1000;
+    Rtemp = 1.0; 
+    r_guess = linspace(0,Rtemp,Ntemp);
+    z_guess = -sqrt(2*volume0prime/(pi*Rtemp))*cos(pi*r_guess/(2*Rtemp));
+
+    % determine the curve length
+    ds_guess = zeros(size(r_guess));
+    ds_guess(2:end) = sqrt((r_guess(2:end)-r_guess(1:Ntemp-1)).^2 + ...
+                           (z_guess(2:end)-z_guess(1:Ntemp-1)).^2);
+    s_guess = cumsum(ds_guess);
+    smax = s_guess(end);
 
     % get the differentation/integration matrices and the grid
-    [D,~,w,s] = dif1D('fd',0,smax,N,5);
-    
-    % start- and end-point of the current radial line
-    dtheta = linspace(-pi/2,theta,N);
-    dtheta = dtheta';
-    r = xcyc(1) + Rguess*cos(dtheta); 
-    z = xcyc(2) + Rguess*sin(dtheta);
-    
-    psi = atan2(D*z,D*r);
-     
-    C = 1;                      % initial stretch parameter
-    p0 = 2*Rguess*sigmaprime;   % predict the pressure
-    
-    % get the differentation/integration matrices and the grid
     [D,~,w,s] = dif1D('cheb',0,smax,N,5);
+
+    % interpolate the shape in the Chebyshev points
+    r = interp1(s_guess,r_guess,s);
+    z = interp1(s_guess,z_guess,s);
+
+    psi = atan2(D*z,D*r);      % intial psi value 
+    C = 1;                     % initial stretch parameter
+    p0 = 2*Rtemp*sigmaprime;   % predict the pressure
     
 end
     
