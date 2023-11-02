@@ -18,7 +18,7 @@ deltarho = 1e-3;   % density difference [10^6 kg/m^3]
 N = 40;            % resolution of the discretization for calculation
 Nplot = 80;        % resolution of the discretization for plotting
 Ncheb = 10;        % number of Chebyshev to describe the shape
-alpha = 0.1;       % relaxation parameter in the Newton-Raphson scheme
+alpha = 1;       % relaxation parameter in the Newton-Raphson scheme
 Kmod = 20;         % elastic dilational modulus [mN/m]
 Gmod = 20;         % elastic shear modulus [mN/m]
 compresstype = 1;  % 1: compress the volume    other: compress the area
@@ -162,7 +162,7 @@ for ii = 1:length(frac)+1
       b8 = (1-r(end));
 
       A = [[A11, Z, A13, A18, Z1];[Z, A22, A23, A28, Z1];
-          [A31, A32, A33, A38, A39];[A81, zeros(1,2*N), -1,0];
+          [A31, A32, A33, A38, A39];[A81, zeros(1,2*N), 0,0];
           [A91, Z1',A93,A98,0]];
       b = [b1;b2;b3;b8;b9];
 
@@ -347,6 +347,8 @@ for ii = 1:length(frac)+1
     if rms(b)>1e3
       crash = 1; break;
     end
+
+    fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
 
   end
 
