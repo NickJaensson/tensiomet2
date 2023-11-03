@@ -119,74 +119,6 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
 
     switch params.strainmeasure
     
-    case 'generic'
-    
-        % determine sigma^r
-        A55 = -eye(N);
-        A56 = diag(Kmod./lams - Gmod.*lams.^(-3));
-        A57 = diag(Kmod./lamt + Gmod.*lamt.^(-3));
-        b5 = -(params.sigma-sigmat+Kmod*log(lams.*lamt)+...
-        0.5*Gmod*(lams.^(-2)-lamt.^(-2)));
-        
-        % determine lambda^s
-        A64 = -eye(N);
-        A66 = diag(Kmod./lams + Gmod*lams.^(-3));
-        A67 = diag(Kmod./lamt - Gmod*lamt.^(-3));
-        b6 = -(params.sigma-sigmas+Kmod*log(lams.*lamt)+...
-        0.5*Gmod*(lamt.^(-2)-lams.^(-2)));
-    
-    case 'knoche'
-    
-        % determine sigma^r
-        A55 = -diag(lams);
-        A56 = diag((Kmod-Gmod)+(params.sigma-sigmat));
-        A57 = (Kmod+Gmod)*eye(N);
-        b5 = -((Kmod+Gmod)*(lamt-1)+(Kmod-Gmod)*...
-        (lams-1)+lams.*(params.sigma-sigmat));
-        
-        % determine lambda^s
-        A64 = -diag(lamt);
-        A66 = (Kmod+Gmod)*eye(N);
-        A67 = diag((Kmod-Gmod)+(params.sigma-sigmas));
-        b6 = -((Kmod+Gmod)*(lams-1)+(Kmod-Gmod)*...
-        (lamt-1)+lamt.*(params.sigma-sigmas));
-    
-    case 'hookean'
-    
-        % determine sigma^r
-        A55 = -eye(N);
-        A56 = (Kmod-Gmod)*eye(N);
-        A57 = (Kmod+Gmod)*eye(N);
-        b5 = -((Kmod+Gmod)*(lamt-1)+(Kmod-Gmod)*...
-        (lams-1)+params.sigma-sigmat);
-        
-        % determine lambda^s
-        A64 = -eye(N);
-        A66 = (Kmod+Gmod)*eye(N);
-        A67 = (Kmod-Gmod)*eye(N);
-        b6 = -((Kmod+Gmod)*(lams-1)+(Kmod-Gmod)*...
-        (lamt-1)+params.sigma-sigmas);
-    
-    case 'hencky'
-    
-        % determine sigma^r
-        A55 = -eye(N);
-        %           A56 = (Kmod-Gmod)*eye(N); % incorrect in code Nagel?
-        %           A57 = (Kmod+Gmod)*eye(N);
-        A56 = (Kmod-Gmod)*eye(N).*diag(1./lams);
-        A57 = (Kmod+Gmod)*eye(N).*diag(1./lamt);          
-        b5 = -(Kmod*log(lams.*lamt)+Gmod*log(lamt./lams)+...
-        (params.sigma-sigmat));
-        
-        % determine lambda^s
-        A64 = -eye(N);
-        %           A66 = (Kmod+Gmod)*eye(N); % incorrect in code Nagel?
-        %           A67 = (Kmod-Gmod)*eye(N);
-        A66 = (Kmod+Gmod)*eye(N).*diag(1./lams);
-        A67 = (Kmod-Gmod)*eye(N).*diag(1./lamt);          
-        b6 = -(Kmod*log(lams.*lamt)+Gmod*log(lams./lamt)+...
-        (params.sigma-sigmas));
-    
     case 'pepicelli'
 
         % A54 = 1
@@ -215,22 +147,6 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
         A67 = Asubt.*diag(Kmod./lams) - diag(Gmod*lamt.^(-3));
         b6 = -(params.sigma-sigmas+Kmod*log(lams.*lamt)./(lams.*lamt)+...
         0.5*Gmod*(lamt.^(-2)-lams.^(-2)));
-        
-    case 'balemans'
-    
-        % determine sigma^r
-        A55 = -eye(N);
-        A56 = diag(Kmod./lams) - diag(Gmod.*lamt./lams.^(-2));
-        A57 = diag(Kmod./lamt) + diag(Gmod./lams);
-        b5 = -(params.sigma-sigmat+Kmod*log(lams.*lamt)+...
-        Gmod*(lamt./lams-1));
-        
-        % determine lambda^s
-        A64 = -eye(N);
-        A66 = diag(Kmod./lams) + diag(Gmod./lamt);
-        A67 = diag(Kmod./lamt) - diag(Gmod*lams./lamt.^(-2));
-        b6 = -(params.sigma-sigmas+Kmod*log(lams.*lamt)+...
-        Gmod*(lams./lamt-1));
 
     end
 
