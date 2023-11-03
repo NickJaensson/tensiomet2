@@ -5,10 +5,10 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     r = itervars.r;
     z = itervars.z;
     psi = itervars.psi;
-    taus = itervars.taus;
-    taup = itervars.taup;
+    sigmas = itervars.taus;
+    sigmat = itervars.taup;
     lams = itervars.lams;
-    lamp = itervars.lamp;
+    lamt = itervars.lamp;
     p0 = itervars.p0;
     N = params.N;
     C = params.C;
@@ -37,15 +37,15 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     b2 = lams.*sin(psi)-C*D*z;
 
     % determine psi from laplace law
-    A31 = diag(-taup.*sin(psi)./r.^2);
+    A31 = diag(-sigmat.*sin(psi)./r.^2);
     A32 = diag(lams);
-    A33 = C*diag(taus)*D+diag(taup.*cos(psi)./r);
+    A33 = C*diag(sigmas)*D+diag(sigmat.*cos(psi)./r);
     A34 = C*diag(D*psi);
     A35 = diag(sin(psi)./r);
-    A36 = diag(z-p0+taup.*sin(psi)./r);
-    A38 = taus.*(D*psi);
+    A36 = diag(z-p0+sigmat.*sin(psi)./r);
+    A38 = sigmas.*(D*psi);
     A39 = -lams;
-    b3 =  -(C*taus.*(D*psi)+lams.*(z-p0+taup.*sin(psi)./r));
+    b3 =  -(C*sigmas.*(D*psi)+lams.*(z-p0+sigmat.*sin(psi)./r));
 
     if params.compresstype == 1 || ii == 1
         % determine pressure - use volume      
@@ -85,14 +85,14 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
 
     Z1 = zeros(N,1);
 
-    % determine taus from projection of force balance
+    % determine sigmas from projection of force balance
     % THIS MUST ME CHECKED: SHOULD EVERY DERIVATIVE D BE MULTIPLIED BY C??!!
-    A41 = C*diag(D*taus);
-    A43 = diag(lams.*sin(psi).*(taup-taus));
+    A41 = C*diag(D*sigmas);
+    A43 = diag(lams.*sin(psi).*(sigmat-sigmas));
     A44 = diag(lams.*cos(psi))+C*diag(r)*D;
-    A46 = diag(cos(psi).*(taup-taus));
+    A46 = diag(cos(psi).*(sigmat-sigmas));
     A45 = diag(-lams.*cos(psi));
-    b4 = -C*r.*(D*taus)+lams.*cos(psi).*(taup-taus);  % check this eq.
+    b4 = -C*r.*(D*sigmas)+lams.*cos(psi).*(sigmat-sigmas);  % check this eq.
 
     switch params.strainmeasure
     
@@ -101,32 +101,32 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
         % determine sigma^r
         A55 = -eye(N);
         A56 = diag(Kmod./lams - Gmod.*lams.^(-3));
-        A57 = diag(Kmod./lamp + Gmod.*lamp.^(-3));
-        b5 = -(params.sigma-taup+Kmod*log(lams.*lamp)+...
-        0.5*Gmod*(lams.^(-2)-lamp.^(-2)));
+        A57 = diag(Kmod./lamt + Gmod.*lamt.^(-3));
+        b5 = -(params.sigma-sigmat+Kmod*log(lams.*lamt)+...
+        0.5*Gmod*(lams.^(-2)-lamt.^(-2)));
         
         % determine lambda^s
         A64 = -eye(N);
         A66 = diag(Kmod./lams + Gmod*lams.^(-3));
-        A67 = diag(Kmod./lamp - Gmod*lamp.^(-3));
-        b6 = -(params.sigma-taus+Kmod*log(lams.*lamp)+...
-        0.5*Gmod*(lamp.^(-2)-lams.^(-2)));
+        A67 = diag(Kmod./lamt - Gmod*lamt.^(-3));
+        b6 = -(params.sigma-sigmas+Kmod*log(lams.*lamt)+...
+        0.5*Gmod*(lamt.^(-2)-lams.^(-2)));
     
     case 'knoche'
     
         % determine sigma^r
         A55 = -diag(lams);
-        A56 = diag((Kmod-Gmod)+(params.sigma-taup));
+        A56 = diag((Kmod-Gmod)+(params.sigma-sigmat));
         A57 = (Kmod+Gmod)*eye(N);
-        b5 = -((Kmod+Gmod)*(lamp-1)+(Kmod-Gmod)*...
-        (lams-1)+lams.*(params.sigma-taup));
+        b5 = -((Kmod+Gmod)*(lamt-1)+(Kmod-Gmod)*...
+        (lams-1)+lams.*(params.sigma-sigmat));
         
         % determine lambda^s
-        A64 = -diag(lamp);
+        A64 = -diag(lamt);
         A66 = (Kmod+Gmod)*eye(N);
-        A67 = diag((Kmod-Gmod)+(params.sigma-taus));
+        A67 = diag((Kmod-Gmod)+(params.sigma-sigmas));
         b6 = -((Kmod+Gmod)*(lams-1)+(Kmod-Gmod)*...
-        (lamp-1)+lamp.*(params.sigma-taus));
+        (lamt-1)+lamt.*(params.sigma-sigmas));
     
     case 'hookean'
     
@@ -134,15 +134,15 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
         A55 = -eye(N);
         A56 = (Kmod-Gmod)*eye(N);
         A57 = (Kmod+Gmod)*eye(N);
-        b5 = -((Kmod+Gmod)*(lamp-1)+(Kmod-Gmod)*...
-        (lams-1)+params.sigma-taup);
+        b5 = -((Kmod+Gmod)*(lamt-1)+(Kmod-Gmod)*...
+        (lams-1)+params.sigma-sigmat);
         
         % determine lambda^s
         A64 = -eye(N);
         A66 = (Kmod+Gmod)*eye(N);
         A67 = (Kmod-Gmod)*eye(N);
         b6 = -((Kmod+Gmod)*(lams-1)+(Kmod-Gmod)*...
-        (lamp-1)+params.sigma-taus);
+        (lamt-1)+params.sigma-sigmas);
     
     case 'hencky'
     
@@ -151,60 +151,60 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
         %           A56 = (Kmod-Gmod)*eye(N); % incorrect in code Nagel?
         %           A57 = (Kmod+Gmod)*eye(N);
         A56 = (Kmod-Gmod)*eye(N).*diag(1./lams);
-        A57 = (Kmod+Gmod)*eye(N).*diag(1./lamp);          
-        b5 = -(Kmod*log(lams.*lamp)+Gmod*log(lamp./lams)+...
-        (params.sigma-taup));
+        A57 = (Kmod+Gmod)*eye(N).*diag(1./lamt);          
+        b5 = -(Kmod*log(lams.*lamt)+Gmod*log(lamt./lams)+...
+        (params.sigma-sigmat));
         
         % determine lambda^s
         A64 = -eye(N);
         %           A66 = (Kmod+Gmod)*eye(N); % incorrect in code Nagel?
         %           A67 = (Kmod-Gmod)*eye(N);
         A66 = (Kmod+Gmod)*eye(N).*diag(1./lams);
-        A67 = (Kmod-Gmod)*eye(N).*diag(1./lamp);          
-        b6 = -(Kmod*log(lams.*lamp)+Gmod*log(lams./lamp)+...
-        (params.sigma-taus));
+        A67 = (Kmod-Gmod)*eye(N).*diag(1./lamt);          
+        b6 = -(Kmod*log(lams.*lamt)+Gmod*log(lams./lamt)+...
+        (params.sigma-sigmas));
     
     case 'pepicelli'
     
-        Asubs = diag((1.-log(lams.*lamp))./(lams.^2));
-        Asubr = diag((1.-log(lams.*lamp))./(lamp.^2));
+        Asubs = diag((1.-log(lams.*lamt))./(lams.^2));
+        Asubr = diag((1.-log(lams.*lamt))./(lamt.^2));
         
         % determine sigma^r
         A55 = -eye(N);
-        A56 = Asubs.*diag(Kmod./lamp) - diag(Gmod.*lams.^(-3));
-        A57 = Asubr.*diag(Kmod./lams) + diag(Gmod.*lamp.^(-3));
-        b5 = -(params.sigma-taup+Kmod*log(lams.*lamp)./(lams.*lamp)+...
-        0.5*Gmod*(lams.^(-2)-lamp.^(-2)));
+        A56 = Asubs.*diag(Kmod./lamt) - diag(Gmod.*lams.^(-3));
+        A57 = Asubr.*diag(Kmod./lams) + diag(Gmod.*lamt.^(-3));
+        b5 = -(params.sigma-sigmat+Kmod*log(lams.*lamt)./(lams.*lamt)+...
+        0.5*Gmod*(lams.^(-2)-lamt.^(-2)));
         
         % determine lambda^s
         A64 = -eye(N);
-        A66 = Asubs.*diag(Kmod./lamp) + diag(Gmod*lams.^(-3));
-        A67 = Asubr.*diag(Kmod./lams) - diag(Gmod*lamp.^(-3));
-        b6 = -(params.sigma-taus+Kmod*log(lams.*lamp)./(lams.*lamp)+...
-        0.5*Gmod*(lamp.^(-2)-lams.^(-2)));
+        A66 = Asubs.*diag(Kmod./lamt) + diag(Gmod*lams.^(-3));
+        A67 = Asubr.*diag(Kmod./lams) - diag(Gmod*lamt.^(-3));
+        b6 = -(params.sigma-sigmas+Kmod*log(lams.*lamt)./(lams.*lamt)+...
+        0.5*Gmod*(lamt.^(-2)-lams.^(-2)));
         
     case 'balemans'
     
         % determine sigma^r
         A55 = -eye(N);
-        A56 = diag(Kmod./lams) - diag(Gmod.*lamp./lams.^(-2));
-        A57 = diag(Kmod./lamp) + diag(Gmod./lams);
-        b5 = -(params.sigma-taup+Kmod*log(lams.*lamp)+...
-        Gmod*(lamp./lams-1));
+        A56 = diag(Kmod./lams) - diag(Gmod.*lamt./lams.^(-2));
+        A57 = diag(Kmod./lamt) + diag(Gmod./lams);
+        b5 = -(params.sigma-sigmat+Kmod*log(lams.*lamt)+...
+        Gmod*(lamt./lams-1));
         
         % determine lambda^s
         A64 = -eye(N);
-        A66 = diag(Kmod./lams) + diag(Gmod./lamp);
-        A67 = diag(Kmod./lamp) - diag(Gmod*lams./lamp.^(-2));
-        b6 = -(params.sigma-taus+Kmod*log(lams.*lamp)+...
-        Gmod*(lams./lamp-1));
+        A66 = diag(Kmod./lams) + diag(Gmod./lamt);
+        A67 = diag(Kmod./lamt) - diag(Gmod*lams./lamt.^(-2));
+        b6 = -(params.sigma-sigmas+Kmod*log(lams.*lamt)+...
+        Gmod*(lams./lamt-1));
 
     end
 
     % determine lambda^r
     A71 = eye(N);
     A77 = diag(-itervars.r0);
-    b7 = -r+lamp.*itervars.r0;
+    b7 = -r+lamt.*itervars.r0;
     
     % Boundary conditions
     A41(1,:) = ZL;
@@ -218,9 +218,9 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     A71(end,:) = ZL;
     A77(end,:) = fliplr(IDL);
     
-    b4(1) = -D(1,:)*taus;
-    b7(1) =  -lamp(1)+lams(1);
-    b7(end) =  1-lamp(end);
+    b4(1) = -D(1,:)*sigmas;
+    b7(1) =  -lamt(1)+lams(1);
+    b7(end) =  1-lamt(end);
 
     % combine matrices
     A = [[A11, Z, A13, Z, Z, A16, Z,Z1]; ...
