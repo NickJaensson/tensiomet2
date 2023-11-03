@@ -13,6 +13,7 @@ params.Gmod = 1;          % elastic shear modulus [mN/m]
 params.compresstype = 1;  % 1: compress the volume    other: compress the area
 params.frac = [0.9];      % compute elastic stresses for these compressions
 params.strainmeasure = 'pepicelli'; % which elastic constitutive model
+params.maxiter = 1200; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
 
 r0 = r; z0 = z;
 
@@ -49,13 +50,14 @@ for ii = 1:length(params.frac)
     itervars.lams = lams; itervars.lamp = lamp;    
     itervars.p0 = p0; 
 
-    while rms(u) > 1e-10
-
-        iter = iter + 1;
+    % start the Newton-Raphson iteration
+    while rms(u) > params.eps
     
-        if iter > 1200 
-            error('iter > 1200!');
-        end
+        iter = iter + 1;
+        
+        if iter > params.maxiter
+            error('Iteration did not converge!')
+        end    
     
         % build the Jacobian and RHS
         [A,b] = jacobian_rhs_elastic(params,itervars);
