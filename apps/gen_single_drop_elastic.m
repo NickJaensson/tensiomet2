@@ -5,12 +5,13 @@ close all; clear
 
 addpath('../src/')
 
+% generate reference shape (parameters are taken from gen_single_drop.m)
 gen_single_drop
 
-% physical pa rameters
-params.Kmod = 1;         % elastic dilational modulus [mN/m]
-params.Gmod = 1;          % elastic shear modulus [mN/m]
-params.compresstype = 1;  % 1: compress the volume    other: compress the area
+% physical parameters for the elastic problem
+params.Kmod = 1;         % elastic dilational modulus
+params.Gmod = 1;          % elastic shear modulus
+params.compresstype = 1;  % 1: compress the volume other: compress the area
 params.frac = [0.9];      % compute elastic stresses for these compressions
 params.strainmeasure = 'pepicelli'; % which elastic constitutive model
 
@@ -24,8 +25,7 @@ taus = params.sigma*ones(params.N,1); taup = taus;
 clear itervars
 
 % store the coordinates of the reference shape
-itervars.r0 = r;
-itervars.z0 = z;
+itervars.r0 = r; itervars.z0 = z;
 
 for ii = 1:length(params.frac)
 
