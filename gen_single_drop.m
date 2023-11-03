@@ -1,7 +1,7 @@
 
 close all; clear
 
-addpath('subs/')
+%addpath('subs/')
 
 % physical parameters
 sigma = 72;        % surface tension [mN/m]
