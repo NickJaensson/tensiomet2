@@ -24,28 +24,28 @@ for i=1:length(f)
 
     ff = f{i};
 
-    str = 'D'+string(i)+'1 = '+string(diff(ff,r))  +' + '+string(diff(ff,r_prime))+'*D';
+    str = 'A'+string(i)+'1 = '+string(diff(ff,r))  +' + '+string(diff(ff,r_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
-    str = 'D'+string(i)+'2 = '+string(diff(ff,z))  +' + '+string(diff(ff,z_prime))+'*D';
+    str = 'A'+string(i)+'2 = '+string(diff(ff,z))  +' + '+string(diff(ff,z_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
-    str = 'D'+string(i)+'3 = '+string(diff(ff,psi))+' + '+string(diff(ff,psi_prime))+'*D';
+    str = 'A'+string(i)+'3 = '+string(diff(ff,psi))+' + '+string(diff(ff,psi_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
-    str = 'D'+string(i)+'4 = '+string(diff(ff,sigmas))+' + '+string(diff(ff,sigmas_prime))+'*D';
+    str = 'A'+string(i)+'4 = '+string(diff(ff,sigmas))+' + '+string(diff(ff,sigmas_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
-    str = 'D'+string(i)+'5 = '+string(diff(ff,sigmat))+' + '+string(diff(ff,sigmat_prime))+'*D';
+    str = 'A'+string(i)+'5 = '+string(diff(ff,sigmat))+' + '+string(diff(ff,sigmat_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
-    str = 'D'+string(i)+'6 = '+string(diff(ff,lams))+' + '+string(diff(ff,lams_prime))+'*D';
+    str = 'A'+string(i)+'6 = '+string(diff(ff,lams))+' + '+string(diff(ff,lams_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
-    str = 'D'+string(i)+'7 = '+string(diff(ff,lamt))+' + '+string(diff(ff,lamt_prime))+'*D';
+    str = 'A'+string(i)+'7 = '+string(diff(ff,lamt))+' + '+string(diff(ff,lamt_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
-    str = 'D'+string(i)+'8 = '+string(diff(ff,P))  +' + '+string(diff(ff,P_prime))+'*D';
+    str = 'A'+string(i)+'8 = '+string(diff(ff,P))  +' + '+string(diff(ff,P_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
     str = 'b'+string(i)+' = '+string(-ff);

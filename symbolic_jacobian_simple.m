@@ -23,19 +23,19 @@ for i=1:5
 
     ff = f{i};
 
-    str = 'D'+string(i)+'1 = '+string(diff(ff,r))  +' + '+string(diff(ff,r_prime))+'*D';
+    str = 'A'+string(i)+'1 = '+string(diff(ff,r))  +' + '+string(diff(ff,r_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
-    str = 'D'+string(i)+'2 = '+string(diff(ff,z))  +' + '+string(diff(ff,z_prime))+'*D';
+    str = 'A'+string(i)+'2 = '+string(diff(ff,z))  +' + '+string(diff(ff,z_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
-    str = 'D'+string(i)+'3 = '+string(diff(ff,psi))+' + '+string(diff(ff,psi_prime))+'*D';
+    str = 'A'+string(i)+'3 = '+string(diff(ff,psi))+' + '+string(diff(ff,psi_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
-    str = 'D'+string(i)+'4 = '+string(diff(ff,C))  +' + '+string(diff(ff,C_prime))+'*D';
+    str = 'A'+string(i)+'4 = '+string(diff(ff,C))  +' + '+string(diff(ff,C_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
-    str = 'D'+string(i)+'5 = '+string(diff(ff,P))  +' + '+string(diff(ff,P_prime))+'*D';
+    str = 'A'+string(i)+'5 = '+string(diff(ff,P))  +' + '+string(diff(ff,P_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
     str = 'b'+string(i)+' = '+string(-ff);
