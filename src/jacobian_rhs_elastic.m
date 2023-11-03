@@ -23,6 +23,10 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
 
     % Eq. 1-4 Knoche, p85, eq.5.7, Eq. 5-7, eq.5.8
     % determine r from psi (incl lams)
+    % A11 = C/lams*D
+    % A13 = sin(psi)
+    % A16 = -(C*D*r)/lams^2
+    % b1 = cos(psi) - (C*D*r)/lams
     A11 = C*D;
     A13 = diag(lams.*sin(psi));
     A16 = diag(-cos(psi));
@@ -30,6 +34,10 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     b1 = lams.*cos(psi)-C*D*r;
 
     % determine z from psi (incl lams)
+    % A11 = C/lams*D
+    % A13 = sin(psi)
+    % A16 = -(C*D*r)/lams^2
+    % b1 = cos(psi) - (C*D*r)/lams
     A22 = C*D;
     A23 = diag(-lams.*cos(psi));
     A26 = diag(-sin(psi));
@@ -37,6 +45,14 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     b2 = lams.*sin(psi)-C*D*z;
 
     % determine psi from laplace law
+    % A31 = -(sigmat*sin(psi))/r^2
+    % A32 = g*rho
+    % A33 = (sigmat*cos(psi))/r + (C*sigmas)/lams*D
+    % A34 = (C*D*psi)/lams
+    % A35 = sin(psi)/r
+    % A36 = -(C*D*psi*sigmas)/lams^2
+    % A38 = -1
+    % b3 = P - (sigmat*sin(psi))/r - g*rho*z - (C*D*psi*sigmas)/lams
     A31 = diag(-sigmat.*sin(psi)./r.^2);
     A32 = diag(lams);
     A33 = C*diag(sigmas)*D+diag(sigmat.*cos(psi)./r);
@@ -47,18 +63,21 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     A39 = -lams;
     b3 =  -(C*sigmas.*(D*psi)+lams.*(z-p0+sigmat.*sin(psi)./r));
 
+    % A81 = 2*int*r*pi*sin(psi)
+    % A83 = int*r^2*pi*cos(psi)
+    % b8 = C*V - int*r^2*pi*sin(psi)
     if params.compresstype == 1 || ii == 1
         % determine pressure - use volume      
-        A91 = 2*w.*r'.*sin(psi').*lams';
-        A93 = w.*r'.^2.*cos(psi').*lams';
-        A98 = -params.volume/pi;
-        b9 = -(w*(r.^2.*sin(psi).*lams)-C*params.volume/pi);
+        A81 = 2*w.*r'.*sin(psi').*lams';
+        A83 = w.*r'.^2.*cos(psi').*lams';
+        A88 = -params.volume/pi;
+        b8 = -(w*(r.^2.*sin(psi).*lams)-C*params.volume/pi);
     else
         % determine pressure - use area
-        A91 = 2*w.*lams';
-        A93 = zeros(1,N);
-        A98 = -params.area/pi;
-        b9 = -(2*w*(r.*lams)-C*params.area/pi);
+        A81 = 2*w.*lams';
+        A83 = zeros(1,N);
+        A88 = -params.area/pi;
+        b8 = -(2*w*(r.*lams)-C*params.area/pi);
     end
 
     % Boundary conditions
@@ -86,7 +105,12 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     Z1 = zeros(N,1);
 
     % determine sigmas from projection of force balance
-    % THIS MUST ME CHECKED: SHOULD EVERY DERIVATIVE D BE MULTIPLIED BY C??!!
+    % A41 = (C*D*sigmas)/lams
+    % A43 = -sin(psi)*(sigmas - sigmat)
+    % A44 = cos(psi) + (C*r)/lams*D
+    % A45 = -cos(psi)
+    % A46 = -(C*r*D*sigmas)/lams^2
+    % b4 = - cos(psi)*(sigmas - sigmat) - (C*r*D*sigmas)/lams    
     A41 = C*diag(D*sigmas);
     A43 = diag(lams.*sin(psi).*(sigmat-sigmas));
     A44 = diag(lams.*cos(psi))+C*diag(r)*D;
@@ -165,7 +189,18 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
         (params.sigma-sigmas));
     
     case 'pepicelli'
+
+
+        % A54 = 1
+        % A56 = (K*log(lams*lamt))/(lams^2*lamt) - K/(lams^2*lamt) - G/lams^3 + 0*D
+        % A57 = G/lamt^3 - K/(lams*lamt^2) + (K*log(lams*lamt))/(lams*lamt^2) + 0*D
+        % b5 = gamma - sigmas - (G*(1/lams^2 - 1/lamt^2))/2 + (K*log(lams*lamt))/(lams*lamt)
     
+        % A65 = 1
+        % A66 = G/lams^3 - K/(lams^2*lamt) + (K*log(lams*lamt))/(lams^2*lamt) + 0*D
+        % A67 = (K*log(lams*lamt))/(lams*lamt^2) - K/(lams*lamt^2) - G/lamt^3 + 0*D
+        % b6 = gamma - sigmat + (G*(1/lams^2 - 1/lamt^2))/2 + (K*log(lams*lamt))/(lams*lamt)
+
         Asubs = diag((1.-log(lams.*lamt))./(lams.^2));
         Asubr = diag((1.-log(lams.*lamt))./(lamt.^2));
         
@@ -201,6 +236,10 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
 
     end
 
+    % A65 = 1
+    % A66 = G/lams^3 - K/(lams^2*lamt) + (K*log(lams*lamt))/(lams^2*lamt) + 0*D
+    % A67 = (K*log(lams*lamt))/(lams*lamt^2) - K/(lams*lamt^2) - G/lamt^3 + 0*D
+    % b6 = gamma - sigmat + (G*(1/lams^2 - 1/lamt^2))/2 + (K*log(lams*lamt))/(lams*lamt)
     % determine lambda^r
     A71 = eye(N);
     A77 = diag(-itervars.r0);
@@ -230,9 +269,9 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
        [Z, Z, Z, Z, A55, A56, A57, Z1]; ...
        [Z, Z, Z, A64, Z, A66, A67, Z1]; ...
        [A71, Z, Z, Z, Z, Z, A77, Z1]; ...
-       [A91, Z1',A93,Z1',Z1',Z1',Z1',0]];
+       [A81, Z1',A83,Z1',Z1',Z1',Z1',0]];
     
-    b = [b1;b2;b3;b4;b5;b6;b7;b9];
+    b = [b1;b2;b3;b4;b5;b6;b7;b8];
 
 
 end
