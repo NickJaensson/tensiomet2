@@ -21,22 +21,22 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     A22 = C*D; A23 = diag(-cos(psi)); A24 = D*z; b2 = -(C*D*z-sin(psi));
     
     % determine psi from Laplace law
-    A31 = -params.sigmaprime*diag(sin(psi)./r.^2);
+    A31 = -params.sigma*diag(sin(psi)./r.^2);
     A32 = diag(ones(params.N,1));
-    A33 = C*params.sigmaprime*D + params.sigmaprime*diag(cos(psi)./r);
-    A34 = params.sigmaprime*(D*psi);
+    A33 = C*params.sigma*D + params.sigma*diag(cos(psi)./r);
+    A34 = params.sigma*(D*psi);
     A35 = -ones(params.N,1);
-    b3 = p0-z-params.sigmaprime*(C*D*psi+sin(psi)./r);
+    b3 = p0-z-params.sigma*(C*D*psi+sin(psi)./r);
     
     % impose the needle radius as a BC (imposes the domain length)
     % NOTE: the lengths are scaled with the radius, thus its value is one
-    A41 = fliplr(IDL); b4 = (1-r(end));
+    A41 = fliplr(IDL); b4 = (params.rneedle-r(end));
     
     % determine pressure - use volume
     A51 = pi*2*w.*r'.*sin(psi');
     A53 = pi*w.*r'.^2.*cos(psi');
-    A54 = -params.volume0prime;
-    b5 = -(pi*w*(r.^2.*sin(psi))-C*params.volume0prime);
+    A54 = -params.volume0;
+    b5 = -(pi*w*(r.^2.*sin(psi))-C*params.volume0);
     
     % boundary condition r(0) = 0
     A11(1,:) = IDL; 
