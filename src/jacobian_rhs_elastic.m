@@ -29,8 +29,8 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     % b1 = lams*cos(psi) - (C*D*r)
     A11 = C*D;
     A13 = diag(lams.*sin(psi));
-    A16 = diag(-cos(psi));
-    A18 = D*r;
+    A16 = -C*diag((D*r)./lams);
+    A18 = ZL';
     b1 = lams.*cos(psi)-C*D*r;
 
     % determine z from psi (incl lams)
@@ -40,27 +40,27 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     % b2 = lams*sin(psi) - (C*D*z)
     A22 = C*D;
     A23 = diag(-lams.*cos(psi));
-    A26 = diag(-sin(psi));
-    A28 = D*z;
+    A26 = -C*diag((D*z)./lams);
+    A28 = ZL';
     b2 = lams.*sin(psi)-C*D*z;
 
     % determine psi from laplace law
     % A31 = -lams*(sigmat*sin(psi))/r^2
     % A32 = lams*g*rho
-    % A33 = (sigmat*cos(psi))/r + (C*sigmas)*D
+    % A33 = (lams*sigmat*cos(psi))/r + (C*sigmas)*D
     % A34 = (C*D*psi)
     % A35 = lams*sin(psi)/r
     % A36 = -(C*D*psi*sigmas)/lams
     % A38 = -lams
     % b3 = lams*P - lams*(sigmat*sin(psi))/r - lams*g*rho*z - (C*D*psi*sigmas)
-    A31 = diag(-sigmat.*sin(psi)./r.^2);
-    A32 = diag(lams);
-    A33 = C*diag(sigmas)*D+diag(sigmat.*cos(psi)./r);
+    A31 = diag(-lams.*sigmat.*sin(psi)./r.^2);
+    A32 = diag(lams)*params.deltarho*params.grav;
+    A33 = C*diag(sigmas)*D+diag(lams.*sigmat.*cos(psi)./r);
     A34 = C*diag(D*psi);
-    A35 = diag(sin(psi)./r);
-    A36 = diag(z-p0+sigmat.*sin(psi)./r);
+    A35 = diag(lams.*sin(psi)./r);
+    A36 = -C*diag((D*psi).*sigmas./lams);
     A38 = -lams;
-    b3 =  -(C*sigmas.*(D*psi)+lams.*(z-p0+sigmat.*sin(psi)./r));
+    b3 =  -C*sigmas.*(D*psi)-lams.*(z*params.deltarho*params.grav-p0+sigmat.*sin(psi)./r);
 
     % A81 = 2*int*r*pi*sin(psi)*lams
     % A83 = int*r^2*pi*cos(psi)*lams
@@ -113,9 +113,9 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     A41 = C*diag(D*sigmas);
     A43 = diag(lams.*sin(psi).*(sigmat-sigmas));
     A44 = diag(lams.*cos(psi))+C*diag(r)*D;
-    A46 = diag(cos(psi).*(sigmat-sigmas));
-    A45 = diag(-lams.*cos(psi));
-    b4 = -C*r.*(D*sigmas)+lams.*cos(psi).*(sigmat-sigmas);  % check this eq.
+    A45 = -diag(lams.*cos(psi));
+    A46 = -C*diag(r.*(D*sigmas)./lams);
+    b4 = -C*r.*(D*sigmas)+lams.*cos(psi).*(sigmat-sigmas);
 
     switch params.strainmeasure
     
@@ -185,6 +185,5 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
          [A81, Z1', A83,  Z1', Z1', Z1', Z1',   0]];
     
     b = [b1;b2;b3;b4;b5;b6;b7;b8];
-
 
 end
