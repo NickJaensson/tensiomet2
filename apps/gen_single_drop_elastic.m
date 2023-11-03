@@ -79,8 +79,8 @@ for ii = 1:length(params.frac)
     p0 = itervars.p0;
 
     % calculate the volume and the area
-    volume = pi*params.w*(r.^2.*sin(psi))/C;
-    area = pi*2*params.w*(r)/C;
+    volume = pi*params.w*(r.^2.*sin(psi).*lams)/C;
+    area = pi*2*params.w*(r.*lams)/C;
     
     disp(['volume = ', num2str(volume,15)]);
     disp(['area = ', num2str(area,15)]);
