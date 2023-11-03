@@ -84,6 +84,10 @@ disp(['volume = ', num2str(volume,15)]);
 disp(['area = ', num2str(area,15)]);
 disp(['pressure = ', num2str(p0,15)]);
 
+% store the converged values of C and area0 for the elastic problem
+params.area0 = pi*2*params.w*(r)/C;
+params.C = C;
+
 % interpolate the numerical solutions on a finer grid. 
 % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
 % though all the points (see book of Trefethen on Spectral Methods in 

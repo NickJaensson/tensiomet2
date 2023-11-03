@@ -13,26 +13,19 @@ params.Gmod = 1;          % elastic shear modulus [mN/m]
 params.compresstype = 1;  % 1: compress the volume    other: compress the area
 params.frac = [0.9];      % compute elastic stresses for these compressions
 params.strainmeasure = 'pepicelli'; % which elastic constitutive model
+
 params.maxiter = 1200; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
 
-r0 = r; z0 = z;
-
-params.C = C;
-N=params.N;
-D=params.D;
-w=params.w;
-
-% intial aread
-params.area0 = pi*2*params.w*(r)/C;
-
 % initialize the surface strains ans tresses
-lamp = ones(N,1); lams = lamp;
-taus = params.sigma*ones(N,1); taup = taus;
+lamp = ones(params.N,1); lams = lamp;
+taus = params.sigma*ones(params.N,1); taup = taus;
 
+% clear itervars variable from the simple interface problem
 clear itervars
 
-itervars.r0 = r0;
-itervars.z0 = z0;
+% store the coordinates of the reference shape
+itervars.r0 = r;
+itervars.z0 = z;
 
 for ii = 1:length(params.frac)
 
@@ -44,7 +37,7 @@ for ii = 1:length(params.frac)
     end
 
     % store some variables for the iteration
-    iter = 0; u = ones(3*N+2,1);
+    iter = 0; u = ones(3*params.N+2,1);
     itervars.r = r; itervars.z = z; itervars.psi = psi;
     itervars.taus = taus; itervars.taup = taup;
     itervars.lams = lams; itervars.lamp = lamp;    
@@ -66,13 +59,13 @@ for ii = 1:length(params.frac)
         u = A\b;
     
         % update variables
-        itervars.r   = itervars.r + params.alpha*u(1:N);
-        itervars.z   = itervars.z + params.alpha*u(N+1:2*N);
-        itervars.psi = itervars.psi + params.alpha*u(2*N+1:3*N);    
-        itervars.taus = itervars.taus + params.alpha*u(3*N+1:4*N);
-        itervars.taup = itervars.taup + params.alpha*u(4*N+1:5*N);
-        itervars.lams = itervars.lams + params.alpha*u(5*N+1:6*N);
-        itervars.lamp = itervars.lamp + params.alpha*u(6*N+1:7*N);
+        itervars.r   = itervars.r + params.alpha*u(1:params.N);
+        itervars.z   = itervars.z + params.alpha*u(params.N+1:2*params.N);
+        itervars.psi = itervars.psi + params.alpha*u(2*params.N+1:3*params.N);    
+        itervars.taus = itervars.taus + params.alpha*u(3*params.N+1:4*params.N);
+        itervars.taup = itervars.taup + params.alpha*u(4*params.N+1:5*params.N);
+        itervars.lams = itervars.lams + params.alpha*u(5*params.N+1:6*params.N);
+        itervars.lamp = itervars.lamp + params.alpha*u(6*params.N+1:7*params.N);
         itervars.p0  = itervars.p0 + params.alpha*u(end);
 
         fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
@@ -103,8 +96,8 @@ for ii = 1:length(params.frac)
     
     % plot the droplet shape
     plot(rr,zz); 
-    rmax = max([r0',rr']);
-    zmin = min([z0',zz']);
+    rmax = max([itervars.r0',rr']);
+    zmin = min([itervars.z0',zz']);
     
     % rescale the plot
     xlim([0 1.2*rmax]);
@@ -112,7 +105,7 @@ for ii = 1:length(params.frac)
     set(gca,'DataAspectRatio',[1 1 1])
     
     % compute the curvatures (NOTE: d/ds operator is given by C*D, see Nagel)
-    kappas = (C*D*psi)./lams;
+    kappas = (C*params.D*psi)./lams;
     kappap = sin(psi)./r;
     kappap(1) = kappas(1);
     
@@ -124,7 +117,7 @@ for ii = 1:length(params.frac)
     % use: s* = s0 / C  and  s = \int lambdas ds* = \int lambdas ds / C
     
     % construct the integration matrix from the integration vector
-    wmat = repmat(w,N,1);
+    wmat = repmat(params.w,params.N,1);
     wmat = tril(wmat);
     
     % compute the value of s in the deformed state
