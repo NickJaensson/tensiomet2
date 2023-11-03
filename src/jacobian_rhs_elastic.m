@@ -200,19 +200,19 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
         % b6 = gamma - sigmat + (G*(1/lams^2 - 1/lamt^2))/2 + (K*log(lams*lamt))/(lams*lamt)
 
         Asubs = diag((1.-log(lams.*lamt))./(lams.^2));
-        Asubr = diag((1.-log(lams.*lamt))./(lamt.^2));
+        Asubt = diag((1.-log(lams.*lamt))./(lamt.^2));
         
         % determine sigma^r
         A55 = -eye(N);
         A56 = Asubs.*diag(Kmod./lamt) - diag(Gmod.*lams.^(-3));
-        A57 = Asubr.*diag(Kmod./lams) + diag(Gmod.*lamt.^(-3));
+        A57 = Asubt.*diag(Kmod./lams) + diag(Gmod.*lamt.^(-3));
         b5 = -(params.sigma-sigmat+Kmod*log(lams.*lamt)./(lams.*lamt)+...
         0.5*Gmod*(lams.^(-2)-lamt.^(-2)));
         
         % determine lambda^s
         A64 = -eye(N);
         A66 = Asubs.*diag(Kmod./lamt) + diag(Gmod*lams.^(-3));
-        A67 = Asubr.*diag(Kmod./lams) - diag(Gmod*lamt.^(-3));
+        A67 = Asubt.*diag(Kmod./lams) - diag(Gmod*lamt.^(-3));
         b6 = -(params.sigma-sigmas+Kmod*log(lams.*lamt)./(lams.*lamt)+...
         0.5*Gmod*(lamt.^(-2)-lams.^(-2)));
         
