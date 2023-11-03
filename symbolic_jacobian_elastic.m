@@ -10,10 +10,11 @@ kappat = sin(psi)/r;
 kappas = C*psi_prime/lams;
 J = lams*lamt;
 
-f{1} = (kappat*sigmat+kappas*sigmas) - P + rho*g*z;
-f{2} = r*C*sigmas_prime/lams - cos(psi)*(sigmat-sigmas);
-f{3} = C*r_prime/lams - cos(psi);
-f{4} = C*z_prime/lams - sin(psi);
+f{1} = C*r_prime/lams - cos(psi);
+f{2} = C*z_prime/lams - sin(psi);
+f{3} = (kappat*sigmat+kappas*sigmas) - P + rho*g*z;
+f{4} = r*C*sigmas_prime/lams - cos(psi)*(sigmat-sigmas);
+
 f{5} = sigmas - gamma - (K/J)*log(J) - (G/2)*(1/lamt^2 - 1/lams^2);
 f{6} = sigmat - gamma - (K/J)*log(J) + (G/2)*(1/lamt^2 - 1/lams^2);
 f{7} = lamt - r/rstar;
