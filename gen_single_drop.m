@@ -111,10 +111,10 @@ while rms(u) > 1e-10
   A41 = fliplr(IDL); b4 = (1-r(end));
   
   % determine pressure - use volume
-  A51 = 2*w.*r'.*sin(psi');
-  A53 = w.*r'.^2.*cos(psi');
-  A54 = -volume0prime/pi;
-  b5 = -(w*(r.^2.*sin(psi))-C*volume0prime/pi);
+  A51 = pi*2*w.*r'.*sin(psi');
+  A53 = pi*w.*r'.^2.*cos(psi');
+  A54 = -volume0prime;
+  b5 = -(pi*w*(r.^2.*sin(psi))-C*volume0prime);
 
   % boundary condition r(0) = 0
   A11(1,:) = IDL; 
@@ -168,9 +168,9 @@ end
 toc
 
 % compute volume and area (scaled back to dimensionfull)
-disp(['volume = ', num2str(rneedle^3*pi*w*(r.^2.*sin(psi))/C,12),' mm^3']);
-disp(['area = ', num2str(rneedle^2*pi*2*w*(r)/C,12),' mm^2']);
-disp(['pressure = ', num2str(deltarho*grav*rneedle*p0,12),' Pa']);
+disp(['volume = ', num2str(rneedle^3*pi*w*(r.^2.*sin(psi))/C,15),' mm^3']);
+disp(['area = ', num2str(rneedle^2*pi*2*w*(r)/C,15),' mm^2']);
+disp(['pressure = ', num2str(deltarho*grav*rneedle*p0,15),' Pa']);
 
 % % plot the shape of the drop on the numerical grid
 % figure; hold on
