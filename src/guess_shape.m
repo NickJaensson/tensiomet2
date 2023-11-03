@@ -6,7 +6,9 @@ function [r,z,s] = guess_shape(params,N_guess)
         % predict the droplet shape using the emperical approach from Nagel
         
         % predict the maximum length of the interface (empirical Nagel)
-        smax = sqrt(params.sigma)*2.0/0.8701;    
+        sigmaprime = params.sigma/(params.deltarho*params.grav*params.rneedle^2);
+
+        smax = sqrt(sigmaprime)*2.0/0.8701;    
     
         s = linspace(0,smax,N_guess);
     
