@@ -30,7 +30,6 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     A11 = C*D;
     A13 = diag(lams.*sin(psi));
     A16 = -C*diag((D*r)./lams);
-    A18 = ZL';
     b1 = lams.*cos(psi)-C*D*r;
 
     % determine z from psi (incl lams)
@@ -41,7 +40,6 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     A22 = C*D;
     A23 = diag(-lams.*cos(psi));
     A26 = -C*diag((D*z)./lams);
-    A28 = ZL';
     b2 = lams.*sin(psi)-C*D*z;
 
     % determine psi from laplace law
@@ -53,14 +51,15 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     % A36 = -(C*D*psi*sigmas)/lams
     % A38 = -lams
     % b3 = lams*P - lams*(sigmat*sin(psi))/r - lams*g*rho*z - (C*D*psi*sigmas)
-    A31 = diag(-lams.*sigmat.*sin(psi)./r.^2);
+    A31 = -diag(lams.*sigmat.*sin(psi)./(r.^2));
     A32 = diag(lams)*params.deltarho*params.grav;
-    A33 = C*diag(sigmas)*D+diag(lams.*sigmat.*cos(psi)./r);
+    A33 = diag(lams.*sigmat.*cos(psi)./r)+C*diag(sigmas)*D;
     A34 = C*diag(D*psi);
     A35 = diag(lams.*sin(psi)./r);
     A36 = -C*diag((D*psi).*sigmas./lams);
     A38 = -lams;
-    b3 =  -C*sigmas.*(D*psi)-lams.*(z*params.deltarho*params.grav-p0+sigmat.*sin(psi)./r);
+    b3 = lams*p0 - lams.*sigmat.*sin(psi)./r ...
+                  - lams.*z*params.deltarho*params.grav -C*sigmas.*(D*psi);
 
     % A81 = 2*int*r*pi*sin(psi)*lams
     % A83 = int*r^2*pi*cos(psi)*lams
@@ -68,15 +67,14 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     % b8 = (C*V) - int*r^2*pi*sin(psi)*lams
     if params.compresstype == 1 || ii == 1
         % determine pressure - use volume      
-        A81 = 2*w.*r'.*sin(psi').*lams';
-        A83 = w.*r'.^2.*cos(psi').*lams';
-        A88 = -params.volume/pi;
+        A81 = 2*pi*w*(r.*sin(psi))*lams';
+        A83 = pi*w*(r.^2.*cos(psi))*lams';
+        A86 = params.C*params.volume./lams';
         b8 = -(w*(r.^2.*sin(psi).*lams)-C*params.volume/pi);
     else
         % determine pressure - use area
         A81 = 2*w.*lams';
         A83 = zeros(1,N);
-        A88 = -params.area/pi;
         b8 = -(2*w*(r.*lams)-C*params.area/pi);
     end
 
@@ -84,11 +82,9 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     A11(1,:) = IDL;
     A13(1,:) = ZL;
     A16(1,:) = ZL;
-    A18(1) = 0;
     A22(1,:) = fliplr(IDL);
     A23(1,:) = ZL;
     A26(1,:) = ZL;
-    A28(1) = 0;
     A31(1,:) = ZL;
     A32(1,:) = ZL;
     A33(1,:) = IDL;
@@ -174,16 +170,31 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     b7(1) =  -lamt(1)+lams(1);
     b7(end) =  1-lamt(end);
 
-    % combine matrices
+    I = eye(N);
+
+    % % combine matrices
+    % A = [[A11,   Z, A13,   Z,    Z, A16,   Z,  Z1]; ...
+    %      [  Z, A22, A23,   Z,    Z, A26,   Z,  Z1]; ...
+    %      [A31, A32, A33, A34,  A35, A36,   Z, A38]; ...
+    %      [A41,   Z, A43, A44,  A45, A46,   Z,  Z1]; ...
+    %      [  Z,   Z,   Z,   Z,  A55, A56, A57,  Z1]; ...
+    %      [  Z,   Z,   Z, A64,    Z, A66, A67,  Z1]; ...
+    %      [A71,   Z,   Z,   Z,    Z,   Z, A77,  Z1]; ...
+    %      [A81, Z1', A83,  Z1', Z1', A86, Z1',   0]];
+    % 
+    %b = [b1;b2;b3;b4;b5;b6;b7;b8];
+
     A = [[A11,   Z, A13,   Z,    Z, A16,   Z,  Z1]; ...
          [  Z, A22, A23,   Z,    Z, A26,   Z,  Z1]; ...
          [A31, A32, A33, A34,  A35, A36,   Z, A38]; ...
          [A41,   Z, A43, A44,  A45, A46,   Z,  Z1]; ...
-         [  Z,   Z,   Z,   Z,  A55, A56, A57,  Z1]; ...
-         [  Z,   Z,   Z, A64,    Z, A66, A67,  Z1]; ...
+         [  Z,   Z,   Z,   Z,    I,   Z,   Z,  Z1]; ...
+         [  Z,   Z,   Z,   Z,    Z,   I,   Z,  Z1]; ...
          [A71,   Z,   Z,   Z,    Z,   Z, A77,  Z1]; ...
-         [A81, Z1', A83,  Z1', Z1', Z1', Z1',   0]];
-    
-    b = [b1;b2;b3;b4;b5;b6;b7;b8];
+         [Z1', Z1', Z1', Z1',  Z1', Z1', Z1',   1]];
+
+    b = [b1;b2;b3;b4;0*b5;0*b6;b7;0*b8];
+
+    %fprintf('    max(b) = %d\n',max(abs([b5;b6])));
 
 end
