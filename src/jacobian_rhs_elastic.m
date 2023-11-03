@@ -238,9 +238,9 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     % A77 = rstar
     % b7 = r - lamt*rstar
     % determine lambda^r
-    A71 = eye(N);
-    A77 = diag(-itervars.r0);
-    b7 = -r+lamt.*itervars.r0;
+    A71 = -eye(N);
+    A77 = diag(itervars.r0);
+    b7 = r-lamt.*itervars.r0;
     
     % Boundary conditions
     A41(1,:) = ZL;
