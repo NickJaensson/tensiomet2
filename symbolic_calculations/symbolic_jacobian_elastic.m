@@ -18,7 +18,7 @@ f{4} = r*C*sigmas_prime/lams - cos(psi)*(sigmat-sigmas);
 f{5} = sigmas - gamma - (K/J)*log(J) - (G/2)*(1/lamt^2 - 1/lams^2);
 f{6} = sigmat - gamma - (K/J)*log(J) + (G/2)*(1/lamt^2 - 1/lams^2);
 f{7} = lamt - r/rstar;
-f{8} = int*(pi*r^2*sin(psi)) - C*V/lams;
+f{8} = int*(pi*r^2*sin(psi)*lams/C) - V;
 
 for i=1:length(f)
 

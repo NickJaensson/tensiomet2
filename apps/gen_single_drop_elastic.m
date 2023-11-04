@@ -12,10 +12,11 @@ gen_single_drop
 params.Kmod = 1;         % elastic dilational modulus
 params.Gmod = 1;          % elastic shear modulus
 params.compresstype = 1;  % 1: compress the volume other: compress the area
-params.frac = [0.9];      % compute elastic stresses for these compressions
+params.frac = [0.8];      % compute elastic stresses for these compressions
 params.strainmeasure = 'pepicelli'; % which elastic constitutive model
 
-params.maxiter = 1200; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
+params.maxiter = 2000; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
+params.eps = 1e-12; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
 
 % initialize the surface strains ans tresses
 lamp = ones(params.N,1); lams = lamp;
@@ -79,8 +80,9 @@ for ii = 1:length(params.frac)
     p0 = itervars.p0;
 
     % calculate the volume and the area
-    volume = pi*params.w*(r.^2.*sin(psi).*lams)/C;
-    area = pi*2*params.w*(r.*lams)/C;
+    wdef = params.w.*lams'/C; 
+    volume = pi*wdef*(r.^2.*sin(psi));
+    area = pi*2*wdef*(r);
     
     disp(['volume = ', num2str(volume,15)]);
     disp(['area = ', num2str(area,15)]);
