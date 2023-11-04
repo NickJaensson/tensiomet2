@@ -20,8 +20,8 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     Z = zeros(N);            % matrix filled with zeros
     IDL = [1, zeros(1,N-1)]; % line with single one and rest zeros
     ZL = zeros(1,N);         % line completely filled with zeros
-    Z1 = zeros(N,1);
-    I = eye(N);
+    Z1 = zeros(N,1);         % column filled with zeros
+    I = eye(N);              % unit matrix
 
     % Eq. 1-4 Knoche, p85, eq.5.7, Eq. 5-7, eq.5.8
     % determine r from psi (incl lams)
