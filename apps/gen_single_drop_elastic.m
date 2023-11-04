@@ -12,10 +12,11 @@ gen_single_drop
 params.Kmod = 1;         % elastic dilational modulus
 params.Gmod = 1;          % elastic shear modulus
 params.compresstype = 1;  % 1: compress the volume other: compress the area
-params.frac = [1.0];      % compute elastic stresses for these compressions
+params.frac = [0.8];      % compute elastic stresses for these compressions
 params.strainmeasure = 'pepicelli'; % which elastic constitutive model
 
-params.maxiter = 4000; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
+params.maxiter = 2000; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
+params.eps = 1e-6; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
 
 % initialize the surface strains ans tresses
 lamp = ones(params.N,1); lams = lamp;
@@ -26,16 +27,6 @@ clear itervars
 
 % store the coordinates of the reference shape
 itervars.r0 = r; itervars.z0 = z;
-
-% take itervars outside the loop (JUST FOR TESTING!)
-itervars.r = 1.8*r; 
-itervars.z = 1.8*z; 
-itervars.psi = 1.3*psi;
-itervars.taus = 1.2*taus; 
-itervars.taup = taup;
-itervars.lams = lams; 
-itervars.lamp = 1.8*lamp;    
-itervars.p0 = 1.3*p0; 
 
 for ii = 1:length(params.frac)
 
@@ -48,10 +39,10 @@ for ii = 1:length(params.frac)
 
     % store some variables for the iteration
     iter = 0; u = ones(3*params.N+2,1);
-    % itervars.r = r; itervars.z = z; itervars.psi = psi;
-    % itervars.taus = taus; itervars.taup = taup;
-    % itervars.lams = lams; itervars.lamp = lamp;    
-    % itervars.p0 = p0; 
+    itervars.r = r; itervars.z = z; itervars.psi = psi;
+    itervars.taus = taus; itervars.taup = taup;
+    itervars.lams = lams; itervars.lamp = lamp;    
+    itervars.p0 = p0; 
 
     % start the Newton-Raphson iteration
     while rms(u) > params.eps
@@ -133,5 +124,8 @@ for ii = 1:length(params.frac)
     
     % compute the value of s in the deformed state
     sdef = wmat*lams/C;
+
+    fprintf('lamp(end) = %d\n',itervars.lamp(end));
+    fprintf('r(end) = %d\n',itervars.r(end));
 
 end
