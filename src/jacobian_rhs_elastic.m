@@ -157,12 +157,14 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     b7 = -r+lamt.*itervars.r0;
 
     % boundary condition dsigmas/ds(0) = 0
+    % NOTE: this BC is included in the Newton-Raphson iteration
     A41(1,:) = ZL;
     A43(1,:) = ZL;
-    A44(1,:) = D(1,:);
+    A44(1,:) = (1/lams(1))*params.C*D(1,:);
     A45(1,:) = ZL;
     A46(1,:) = ZL;
-    b4(1) = -D(1,:)*sigmas;
+    A46(1,1) = -(1/lams(1)^2)*params.C*(D(1,:)*sigmas);
+    b4(1) = -(1/lams(1))*params.C*(D(1,:)*sigmas);
 
     % boundary condition lams(0)=lamt(0)
     % boundary condition lamt(s0) = 1
