@@ -16,7 +16,7 @@ params.frac = [0.8];      % compute elastic stresses for these compressions
 params.strainmeasure = 'pepicelli'; % which elastic constitutive model
 
 params.maxiter = 2000; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
-params.eps = 1e-6; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
+params.eps = 1e-12; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
 
 % initialize the surface strains ans tresses
 lamp = ones(params.N,1); lams = lamp;
@@ -124,8 +124,5 @@ for ii = 1:length(params.frac)
     
     % compute the value of s in the deformed state
     sdef = wmat*lams/C;
-
-    fprintf('lamp(end) = %d\n',itervars.lamp(end));
-    fprintf('r(end) = %d\n',itervars.r(end));
 
 end
