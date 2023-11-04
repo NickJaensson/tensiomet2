@@ -20,6 +20,8 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     Z = zeros(N);            % matrix filled with zeros
     IDL = [1, zeros(1,N-1)]; % line with single one and rest zeros
     ZL = zeros(1,N);         % line completely filled with zeros
+    Z1 = zeros(N,1);
+    I = eye(N);
 
     % Eq. 1-4 Knoche, p85, eq.5.7, Eq. 5-7, eq.5.8
     % determine r from psi (incl lams)
@@ -79,13 +81,19 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
         b8 = -(2*w*(r.*lams)-C*params.area/pi);
     end
 
-    % Boundary conditions
+    % boundary condition r(0) = 0
     A11(1,:) = IDL;
     A13(1,:) = ZL;
     A16(1,:) = ZL;
+    b1(1) = -r(1);
+
+    % boundary condition z(s0) = 0
     A22(1,:) = fliplr(IDL);
     A23(1,:) = ZL;
     A26(1,:) = ZL;
+    b2(1) = -z(end);
+
+    % boundary condition phi(0) = 0
     A31(1,:) = ZL;
     A32(1,:) = ZL;
     A33(1,:) = IDL;
@@ -93,12 +101,7 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     A35(1,:) = ZL;
     A36(1,:) = ZL;
     A38(1,:) = 0;
-
-    b1(1) = -r(1);
-    b2(1) = -z(end);
     b3(1) = -psi(1);
-
-    Z1 = zeros(N,1);
 
     % determine sigmas from projection of force balance
     % A41 = (C*D*sigmas)
@@ -147,31 +150,31 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
 
     end
 
-    % A71 = -1
-    % A77 = rstar
-    % b7 = r - lamt*rstar
+    % A71 = 1
+    % A77 = -rstar
+    % b7 = -r + lamt*rstar
     % determine lambda^r
-    A71 = -eye(N);
-    A77 = diag(itervars.r0);
-    b7 = r-lamt.*itervars.r0;
-    
-    % Boundary conditions
+    A71 = eye(N);
+    A77 = -diag(itervars.r0);
+    b7 = -r+lamt.*itervars.r0;
+
+    % boundary condition dsigmas/ds(0) = 0
     A41(1,:) = ZL;
     A43(1,:) = ZL;
     A44(1,:) = D(1,:);
     A45(1,:) = ZL;
     A46(1,:) = ZL;
-    
+    b4(1) = -D(1,:)*sigmas;
+
+    % boundary condition lams(0)=lamt(0)
+    % boundary condition lamt(s0) = 1
     A71(1,:) = ZL;
     A77(1,:) = IDL;
     A71(end,:) = ZL;
     A77(end,:) = fliplr(IDL);
-    
-    b4(1) = -D(1,:)*sigmas;
     b7(1) =  -lamt(1)+lams(1);
     b7(end) =  1-lamt(end);
 
-    I = eye(N);
 
     % % combine matrices
     % A = [[A11,   Z, A13,   Z,    Z, A16,   Z,  Z1]; ...
