@@ -61,16 +61,17 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     b3 = lams*p0 - lams.*sigmat.*sin(psi)./r ...
                   - lams.*z*params.deltarho*params.grav -C*sigmas.*(D*psi);
 
-    % A81 = 2*int*r*pi*sin(psi)*lams
-    % A83 = int*r^2*pi*cos(psi)*lams
-    % A86 = (C*V)/lams
-    % b8 = (C*V) - int*r^2*pi*sin(psi)*lams
+    % A81 = (2*int*lams*r*pi*sin(psi))
+    % A83 = (int*lams*r^2*pi*cos(psi))
+    % A86 = (int*r^2*pi*sin(psi))
+    % b8 = V*C - (int*lams*r^2*pi*sin(psi))
     if params.compresstype == 1 || ii == 1
-        % determine pressure - use volume      
-        A81 = 2*pi*w*(r.*sin(psi))*lams';
-        A83 = pi*w*(r.^2.*cos(psi))*lams';
-        A86 = params.C*params.volume./lams';
-        b8 = -(w*(r.^2.*sin(psi).*lams)-C*params.volume/pi);
+        % determine pressure - use volume
+        wdef = w.*lams'/C; 
+        A81 = 2*pi*wdef.*(r.*sin(psi))';
+        A83 =   pi*wdef.*(r.^2.*cos(psi))';
+        A86 =   pi*wdef.*((r.^2).*sin(psi))';
+        b8 =   -pi*wdef*((r.^2).*sin(psi))+params.volume;
     else
         % determine pressure - use area
         A81 = 2*w.*lams';
@@ -191,9 +192,10 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
          [  Z,   Z,   Z,   Z,    I,   Z,   Z,  Z1]; ...
          [  Z,   Z,   Z,   Z,    Z,   I,   Z,  Z1]; ...
          [A71,   Z,   Z,   Z,    Z,   Z, A77,  Z1]; ...
-         [Z1', Z1', Z1', Z1',  Z1', Z1', Z1',   1]];
+         [A81, Z1', A83,  Z1', Z1', A86, Z1',   0]];
+         %[Z1', Z1', Z1', Z1',  Z1', Z1', Z1',   1]];
 
-    b = [b1;b2;b3;b4;0*b5;0*b6;b7;0*b8];
+    b = [b1;b2;b3;b4;0*b5;0*b6;b7;b8];
 
     %fprintf('    max(b) = %d\n',max(abs([b5;b6])));
 

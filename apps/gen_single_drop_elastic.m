@@ -12,10 +12,10 @@ gen_single_drop
 params.Kmod = 1;         % elastic dilational modulus
 params.Gmod = 1;          % elastic shear modulus
 params.compresstype = 1;  % 1: compress the volume other: compress the area
-params.frac = [0.9];      % compute elastic stresses for these compressions
+params.frac = [1.0];      % compute elastic stresses for these compressions
 params.strainmeasure = 'pepicelli'; % which elastic constitutive model
 
-params.maxiter = 1200; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
+params.maxiter = 4000; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
 
 % initialize the surface strains ans tresses
 lamp = ones(params.N,1); lams = lamp;
@@ -26,6 +26,16 @@ clear itervars
 
 % store the coordinates of the reference shape
 itervars.r0 = r; itervars.z0 = z;
+
+% take itervars outside the loop (JUST FOR TESTING!)
+itervars.r = 1.8*r; 
+itervars.z = 1.8*z; 
+itervars.psi = 1.3*psi;
+itervars.taus = 1.2*taus; 
+itervars.taup = taup;
+itervars.lams = lams; 
+itervars.lamp = 1.8*lamp;    
+itervars.p0 = 1.3*p0; 
 
 for ii = 1:length(params.frac)
 
@@ -38,10 +48,10 @@ for ii = 1:length(params.frac)
 
     % store some variables for the iteration
     iter = 0; u = ones(3*params.N+2,1);
-    itervars.r = r; itervars.z = z; itervars.psi = psi;
-    itervars.taus = taus; itervars.taup = taup;
-    itervars.lams = lams; itervars.lamp = lamp;    
-    itervars.p0 = p0; 
+    % itervars.r = r; itervars.z = z; itervars.psi = psi;
+    % itervars.taus = taus; itervars.taup = taup;
+    % itervars.lams = lams; itervars.lamp = lamp;    
+    % itervars.p0 = p0; 
 
     % start the Newton-Raphson iteration
     while rms(u) > params.eps
@@ -79,8 +89,9 @@ for ii = 1:length(params.frac)
     p0 = itervars.p0;
 
     % calculate the volume and the area
-    volume = pi*params.w*(r.^2.*sin(psi).*lams)/C;
-    area = pi*2*params.w*(r.*lams)/C;
+    wdef = params.w.*lams'/C; 
+    volume = pi*wdef*(r.^2.*sin(psi));
+    area = pi*2*wdef*(r);
     
     disp(['volume = ', num2str(volume,15)]);
     disp(['area = ', num2str(area,15)]);
