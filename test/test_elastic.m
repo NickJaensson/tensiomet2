@@ -4,6 +4,8 @@ addpath('../app/')
 
 gen_single_drop_elastic;
 
+close all
+
 % compare to old values (gen-pendant-drop before refactoring:
 eps2 = 1e-12;
 assert ( abs(volume-12.7999999999999) < eps2 );
