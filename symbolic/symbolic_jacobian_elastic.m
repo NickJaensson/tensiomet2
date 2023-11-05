@@ -1,6 +1,6 @@
 close all; clear
 
-syms gamma rho g V C K G
+syms sigma rho g V C K G
 
 syms r z psi sigmas sigmat lams lamp P psi_prime r_prime z_prime sigmas_prime sigmat_prime lams_prime lamp_prime P_prime
 syms dr dz dpsi dsigmas dsigmat dlams dlamp dP dpsi_prime dr_prime dz_prime dsigmas_prime dsigmat_prime dlams_prime dlamp_prime dP_prime
@@ -15,8 +15,8 @@ f{2} = C*z_prime/lams - sin(psi);
 f{3} = (kappat*sigmat+kappas*sigmas) - P + rho*g*z;
 f{4} = r*C*sigmas_prime/lams - cos(psi)*(sigmat-sigmas);
 
-f{5} = sigmas - gamma - (K/J)*log(J) - (G/2)*(1/lamp^2 - 1/lams^2);
-f{6} = sigmat - gamma - (K/J)*log(J) + (G/2)*(1/lamp^2 - 1/lams^2);
+f{5} = sigmas - sigma - (K/J)*log(J) - (G/2)*(1/lamp^2 - 1/lams^2);
+f{6} = sigmat - sigma - (K/J)*log(J) + (G/2)*(1/lamp^2 - 1/lams^2);
 f{7} = lamp - r/rstar;
 f{8} = int*(pi*r^2*sin(psi)*lams/C) - V;
 

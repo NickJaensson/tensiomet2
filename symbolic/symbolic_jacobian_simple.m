@@ -1,6 +1,6 @@
 close all; clear
 
-syms gamma rho g V
+syms sigma rho g V
 
 syms r z psi C P psi_prime r_prime  z_prime C_prime P_prime
 syms dr dz dpsi dC dP dpsi_prime dr_prime dz_prime dC_prime dP_prime
@@ -11,7 +11,7 @@ kappas = psi_prime;
 
 f{1} = C*r_prime - cos(psi);
 f{2} = C*z_prime - sin(psi);
-f{3} = -P+z+gamma*(C*kappas+kappat);
+f{3} = -P+z+sigma*(C*kappas+kappat);
 
 f{5} = int*(pi*r^2*sin(psi)) - C*V;
 
