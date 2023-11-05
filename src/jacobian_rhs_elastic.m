@@ -8,7 +8,7 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     sigmas = itervars.sigmas;
     sigmat = itervars.sigmap;
     lams = itervars.lams;
-    lamt = itervars.lamp;
+    lamp = itervars.lamp;
     p0 = itervars.p0;
     N = params.N;
     C = params.C;
@@ -121,40 +121,40 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
 
         % define some convenient variables
         lamsm1 = lams.^(-1); lamsm2 = lams.^(-2); lamsm3 = lams.^(-3);
-        lamtm1 = lamt.^(-1); lamtm2 = lamt.^(-2); lamtm3 = lamt.^(-3);
-        J = lams.*lamt;
+        lampm1 = lamp.^(-1); lampm2 = lamp.^(-2); lampm3 = lamp.^(-3);
+        J = lams.*lamp;
         K = params.Kmod;
         G = params.Gmod;
         
         % determine sigma^r
         % A54 = 1
-        % A56 = (K*log(lams*lamt))/(lams^2*lamt) - K/(lams^2*lamt) - G/lams^3
-        % A57 = G/lamt^3 - K/(lams*lamt^2) + (K*log(lams*lamt))/(lams*lamt^2)
-        % b5 = gamma - sigmas - (G*(1/lams^2 - 1/lamt^2))/2 + (K*log(lams*lamt))/(lams*lamt)
+        % A56 = (K*log(lams*lamp))/(lams^2*lamp) - K/(lams^2*lamp) - G/lams^3
+        % A57 = G/lamp^3 - K/(lams*lamp^2) + (K*log(lams*lamp))/(lams*lamp^2)
+        % b5 = gamma - sigmas - (G*(1/lams^2 - 1/lamp^2))/2 + (K*log(lams*lamp))/(lams*lamp)
         A54 = eye(N);
-        A56 = diag(K*log(J).*lamsm2.*lamtm1 - K*lamsm2.*lamtm1 - G*lamsm3);
-        A57 = diag(G*lamtm3 - K*lamsm1.*lamtm2 + K*log(J).*lamsm1.*lamtm2);
-        b5 = params.sigma - sigmas - G*(lamsm2-lamtm2)/2 + K*log(J)./J;
+        A56 = diag(K*log(J).*lamsm2.*lampm1 - K*lamsm2.*lampm1 - G*lamsm3);
+        A57 = diag(G*lampm3 - K*lamsm1.*lampm2 + K*log(J).*lamsm1.*lampm2);
+        b5 = params.sigma - sigmas - G*(lamsm2-lampm2)/2 + K*log(J)./J;
         
         % determine lambda^s
         % A65 = 1
-        % A66 = (K*log(lams*lamt))/(lams^2*lamt) - K/(lams^2*lamt) + G/lams^3
-        % A67 = - G/lamt^3 - K/(lams*lamt^2) + (K*log(lams*lamt))/(lams*lamt^2)
-        % b6 = gamma - sigmat + (G*(1/lams^2 - 1/lamt^2))/2 + (K*log(lams*lamt))/(lams*lamt)
+        % A66 = (K*log(lams*lamp))/(lams^2*lamp) - K/(lams^2*lamp) + G/lams^3
+        % A67 = - G/lamp^3 - K/(lams*lamp^2) + (K*log(lams*lamp))/(lams*lamp^2)
+        % b6 = gamma - sigmat + (G*(1/lams^2 - 1/lamp^2))/2 + (K*log(lams*lamp))/(lams*lamp)
         A65 = eye(N);
-        A66 = diag(K*log(J).*lamsm2.*lamtm1 - K*lamsm2.*lamtm1 + G*lamsm3);
-        A67 = diag(-G*lamtm3 - K*lamsm1.*lamtm2 + K*log(J).*lamsm1.*lamtm2);
-        b6 = params.sigma - sigmat + G*(lamsm2-lamtm2)/2 + K*log(J)./J;
+        A66 = diag(K*log(J).*lamsm2.*lampm1 - K*lamsm2.*lampm1 + G*lamsm3);
+        A67 = diag(-G*lampm3 - K*lamsm1.*lampm2 + K*log(J).*lamsm1.*lampm2);
+        b6 = params.sigma - sigmat + G*(lamsm2-lampm2)/2 + K*log(J)./J;
 
     end
 
     % A71 = 1
     % A77 = -rstar
-    % b7 = -r + lamt*rstar
+    % b7 = -r + lamp*rstar
     % determine lambda^r
     A71 = eye(N);
     A77 = -diag(itervars.r0);
-    b7 = -r+lamt.*itervars.r0;
+    b7 = -r+lamp.*itervars.r0;
 
     % boundary condition dsigmas/ds(0) = 0
     % NOTE: this BC is included in the Newton-Raphson iteration
@@ -166,14 +166,14 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     A46(1,1) = -(1/lams(1)^2)*params.C*(D(1,:)*sigmas);
     b4(1) = -(1/lams(1))*params.C*(D(1,:)*sigmas);
 
-    % boundary condition lams(0)=lamt(0)
-    % boundary condition lamt(s0) = 1
+    % boundary condition lams(0)=lamp(0)
+    % boundary condition lamp(s0) = 1
     A71(1,:) = ZL;
     A77(1,:) = IDL;
     A71(end,:) = ZL;
     A77(end,:) = fliplr(IDL);
-    b7(1) =  -lamt(1)+lams(1);
-    b7(end) =  1-lamt(end);
+    b7(1) =  -lamp(1)+lams(1);
+    b7(end) =  1-lamp(end);
 
     % combine matrices
     A = [[A11,   Z, A13,   Z,    Z, A16,   Z,  Z1]; ...

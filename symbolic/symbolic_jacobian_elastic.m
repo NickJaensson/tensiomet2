@@ -2,22 +2,22 @@ close all; clear
 
 syms gamma rho g V C K G
 
-syms r z psi sigmas sigmat lams lamt P psi_prime r_prime z_prime sigmas_prime sigmat_prime lams_prime lamt_prime P_prime
-syms dr dz dpsi dsigmas dsigmat dlams dlamt dP dpsi_prime dr_prime dz_prime dsigmas_prime dsigmat_prime dlams_prime dlamt_prime dP_prime
+syms r z psi sigmas sigmat lams lamp P psi_prime r_prime z_prime sigmas_prime sigmat_prime lams_prime lamp_prime P_prime
+syms dr dz dpsi dsigmas dsigmat dlams dlamp dP dpsi_prime dr_prime dz_prime dsigmas_prime dsigmat_prime dlams_prime dlamp_prime dP_prime
 syms kappat kappas int J rstar
 
 kappat = sin(psi)/r;
 kappas = C*psi_prime/lams;
-J = lams*lamt;
+J = lams*lamp;
 
 f{1} = C*r_prime/lams - cos(psi);
 f{2} = C*z_prime/lams - sin(psi);
 f{3} = (kappat*sigmat+kappas*sigmas) - P + rho*g*z;
 f{4} = r*C*sigmas_prime/lams - cos(psi)*(sigmat-sigmas);
 
-f{5} = sigmas - gamma - (K/J)*log(J) - (G/2)*(1/lamt^2 - 1/lams^2);
-f{6} = sigmat - gamma - (K/J)*log(J) + (G/2)*(1/lamt^2 - 1/lams^2);
-f{7} = lamt - r/rstar;
+f{5} = sigmas - gamma - (K/J)*log(J) - (G/2)*(1/lamp^2 - 1/lams^2);
+f{6} = sigmat - gamma - (K/J)*log(J) + (G/2)*(1/lamp^2 - 1/lams^2);
+f{7} = lamp - r/rstar;
 f{8} = int*(pi*r^2*sin(psi)*lams/C) - V;
 
 for i=1:length(f)
@@ -42,7 +42,7 @@ for i=1:length(f)
     str = 'A'+string(i)+'6 = '+string(diff(ff,lams))+' + '+string(diff(ff,lams_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
-    str = 'A'+string(i)+'7 = '+string(diff(ff,lamt))+' + '+string(diff(ff,lamt_prime))+'*D';
+    str = 'A'+string(i)+'7 = '+string(diff(ff,lamp))+' + '+string(diff(ff,lamp_prime))+'*D';
     fprintf(replace_prime(str)+'\n')
 
     str = 'A'+string(i)+'8 = '+string(diff(ff,P))  +' + '+string(diff(ff,P_prime))+'*D';
@@ -56,7 +56,7 @@ for i=1:length(f)
 end
 
 fprintf('Note: we assume the solution vector to be:\n');
-fprintf('[dr,dz,dpsi,dsigmas,dsigmat,dlams,dlamt,dP]\n');
+fprintf('[dr,dz,dpsi,dsigmas,dsigmat,dlams,dlamp,dP]\n');
 
 function new_str = replace_prime(str)
     new_str = strrep(str,'r_prime','D*r');
@@ -65,5 +65,5 @@ function new_str = replace_prime(str)
     new_str = strrep(new_str,'sigmas_prime','D*sigmas');
     new_str = strrep(new_str,'sigmat_prime','D*sigmat');
     new_str = strrep(new_str,'lams_prime','D*lams');
-    new_str = strrep(new_str,'lamt_prime','D*lamt');
+    new_str = strrep(new_str,'lamp_prime','D*lamp');
 end
