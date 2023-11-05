@@ -125,4 +125,19 @@ for ii = 1:length(params.frac)
     % compute the value of s in the deformed state
     sdef = wmat*lams/C;
 
+    % figure; hold on
+    % plot(sdef,itervars.taus)
+    % plot(sdef,itervars.taup)
+    % 
+    % disp(['max(taus) = ', num2str(max(taus),15)]);
+    % disp(['max(taup) = ', num2str(max(taup),15)]);
+
+    % compare to old values (gen-pendant-drop before refactoring:
+    eps2 = 1e-10;
+    assert ( abs(volume-12.8000000000262) < eps2 );
+    assert ( abs(area-24.3099753701175) < eps2 );
+    assert ( abs(p0-3.06593554365336) < eps2 );
+    assert ( abs(max(taus)-3.751693556095243) < eps2 );
+    assert ( abs(max(taup)-4.000492342729172) < eps2 );
+
 end
