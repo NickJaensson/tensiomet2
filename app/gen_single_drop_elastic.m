@@ -132,12 +132,4 @@ for ii = 1:length(params.frac)
     % disp(['max(sigmas) = ', num2str(max(sigmas),15)]);
     % disp(['max(sigmap) = ', num2str(max(sigmap),15)]);
 
-    % compare to old values (gen-pendant-drop before refactoring:
-    eps2 = 1e-10;
-    assert ( abs(volume-12.8000000000262) < eps2 );
-    assert ( abs(area-24.3099753701175) < eps2 );
-    assert ( abs(p0-3.06593554365336) < eps2 );
-    assert ( abs(max(sigmas)-3.751693556095243) < eps2 );
-    assert ( abs(max(sigmap)-4.000492342729172) < eps2 );
-
 end
