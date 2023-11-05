@@ -6,7 +6,7 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     z = itervars.z;
     psi = itervars.psi;
     sigmas = itervars.sigmas;
-    sigmat = itervars.sigmap;
+    sigmap = itervars.sigmap;
     lams = itervars.lams;
     lamp = itervars.lamp;
     p0 = itervars.p0;
@@ -45,22 +45,22 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     b2 = lams.*sin(psi)-C*D*z;
 
     % determine psi from laplace law
-    % A31 = -lams*(sigmat*sin(psi))/r^2
+    % A31 = -lams*(sigmap*sin(psi))/r^2
     % A32 = lams*g*rho
-    % A33 = (lams*sigmat*cos(psi))/r + (C*sigmas)*D
+    % A33 = (lams*sigmap*cos(psi))/r + (C*sigmas)*D
     % A34 = (C*D*psi)
     % A35 = lams*sin(psi)/r
     % A36 = -(C*D*psi*sigmas)/lams
     % A38 = -lams
-    % b3 = lams*P - lams*(sigmat*sin(psi))/r - lams*g*rho*z - (C*D*psi*sigmas)
-    A31 = -diag(lams.*sigmat.*sin(psi)./(r.^2));
+    % b3 = lams*P - lams*(sigmap*sin(psi))/r - lams*g*rho*z - (C*D*psi*sigmas)
+    A31 = -diag(lams.*sigmap.*sin(psi)./(r.^2));
     A32 = diag(lams)*params.deltarho*params.grav;
-    A33 = diag(lams.*sigmat.*cos(psi)./r)+C*diag(sigmas)*D;
+    A33 = diag(lams.*sigmap.*cos(psi)./r)+C*diag(sigmas)*D;
     A34 = C*diag(D*psi);
     A35 = diag(lams.*sin(psi)./r);
     A36 = -C*diag((D*psi).*sigmas./lams);
     A38 = -lams;
-    b3 = lams*p0 - lams.*sigmat.*sin(psi)./r ...
+    b3 = lams*p0 - lams.*sigmap.*sin(psi)./r ...
                   - lams.*z*params.deltarho*params.grav -C*sigmas.*(D*psi);
 
     % A81 = (2*int*lams*r*pi*sin(psi))
@@ -103,17 +103,17 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
 
     % determine sigmas from projection of force balance
     % A41 = (C*D*sigmas)
-    % A43 = -lams*sin(psi)*(sigmas - sigmat)
+    % A43 = -lams*sin(psi)*(sigmas - sigmap)
     % A44 = lams*cos(psi) + (C*r)*D
     % A45 = -lams*cos(psi)
     % A46 = -(C*r*D*sigmas)/lams
-    % b4 = - lams*cos(psi)*(sigmas - sigmat) - (C*r*D*sigmas)    
+    % b4 = - lams*cos(psi)*(sigmas - sigmap) - (C*r*D*sigmas)    
     A41 = C*diag(D*sigmas);
-    A43 = diag(lams.*sin(psi).*(sigmat-sigmas));
+    A43 = diag(lams.*sin(psi).*(sigmap-sigmas));
     A44 = diag(lams.*cos(psi))+C*diag(r)*D;
     A45 = -diag(lams.*cos(psi));
     A46 = -C*diag(r.*(D*sigmas)./lams);
-    b4 = -C*r.*(D*sigmas)+lams.*cos(psi).*(sigmat-sigmas);
+    b4 = -C*r.*(D*sigmas)+lams.*cos(psi).*(sigmap-sigmas);
 
     switch params.strainmeasure
     
@@ -140,11 +140,11 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
         % A65 = 1
         % A66 = (K*log(lams*lamp))/(lams^2*lamp) - K/(lams^2*lamp) + G/lams^3
         % A67 = - G/lamp^3 - K/(lams*lamp^2) + (K*log(lams*lamp))/(lams*lamp^2)
-        % b6 = gamma - sigmat + (G*(1/lams^2 - 1/lamp^2))/2 + (K*log(lams*lamp))/(lams*lamp)
+        % b6 = gamma - sigmap + (G*(1/lams^2 - 1/lamp^2))/2 + (K*log(lams*lamp))/(lams*lamp)
         A65 = eye(N);
         A66 = diag(K*log(J).*lamsm2.*lampm1 - K*lamsm2.*lampm1 + G*lamsm3);
         A67 = diag(-G*lampm3 - K*lamsm1.*lampm2 + K*log(J).*lamsm1.*lampm2);
-        b6 = params.sigma - sigmat + G*(lamsm2-lampm2)/2 + K*log(J)./J;
+        b6 = params.sigma - sigmap + G*(lamsm2-lampm2)/2 + K*log(J)./J;
 
     end
 
