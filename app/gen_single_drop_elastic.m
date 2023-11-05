@@ -20,7 +20,7 @@ params.eps = 1e-12; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
 
 % initialize the surface strains ans tresses
 lamp = ones(params.N,1); lams = lamp;
-taus = params.sigma*ones(params.N,1); taup = taus;
+sigmas = params.sigma*ones(params.N,1); sigmap = sigmas;
 
 % clear itervars variable from the simple interface problem
 clear itervars
@@ -40,7 +40,7 @@ for ii = 1:length(params.frac)
     % store some variables for the iteration
     iter = 0; u = ones(3*params.N+2,1);
     itervars.r = r; itervars.z = z; itervars.psi = psi;
-    itervars.taus = taus; itervars.taup = taup;
+    itervars.sigmas = sigmas; itervars.sigmap = sigmap;
     itervars.lams = lams; itervars.lamp = lamp;    
     itervars.p0 = p0; 
 
@@ -63,8 +63,8 @@ for ii = 1:length(params.frac)
         itervars.r   = itervars.r + params.alpha*u(1:params.N);
         itervars.z   = itervars.z + params.alpha*u(params.N+1:2*params.N);
         itervars.psi = itervars.psi + params.alpha*u(2*params.N+1:3*params.N);    
-        itervars.taus = itervars.taus + params.alpha*u(3*params.N+1:4*params.N);
-        itervars.taup = itervars.taup + params.alpha*u(4*params.N+1:5*params.N);
+        itervars.sigmas = itervars.sigmas + params.alpha*u(3*params.N+1:4*params.N);
+        itervars.sigmap = itervars.sigmap + params.alpha*u(4*params.N+1:5*params.N);
         itervars.lams = itervars.lams + params.alpha*u(5*params.N+1:6*params.N);
         itervars.lamp = itervars.lamp + params.alpha*u(6*params.N+1:7*params.N);
         itervars.p0  = itervars.p0 + params.alpha*u(end);
@@ -75,7 +75,7 @@ for ii = 1:length(params.frac)
 
     % extract the solution variables
     r = itervars.r; z = itervars.z; psi = itervars.psi;
-    taus = itervars.taus; taup = itervars.taup; 
+    sigmas = itervars.sigmas; sigmap = itervars.sigmap; 
     lams = itervars.lams; lamp = itervars.lamp; 
     p0 = itervars.p0;
 
@@ -126,18 +126,18 @@ for ii = 1:length(params.frac)
     sdef = wmat*lams/C;
 
     % figure; hold on
-    % plot(sdef,itervars.taus)
-    % plot(sdef,itervars.taup)
+    % plot(sdef,itervars.sigmas)
+    % plot(sdef,itervars.sigmap)
     % 
-    % disp(['max(taus) = ', num2str(max(taus),15)]);
-    % disp(['max(taup) = ', num2str(max(taup),15)]);
+    % disp(['max(sigmas) = ', num2str(max(sigmas),15)]);
+    % disp(['max(sigmap) = ', num2str(max(sigmap),15)]);
 
     % compare to old values (gen-pendant-drop before refactoring:
     eps2 = 1e-10;
     assert ( abs(volume-12.8000000000262) < eps2 );
     assert ( abs(area-24.3099753701175) < eps2 );
     assert ( abs(p0-3.06593554365336) < eps2 );
-    assert ( abs(max(taus)-3.751693556095243) < eps2 );
-    assert ( abs(max(taup)-4.000492342729172) < eps2 );
+    assert ( abs(max(sigmas)-3.751693556095243) < eps2 );
+    assert ( abs(max(sigmap)-4.000492342729172) < eps2 );
 
 end
