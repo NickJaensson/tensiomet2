@@ -11,7 +11,7 @@ kappas = psi_prime;
 
 f{1} = C*r_prime - cos(psi);
 f{2} = C*z_prime - sin(psi);
-f{3} = -P+z+sigma*(C*kappas+kappat);
+f{3} = -P+rho*g*z+sigma*(C*kappas+kappat);
 
 f{5} = int*(pi*r^2*sin(psi)) - C*V;
 

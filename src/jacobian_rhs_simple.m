@@ -22,11 +22,11 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     
     % determine psi from Laplace law
     A31 = -params.sigma*diag(sin(psi)./r.^2);
-    A32 = diag(ones(params.N,1));
+    A32 = params.grav*params.deltarho*diag(ones(params.N,1));
     A33 = C*params.sigma*D + params.sigma*diag(cos(psi)./r);
     A34 = params.sigma*(D*psi);
     A35 = -ones(params.N,1);
-    b3 = p0-z-params.sigma*(C*D*psi+sin(psi)./r);
+    b3 = p0-params.grav*params.deltarho*z-params.sigma*(C*D*psi+sin(psi)./r);
     
     % impose the needle radius as a BC (imposes the domain length)
     % NOTE: the lengths are scaled with the radius, thus its value is one
