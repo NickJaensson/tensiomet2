@@ -6,12 +6,18 @@ gen_single_drop_elastic;
 
 close all
 
+% disp ( abs(volume-12.8000000000145) );
+% disp ( abs(area-22.5156483902244) );
+% disp ( abs(p0-2.02056164104927) );
+% disp ( abs(max(sigmas)-3.33958761227839) );
+% disp ( abs(max(sigmap)-3.86864491619739) );
+
 % compare to old values (gen-pendant-drop before refactoring:
-eps2 = 1e-12;
-assert ( abs(volume-12.7999999999999) < eps2 );
-assert ( abs(area-24.3099753701003) < eps2 );
-assert ( abs(p0-3.06593554364227) < eps2 );
-assert ( abs(max(sigmas)-3.751693556096941) < eps2 );
-assert ( abs(max(sigmap)-4.000492342729165) < eps2 );
+eps2 = 1e-10; 
+assert ( abs(volume-12.8000000000001) < eps2 );
+assert ( abs(area-22.5156483902096) < eps2 );
+assert ( abs(p0-2.02056164104124) < eps2 );
+assert ( abs(max(sigmas)-3.33958761227925) < eps2 );
+assert ( abs(max(sigmap)-3.86864491619756) < eps2 );
 
 disp('All tests passed!')

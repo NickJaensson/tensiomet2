@@ -9,8 +9,8 @@ addpath('../src/')
 gen_single_drop
 
 % physical parameters for the elastic problem
-params.Kmod = 1;         % elastic dilational modulus
-params.Gmod = 1;          % elastic shear modulus
+params.Kmod = 3;         % elastic dilational modulus
+params.Gmod = 2;          % elastic shear modulus
 params.compresstype = 1;  % 1: compress the volume other: compress the area
 params.frac = [0.8];      % compute elastic stresses for these compressions
 params.strainmeasure = 'pepicelli'; % which elastic constitutive model

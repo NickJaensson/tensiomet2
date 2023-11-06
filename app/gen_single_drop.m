@@ -5,10 +5,10 @@ addpath('../src/')
 
 % physical parameters
 params.sigma = 4;        % surface tension
-params.grav = 1;         % gravitational acceleration
-params.rneedle = 1;      % radius of the needle
+params.grav = 1.2;       % gravitational acceleration
+params.rneedle = 1.4;    % radius of the needle
 params.volume0 = 16;     % prescribed volume
-params.deltarho = 1;     % density difference
+params.deltarho = 1.1;   % density difference
 params.maxiter = 100;    % maximum number of iteration steps
 params.eps = 1e-12;      % convergence critertion: rms(u) < eps
 
