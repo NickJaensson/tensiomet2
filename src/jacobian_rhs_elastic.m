@@ -176,6 +176,7 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     A77(1,:) = IDL;
     A76 = Z;
     A76(1,:) = -IDL;
+    b7(1) = 0;
 
     % combine matrices
     A = [[A11,   Z, A13,   Z,    Z, A16,   Z,  Z1]; ...
