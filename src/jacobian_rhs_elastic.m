@@ -166,14 +166,16 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     A46(1,1) = -(1/lams(1)^2)*params.C*(D(1,:)*sigmas);
     b4(1) = -(1/lams(1))*params.C*(D(1,:)*sigmas);
 
-    % boundary condition lams(0)=lamp(0)
     % boundary condition lamp(s0) = 1
-    A71(1,:) = ZL;
-    A77(1,:) = IDL;
     A71(end,:) = ZL;
     A77(end,:) = fliplr(IDL);
-    b7(1) =  -lamp(1)+lams(1);
-    b7(end) =  1-lamp(end);
+    b7(end) =  1.0 - lamp(end);
+
+    % boundary condition lams(0)=lamp(0)
+    A71(1,:) = 0;
+    A77(1,:) = IDL;
+    A76 = Z;
+    A76(1,:) = -IDL;
 
     % combine matrices
     A = [[A11,   Z, A13,   Z,    Z, A16,   Z,  Z1]; ...
