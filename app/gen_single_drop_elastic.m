@@ -19,6 +19,9 @@ params.maxiter = 2000; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
 params.eps = 1e-12; % OVERWRITE SINCE NR ITER DOES NOT WORK YET!
 
 % initialize the surface strains ans tresses
+% NOTE: in the solution procedure, the dlams and dlamp (Newton-Raphson 
+% update variables) are required to be equal at s=0. For the correct 
+% solution, the initial guess must have equal lams and lamp at s=0
 lamp = ones(params.N,1); lams = lamp;
 sigmas = params.sigma*ones(params.N,1); sigmap = sigmas;
 
