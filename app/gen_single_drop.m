@@ -1,8 +1,6 @@
 
 close all; clear
 
-addpath('../src/')
-
 % physical parameters
 params.sigma = 4;        % surface tension
 params.grav = 1.2;       % gravitational acceleration

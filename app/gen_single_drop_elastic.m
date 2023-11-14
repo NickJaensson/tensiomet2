@@ -3,8 +3,6 @@
 
 close all; clear
 
-addpath('../src/')
-
 % generate reference shape (parameters are taken from gen_single_drop.m)
 gen_single_drop
 
