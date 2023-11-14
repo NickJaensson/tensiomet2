@@ -100,7 +100,12 @@ for ii = 1:length(params.fracm)
 
     % plot the surface stresses
     figure;
-    plot(params.sdef,itervars.sigmas); hold on
-    plot(params.sdef,itervars.sigmap);
-
+    plot(params.sdef,itervars.sigmas,'LineWidth',2); hold on
+    plot(params.sdef,itervars.sigmap,'LineWidth',2);
+    xlabel('s','FontSize',32);
+    ylabel('\sigma','FontSize',32);
+    legend('\sigma_s','\sigma_\phi','FontSize',24,'Location','northwest');
+    xlim([0,params.sdef(end)])
+    ax = gca; 
+    ax.FontSize = 24;
 end
