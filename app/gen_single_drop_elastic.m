@@ -36,6 +36,20 @@ disp(['volume = ', num2str(volume,15)]);
 disp(['area = ', num2str(area,15)]);
 disp(['pressure = ', num2str(itervars.p0,15)]);
 
+% interpolate the numerical solutions on a finer grid. 
+% NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
+% though all the points (see book of Trefethen on Spectral Methods in 
+% Matlab, page  63). For plotting purposes we use a simpler interpolation 
+ss = linspace(params.s(1),params.s(end),params.Nplot)';
+rr = interp1(params.s,itervars.r,ss,'pchip');
+zz = interp1(params.s,itervars.z,ss,'pchip');
+
+% plot the shape of the drop on the plotting grid
+figure; hold on
+scatter(rr',zz','b');
+plot(rr',zz','b');
+set(gca,'DataAspectRatio',[1 1 1])
+
 % store the converged values of C and area0 for the elastic problem
 params.area0 = pi*2*params.w*(itervars.r)/itervars.C;
 params.C = itervars.C;
