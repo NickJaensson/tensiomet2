@@ -171,6 +171,14 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     A77(end,:) = fliplr(IDL);
     b7(end) =  1.0 - lamp(end);
 
+    % boundary condition sigmas(0)=sigmap(0)
+    A54(1,:) = IDL;
+    A56(1,:) = 0;
+    A57(1,:) = 0;
+    A55 = Z;
+    A55(1,:) = -IDL;
+    b5(1) = 0;
+
     % boundary condition lams(0)=lamp(0)
     A71(1,:) = 0;
     A77(1,:) = IDL;
@@ -183,7 +191,7 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
          [  Z, A22, A23,   Z,    Z, A26,   Z,  Z1]; ...
          [A31, A32, A33, A34,  A35, A36,   Z, A38]; ...
          [A41,   Z, A43, A44,  A45, A46,   Z,  Z1]; ...
-         [  Z,   Z,   Z, A54,    Z, A56, A57,  Z1]; ...
+         [  Z,   Z,   Z, A54,  A55, A56, A57,  Z1]; ...
          [  Z,   Z,   Z,   Z,  A65, A66, A67,  Z1]; ...
          [A71,   Z,   Z,   Z,    Z,   Z, A77,  Z1]; ...
          [A81, Z1', A83,  Z1', Z1', A86, Z1',   0]];
