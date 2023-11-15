@@ -16,8 +16,8 @@ close all
 eps2 = 1e-10; 
 assert ( abs(volume-12.8000000000001) < eps2 );
 assert ( abs(area-22.5156483902096) < eps2 );
-assert ( abs(p0-2.02056164104124) < eps2 );
-assert ( abs(max(sigmas)-3.33958761227925) < eps2 );
-assert ( abs(max(sigmap)-3.86864491619756) < eps2 );
+assert ( abs(itervars.p0-2.02056164104124) < eps2 );
+assert ( abs(max(itervars.sigmas)-3.33958761227925) < eps2 );
+assert ( abs(max(itervars.sigmap)-3.86864491619756) < eps2 );
 
 disp('All tests passed!')
