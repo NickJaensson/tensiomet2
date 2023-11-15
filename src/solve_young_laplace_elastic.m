@@ -4,7 +4,7 @@ function [itervars,params] = solve_young_laplace_elastic(itervars,params)
     if params.compresstype == 1
         params.volume = params.volume0*params.frac;
     else
-        params.area = params.area0*params.frac;
+        error('area compression not implemented')    
     end
 
     % store some variables for the iteration
@@ -38,13 +38,6 @@ function [itervars,params] = solve_young_laplace_elastic(itervars,params)
         fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
 
     end
-
-    % NOTE: there are three coordinates involved: s0 (guessed domain length), 
-    % s* (domain for isotropic solution, which is also the reference domain 
-    % for the elastic problem) and s (domain in deformed state). The
-    % grid (and thus the differentation/integration operators) is defined for 
-    % the guessed domain. To obtain the other domains, we
-    % use: s* = s0 / C  and  s = \int lambdas ds* = \int lambdas ds / C
 
     % construct the integration matrix from the integration vector
     params.wmat = repmat(params.w,params.N,1);
