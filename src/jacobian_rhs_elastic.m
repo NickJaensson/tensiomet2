@@ -153,8 +153,8 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     % b7 = -r + lamp*rstar
     % determine lambda^r
     A71 = eye(N);
-    A77 = -diag(itervars.r0);
-    b7 = -r+lamp.*itervars.r0;
+    A77 = -diag(itervars.r_star);
+    b7 = -r+lamp.*itervars.r_star;
 
     % boundary condition dsigmas/ds(0) = 0
     % NOTE: this BC is included in the Newton-Raphson iteration

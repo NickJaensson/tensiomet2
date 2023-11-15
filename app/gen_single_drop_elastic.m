@@ -66,7 +66,7 @@ itervars.sigmas = params.sigma*ones(params.N,1);
 itervars.sigmap = itervars.sigmas;
 
 % store the coordinates of the reference shape
-itervars.r0 = itervars.r; itervars.z0 = itervars.z;
+itervars.r_star = itervars.r; itervars.z_star = itervars.z;
 
 % solve the elastic Young-Laplace equation for the given parameters
 for ii = 1:length(params.fracm)
@@ -98,8 +98,8 @@ for ii = 1:length(params.fracm)
 
     % plot the droplet shape
     plot(rr,zz); 
-    rmax = max([itervars.r0',rr']);
-    zmin = min([itervars.z0',zz']);
+    rmax = max([itervars.r_star',rr']);
+    zmin = min([itervars.z_star',zz']);
 
     % rescale the plot
     xlim([0 1.2*rmax]);
