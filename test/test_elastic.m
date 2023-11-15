@@ -1,7 +1,5 @@
 close all; clear
 
-addpath('../app/')
-
 gen_single_drop_elastic;
 
 close all

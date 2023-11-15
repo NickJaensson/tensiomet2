@@ -10,7 +10,7 @@ function [itervars,params] = solve_young_laplace_elastic(params)
     smax = s_guess(end); % the total length of the 1D domain
     
     % get the differentation/integration matrices and the grid
-    [params.D,~,params.w,params.s] = dif1D('cheb',0,smax,params.N,5);
+    [params.D,~,params.w,params.s] = numerical_grid(params.N,[0,smax]);
     
     % interpolate the shape in the Chebyshev points
     r = interp1(s_guess,r_guess,params.s);
