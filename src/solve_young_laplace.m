@@ -51,5 +51,9 @@ function [itervars,params] = solve_young_laplace_elastic(params)
         fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
     
     end
+
+    % the integration and differentation matrices in the solution state
+    params.ws = params.w/itervars.C; 
+    params.Ds = itervars.C*params.D; 
     
 end
