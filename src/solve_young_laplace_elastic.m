@@ -39,11 +39,15 @@ function [itervars,params] = solve_young_laplace_elastic(itervars,params)
 
     end
 
+    % the integration and differentation matrices in the deformed state
+    params.wdef = params.w.*itervars.lams'/params.C; 
+    params.Ddef = params.C*params.D.*repelem((1./itervars.lams)',params.N,1); 
+
     % construct the integration matrix from the integration vector
     params.wmat = repmat(params.w,params.N,1);
     params.wmat = tril(params.wmat);
 
     % compute the value of s in the deformed state
     params.sdef = params.wmat*itervars.lams/params.C;
-    
+   
 end

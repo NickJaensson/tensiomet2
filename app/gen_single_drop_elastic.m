@@ -78,9 +78,8 @@ for ii = 1:length(params.fracm)
     [itervars,params] = solve_young_laplace_elastic(itervars,params);
 
     % calculate the volume and the area
-    wdef = params.w.*itervars.lams'/params.C; 
-    volume = pi*wdef*(itervars.r.^2.*sin(itervars.psi));
-    area = pi*2*wdef*(itervars.r);
+    volume = pi*params.wdef*(itervars.r.^2.*sin(itervars.psi));
+    area = pi*2*params.wdef*(itervars.r);
 
     disp(['volume = ', num2str(volume,15)]);
     disp(['area = ', num2str(area,15)]);
@@ -114,7 +113,25 @@ for ii = 1:length(params.fracm)
     ylabel('\sigma','FontSize',32);
     legend('\sigma_s','\sigma_\phi','FontSize',24,'Location','northwest');
     xlim([0,params.sdef(end)])
-    ax = gca; 
-    ax.FontSize = 24;
+    ax = gca; ax.FontSize = 24;
+
+    % determine the curvatures
+    % NOTE: kappap = sin(psi)/r, which is problematic for r=0. This is
+    % solved here by taking kappap(0) = kappas(0)
+    kappas = params.Ddef*itervars.psi;
+    kappap = kappas;
+    kappap(2:end) = sin(itervars.psi(2:end))./itervars.r(2:end);
+
+    % plot the curvatures versus the z-coordinate
+    figure;
+    plot(itervars.z,kappas,'LineWidth',2); hold on
+    plot(itervars.z,kappap,'LineWidth',2); hold on
+    plot(itervars.z,kappap+kappas,'LineWidth',2);
+    xlabel('z','FontSize',32);
+    ylabel('\kappa','FontSize',32);
+    legend('\kappa_s','\kappa_\phi','\kappa_s+\kappa_\phi', ...
+        'FontSize',24,'Location','northwest');
+    xlim([itervars.z(1),0])
+    ax = gca; ax.FontSize = 24;
 
 end
