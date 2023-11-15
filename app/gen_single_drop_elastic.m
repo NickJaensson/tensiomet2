@@ -77,20 +77,14 @@ for ii = 1:length(params.fracm)
     % solve the elastic Young-Laplace equation
     [itervars,params] = solve_young_laplace_elastic(itervars,params);
 
-    % extract the solution variables
-    r = itervars.r; z = itervars.z; psi = itervars.psi;
-    sigmas = itervars.sigmas; sigmap = itervars.sigmap; 
-    lams = itervars.lams; lamp = itervars.lamp; 
-    p0 = itervars.p0; C = params.C;
-
     % calculate the volume and the area
-    wdef = params.w.*lams'/C; 
-    volume = pi*wdef*(r.^2.*sin(psi));
-    area = pi*2*wdef*(r);
+    wdef = params.w.*itervars.lams'/params.C; 
+    volume = pi*wdef*(itervars.r.^2.*sin(itervars.psi));
+    area = pi*2*wdef*(itervars.r);
 
     disp(['volume = ', num2str(volume,15)]);
     disp(['area = ', num2str(area,15)]);
-    disp(['pressure = ', num2str(p0,15)]);
+    disp(['pressure = ', num2str(itervars.p0,15)]);
 
     % interpolate the numerical solutions on a finer grid. 
     % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
@@ -122,4 +116,5 @@ for ii = 1:length(params.fracm)
     xlim([0,params.sdef(end)])
     ax = gca; 
     ax.FontSize = 24;
+
 end
