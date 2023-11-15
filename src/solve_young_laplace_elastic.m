@@ -40,6 +40,8 @@ function [itervars,params] = solve_young_laplace_elastic(itervars,params)
     end
 
     % the integration and differentation matrices in the deformed state
+    % NOTE: this construction of Ddef is simlar to first applying D*f/C,
+    % and then dividing the components by the components of (1/lams)
     params.wdef = params.w.*itervars.lams'/params.C; 
     params.Ddef = params.C*params.D.*repelem((1./itervars.lams)',params.N,1); 
 
