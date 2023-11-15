@@ -76,7 +76,7 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
         b8 =   -pi*wdef*((r.^2).*sin(psi))+params.volume;
     else
         % determine pressure - use area
-        error('imposing area strain not implemented!')
+        error('area compression not implemented')    
     end
 
     % boundary condition r(0) = 0
