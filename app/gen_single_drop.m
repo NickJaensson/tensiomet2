@@ -17,7 +17,7 @@ params.Ncheb = 10;      % number of Chebyshev to describe the shape
 params.alpha = 1;       % relaxation parameter in the Newton-Raphson scheme
 
 % solve the Young-Laplace equation for the given parameters
-[itervars,params] = solve_young_laplace(params);
+[itervars,params] = solve_forward_young_laplace(params);
 
 % calculate the volume and the area
 volume = pi*params.ws*(itervars.r.^2.*sin(itervars.psi));
