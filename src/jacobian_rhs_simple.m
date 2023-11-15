@@ -29,7 +29,6 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     b3 = p0-params.grav*params.deltarho*z-params.sigma*(C*D*psi+sin(psi)./r);
     
     % impose the needle radius as a BC (imposes the domain length)
-    % NOTE: the lengths are scaled with the radius, thus its value is one
     A41 = fliplr(IDL); b4 = (params.rneedle-r(end));
     
     % determine pressure - use volume
