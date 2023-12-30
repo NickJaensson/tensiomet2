@@ -1,7 +1,7 @@
-function [A,b] = jacobian_rhs_simple(params,vars_sol)
+function [A,b] = jacobian_rhs_elastic(params_phys,params_num,vars_sol)
     
-    D = params.D;
-    w = params.w;
+    D = params_num.D;
+    w = params_num.w;
     r = vars_sol.r;
     z = vars_sol.z;
     psi = vars_sol.psi;
@@ -10,11 +10,11 @@ function [A,b] = jacobian_rhs_simple(params,vars_sol)
     lams = vars_sol.lams;
     lamp = vars_sol.lamp;
     p0 = vars_sol.p0;
-    N = params.N;
-    C = params.C;
+    N = params_num.N;
+    C = params_num.C;
 
-    Kmod = params.Kmod;
-    Gmod = params.Gmod;
+    Kmod = params_phys.Kmod;
+    Gmod = params_phys.Gmod;
 
     % initialize some variables 
     Z = zeros(N);            % matrix filled with zeros
@@ -54,26 +54,26 @@ function [A,b] = jacobian_rhs_simple(params,vars_sol)
     % A38 = -lams
     % b3 = lams*P - lams*(sigmap*sin(psi))/r - lams*g*rho*z - (C*D*psi*sigmas)
     A31 = -diag(lams.*sigmap.*sin(psi)./(r.^2));
-    A32 = diag(lams)*params.deltarho*params.grav;
+    A32 = diag(lams)*params_phys.deltarho*params_phys.grav;
     A33 = diag(lams.*sigmap.*cos(psi)./r)+C*diag(sigmas)*D;
     A34 = C*diag(D*psi);
     A35 = diag(lams.*sin(psi)./r);
     A36 = -C*diag((D*psi).*sigmas./lams);
     A38 = -lams;
     b3 = lams*p0 - lams.*sigmap.*sin(psi)./r ...
-                  - lams.*z*params.deltarho*params.grav -C*sigmas.*(D*psi);
+                  - lams.*z*params_phys.deltarho*params_phys.grav -C*sigmas.*(D*psi);
 
     % A81 = (2*int*lams*r*pi*sin(psi))
     % A83 = (int*lams*r^2*pi*cos(psi))
     % A86 = (int*r^2*pi*sin(psi))
     % b8 = V*C - (int*lams*r^2*pi*sin(psi))
-    if params.compresstype == 1
+    if params_phys.compresstype == 1
         % determine pressure - use volume
         wdef = w.*lams'/C; 
         A81 = 2*pi*wdef.*(r.*sin(psi))';
         A83 =   pi*wdef.*(r.^2.*cos(psi))';
         A86 =   pi*wdef.*((r.^2).*sin(psi))';
-        b8 =   -pi*wdef*((r.^2).*sin(psi))+params.volume;
+        b8 =   -pi*wdef*((r.^2).*sin(psi))+params_phys.volume;
     else
         % determine pressure - use area
         error('area compression not implemented')    
@@ -115,7 +115,7 @@ function [A,b] = jacobian_rhs_simple(params,vars_sol)
     A46 = -C*diag(r.*(D*sigmas)./lams);
     b4 = -C*r.*(D*sigmas)+lams.*cos(psi).*(sigmap-sigmas);
 
-    switch params.strainmeasure
+    switch params_phys.strainmeasure
     
     case 'pepicelli'
 
@@ -123,8 +123,8 @@ function [A,b] = jacobian_rhs_simple(params,vars_sol)
         lamsm1 = lams.^(-1); lamsm2 = lams.^(-2); lamsm3 = lams.^(-3);
         lampm1 = lamp.^(-1); lampm2 = lamp.^(-2); lampm3 = lamp.^(-3);
         J = lams.*lamp;
-        K = params.Kmod;
-        G = params.Gmod;
+        K = params_phys.Kmod;
+        G = params_phys.Gmod;
         
         % determine sigma^r
         % A54 = 1
@@ -134,7 +134,7 @@ function [A,b] = jacobian_rhs_simple(params,vars_sol)
         A54 = eye(N);
         A56 = diag(K*log(J).*lamsm2.*lampm1 - K*lamsm2.*lampm1 - G*lamsm3);
         A57 = diag(G*lampm3 - K*lamsm1.*lampm2 + K*log(J).*lamsm1.*lampm2);
-        b5 = params.sigma - sigmas - G*(lamsm2-lampm2)/2 + K*log(J)./J;
+        b5 = params_phys.sigma - sigmas - G*(lamsm2-lampm2)/2 + K*log(J)./J;
         
         % determine lambda^s
         % A65 = 1
@@ -144,7 +144,7 @@ function [A,b] = jacobian_rhs_simple(params,vars_sol)
         A65 = eye(N);
         A66 = diag(K*log(J).*lamsm2.*lampm1 - K*lamsm2.*lampm1 + G*lamsm3);
         A67 = diag(-G*lampm3 - K*lamsm1.*lampm2 + K*log(J).*lamsm1.*lampm2);
-        b6 = params.sigma - sigmap + G*(lamsm2-lampm2)/2 + K*log(J)./J;
+        b6 = params_phys.sigma - sigmap + G*(lamsm2-lampm2)/2 + K*log(J)./J;
 
     end
 
@@ -160,11 +160,11 @@ function [A,b] = jacobian_rhs_simple(params,vars_sol)
     % NOTE: this BC is included in the Newton-Raphson iteration
     A41(1,:) = ZL;
     A43(1,:) = ZL;
-    A44(1,:) = (1/lams(1))*params.C*D(1,:);
+    A44(1,:) = (1/lams(1))*params_num.C*D(1,:);
     A45(1,:) = ZL;
     A46(1,:) = ZL;
-    A46(1,1) = -(1/lams(1)^2)*params.C*(D(1,:)*sigmas);
-    b4(1) = -(1/lams(1))*params.C*(D(1,:)*sigmas);
+    A46(1,1) = -(1/lams(1)^2)*params_num.C*(D(1,:)*sigmas);
+    b4(1) = -(1/lams(1))*params_num.C*(D(1,:)*sigmas);
 
     % boundary condition lamp(s0) = 1
     A71(end,:) = ZL;

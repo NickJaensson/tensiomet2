@@ -9,8 +9,7 @@ params_phys.grav = 1.2;       % gravitational acceleration
 params_phys.rneedle = 1.4;    % radius of the needle
 params_phys.volume0 = 16;     % prescribed volume
 params_phys.deltarho = 1.1;   % density difference
-params_phys.maxiter = 100;    % maximum number of iteration steps
-params_phys.eps = 1e-12;      % convergence critertion: rms(u) < eps
+
 
 % physical parameters for the elastic problem
 params_phys.Kmod = 3;          % elastic dilational modulus
@@ -24,20 +23,11 @@ params_num.N = 40;          % resolution of the discretization for calculation
 params_num.Nplot = 80;      % resolution of the discretization for plotting
 params_num.Ncheb = 10;      % number of Chebyshev to describe the shape
 params_num.alpha = 1;       % relaxation parameter in the Newton-Raphson scheme
-
-for fn = fieldnames(params_phys)'
-   params.(fn{1}) = params_phys.(fn{1});
-end
-for fn = fieldnames(params_num)'
-   params.(fn{1}) = params_num.(fn{1});
-end
+params_num.maxiter = 100;   % maximum number of iteration steps
+params_num.eps = 1e-12;     % convergence critertion: rms(u) < eps
 
 % solve the Young-Laplace equation for the given parameters
-[vars_sol,params] = solve_forward_young_laplace(params);
-
-for fn = fieldnames(params)'
-   params_num.(fn{1}) = params.(fn{1});
-end
+[vars_sol,params_num] = solve_forward_young_laplace(params_phys, params_num);
 
 % calculate the volume and the area
 volume = pi*params_num.w*(vars_sol.r.^2.*sin(vars_sol.psi))/vars_sol.C;
@@ -62,7 +52,7 @@ plot(rr',zz','b');
 set(gca,'DataAspectRatio',[1 1 1])
 
 % store the converged values of C and area0 for the elastic problem
-params_num.area0 = pi*2*params_num.w*(vars_sol.r)/vars_sol.C;
+params_phys.area0 = pi*2*params_num.w*(vars_sol.r)/vars_sol.C;
 params_num.C = vars_sol.C;
 
 % NOTE: at this stage the initial guesses for r, z, psi and p0 are taken
@@ -73,7 +63,7 @@ params_num.C = vars_sol.C;
 % update variables) are required to be equal at s=0. For the correct 
 % solution, the initial guess must have equal lams and lamp at s=0
 vars_sol.lamp = ones(params_num.N,1); vars_sol.lams = vars_sol.lamp;
-vars_sol.sigmas = params_num.sigma*ones(params_num.N,1); 
+vars_sol.sigmas = params_phys.sigma*ones(params_num.N,1); 
 vars_sol.sigmap = vars_sol.sigmas;
 
 % store the coordinates of the reference shape
@@ -85,19 +75,8 @@ for ii = 1:length(params_phys.fracm)
     % get the current value of the compression
     params_phys.frac = params_phys.fracm(ii);
 
-    for fn = fieldnames(params_phys)'
-       params.(fn{1}) = params_phys.(fn{1});
-    end
-    for fn = fieldnames(params_num)'
-       params.(fn{1}) = params_num.(fn{1});
-    end
-
     % solve the elastic Young-Laplace equation
-    [vars_sol,params] = solve_forward_young_laplace_elastic(vars_sol,params);
-
-    for fn = fieldnames(params)'
-        params_num.(fn{1}) = params.(fn{1});
-    end
+    [vars_sol,params_num] = solve_forward_young_laplace_elastic(vars_sol, params_phys, params_num);
 
     % calculate the volume and the area
     volume = pi*params_num.wdef*(vars_sol.r.^2.*sin(vars_sol.psi));

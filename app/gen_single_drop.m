@@ -7,28 +7,17 @@ params_phys.grav = 1.2;       % gravitational acceleration
 params_phys.rneedle = 1.4;    % radius of the needle
 params_phys.volume0 = 16;     % prescribed volume
 params_phys.deltarho = 1.1;   % density difference
-params_phys.maxiter = 100;    % maximum number of iteration steps
-params_phys.eps = 1e-12;      % convergence critertion: rms(u) < eps
 
 % numerical parameters
 params_num.N = 40;          % resolution of the discretization for calculation
 params_num.Nplot = 80;      % resolution of the discretization for plotting
 params_num.Ncheb = 10;      % number of Chebyshev to describe the shape
 params_num.alpha = 1;       % relaxation parameter in the Newton-Raphson scheme
-
-for fn = fieldnames(params_phys)'
-   params.(fn{1}) = params_phys.(fn{1});
-end
-for fn = fieldnames(params_num)'
-   params.(fn{1}) = params_num.(fn{1});
-end
+params_num.eps = 1e-12;     % convergence critertion: rms(u) < eps
+params_num.maxiter = 100;   % maximum number of iteration steps
 
 % solve the Young-Laplace equation for the given parameters
-[vars_sol,params] = solve_forward_young_laplace(params);
-
-for fn = fieldnames(params)'
-   params_num.(fn{1}) = params.(fn{1});
-end
+[vars_sol,params_num] = solve_forward_young_laplace(params_phys, params_num);
 
 % calculate the volume and the area
 volume = pi*params_num.ws*(vars_sol.r.^2.*sin(vars_sol.psi));
