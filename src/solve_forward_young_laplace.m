@@ -1,4 +1,28 @@
-function [vars_sol,vars_num] = solve_forward_young_laplace(params_phys,params_num)
+function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_num)
+% SOLVE_FORWARD_YOUNG_LAPLACE Solves the forward Young-Laplace equation.
+%
+% This function solves the Young-Laplace equation for a constant surface 
+% tension.
+%
+% Usage:
+%   [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_num)
+%
+% Inputs:
+%   params_phys - A structure containing physical parameters:
+%                 deltarho (density difference), grav (gravity), volume0 (initial volume),
+%                 sigma (surface tension), rneedle (radius of the needle).
+%   params_num - A structure containing numerical parameters:
+%                N (number of points), eps (tolerance for convergence),
+%                maxiter (maximum iterations), alpha (relaxation parameter).
+%
+% Outputs:
+%   vars_sol - A structure containing solution variables:
+%              r, z (coordinates of the interface), psi (angle of the tangent to the interface),
+%              C (stretch parameter), p0 (pressure).
+%   vars_num - A structure containing numerical variables used in the solution:
+%              Differentiation and integration matrices, Chebyshev points, and modified
+%              matrices post-solution (ws, Ds).
+%
 
     % calculate the Worthinton number
     params_phys.Wo = params_phys.deltarho*params_phys.grav*params_phys.volume0/...
