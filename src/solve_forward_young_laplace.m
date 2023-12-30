@@ -38,8 +38,8 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
     vars_num = numerical_grid(params_num,[0,smax]);
     
     % interpolate the shape in the Chebyshev points
-    r = interp1(s_guess,r_guess,vars_num.s);
-    z = interp1(s_guess,z_guess,vars_num.s);
+    r = interp1(s_guess,r_guess,vars_num.s0);
+    z = interp1(s_guess,z_guess,vars_num.s0);
     
     psi = atan2(vars_num.D*z,vars_num.D*r);   % intial psi value 
     C = 1;                                % initial stretch parameter
@@ -80,5 +80,6 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
     % the integration and differentation matrices in the solution state
     vars_num.ws = vars_num.w/vars_sol.C; 
     vars_num.Ds = vars_sol.C*vars_num.D; 
-    
+    vars_num.s = vars_num.s0/C;
+
 end
