@@ -1,15 +1,15 @@
-function [A,b] = jacobian_rhs_simple(params,itervars)
+function [A,b] = jacobian_rhs_simple(params,vars_sol)
     
     D = params.D;
     w = params.w;
-    r = itervars.r;
-    z = itervars.z;
-    psi = itervars.psi;
-    sigmas = itervars.sigmas;
-    sigmap = itervars.sigmap;
-    lams = itervars.lams;
-    lamp = itervars.lamp;
-    p0 = itervars.p0;
+    r = vars_sol.r;
+    z = vars_sol.z;
+    psi = vars_sol.psi;
+    sigmas = vars_sol.sigmas;
+    sigmap = vars_sol.sigmap;
+    lams = vars_sol.lams;
+    lamp = vars_sol.lamp;
+    p0 = vars_sol.p0;
     N = params.N;
     C = params.C;
 
@@ -153,8 +153,8 @@ function [A,b] = jacobian_rhs_simple(params,itervars)
     % b7 = -r + lamp*rstar
     % determine lambda^r
     A71 = eye(N);
-    A77 = -diag(itervars.r_star);
-    b7 = -r+lamp.*itervars.r_star;
+    A77 = -diag(vars_sol.r_star);
+    b7 = -r+lamp.*vars_sol.r_star;
 
     % boundary condition dsigmas/ds(0) = 0
     % NOTE: this BC is included in the Newton-Raphson iteration

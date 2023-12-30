@@ -1,12 +1,12 @@
-function [A,b] = jacobian_rhs_simple(params,itervars)
+function [A,b] = jacobian_rhs_simple(params,vars_sol)
     
     D = params.D;
     w = params.w;
-    r = itervars.r;
-    z = itervars.z;
-    psi = itervars.psi;
-    C = itervars.C;
-    p0 = itervars.p0;
+    r = vars_sol.r;
+    z = vars_sol.z;
+    psi = vars_sol.psi;
+    C = vars_sol.C;
+    p0 = vars_sol.p0;
     
     % initialize some variables 
     Z = zeros(params.N);            % matrix filled with zeros

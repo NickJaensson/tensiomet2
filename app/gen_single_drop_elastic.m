@@ -26,23 +26,23 @@ params.Ncheb = 10;      % number of Chebyshev to describe the shape
 params.alpha = 1;       % relaxation parameter in the Newton-Raphson scheme
 
 % solve the Young-Laplace equation for the given parameters
-[itervars,params] = solve_forward_young_laplace(params);
+[vars_sol,params] = solve_forward_young_laplace(params);
 
 % calculate the volume and the area
-volume = pi*params.w*(itervars.r.^2.*sin(itervars.psi))/itervars.C;
-area = pi*2*params.w*(itervars.r)/itervars.C;
+volume = pi*params.w*(vars_sol.r.^2.*sin(vars_sol.psi))/vars_sol.C;
+area = pi*2*params.w*(vars_sol.r)/vars_sol.C;
 
 disp(['volume = ', num2str(volume,15)]);
 disp(['area = ', num2str(area,15)]);
-disp(['pressure = ', num2str(itervars.p0,15)]);
+disp(['pressure = ', num2str(vars_sol.p0,15)]);
 
 % interpolate the numerical solutions on a finer grid. 
 % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
 % though all the points (see book of Trefethen on Spectral Methods in 
 % Matlab, page  63). For plotting purposes we use a simpler interpolation 
 ss = linspace(params.s(1),params.s(end),params.Nplot)';
-rr = interp1(params.s,itervars.r,ss,'pchip');
-zz = interp1(params.s,itervars.z,ss,'pchip');
+rr = interp1(params.s,vars_sol.r,ss,'pchip');
+zz = interp1(params.s,vars_sol.z,ss,'pchip');
 
 % plot the shape of the drop on the plotting grid
 figure; hold on
@@ -51,8 +51,8 @@ plot(rr',zz','b');
 set(gca,'DataAspectRatio',[1 1 1])
 
 % store the converged values of C and area0 for the elastic problem
-params.area0 = pi*2*params.w*(itervars.r)/itervars.C;
-params.C = itervars.C;
+params.area0 = pi*2*params.w*(vars_sol.r)/vars_sol.C;
+params.C = vars_sol.C;
 
 % NOTE: at this stage the initial guesses for r, z, psi and p0 are taken
 % from the solution without elasticity. 
@@ -61,12 +61,12 @@ params.C = itervars.C;
 % NOTE: in the solution procedure, the dlams and dlamp (Newton-Raphson 
 % update variables) are required to be equal at s=0. For the correct 
 % solution, the initial guess must have equal lams and lamp at s=0
-itervars.lamp = ones(params.N,1); itervars.lams = itervars.lamp;
-itervars.sigmas = params.sigma*ones(params.N,1); 
-itervars.sigmap = itervars.sigmas;
+vars_sol.lamp = ones(params.N,1); vars_sol.lams = vars_sol.lamp;
+vars_sol.sigmas = params.sigma*ones(params.N,1); 
+vars_sol.sigmap = vars_sol.sigmas;
 
 % store the coordinates of the reference shape
-itervars.r_star = itervars.r; itervars.z_star = itervars.z;
+vars_sol.r_star = vars_sol.r; vars_sol.z_star = vars_sol.z;
 
 % solve the elastic Young-Laplace equation for the given parameters
 for ii = 1:length(params.fracm)
@@ -75,15 +75,15 @@ for ii = 1:length(params.fracm)
     params.frac = params.fracm(ii);
 
     % solve the elastic Young-Laplace equation
-    [itervars,params] = solve_forward_young_laplace_elastic(itervars,params);
+    [vars_sol,params] = solve_forward_young_laplace_elastic(vars_sol,params);
 
     % calculate the volume and the area
-    volume = pi*params.wdef*(itervars.r.^2.*sin(itervars.psi));
-    area = pi*2*params.wdef*(itervars.r);
+    volume = pi*params.wdef*(vars_sol.r.^2.*sin(vars_sol.psi));
+    area = pi*2*params.wdef*(vars_sol.r);
 
     disp(['volume = ', num2str(volume,15)]);
     disp(['area = ', num2str(area,15)]);
-    disp(['pressure = ', num2str(itervars.p0,15)]);
+    disp(['pressure = ', num2str(vars_sol.p0,15)]);
 
     % interpolate the numerical solutions on a finer grid. 
     % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
@@ -92,13 +92,13 @@ for ii = 1:length(params.fracm)
     % NOTE2: the interpolation is performed on the "numerical grid", 
     % this is not the actual value of s
     ss = linspace(params.s(1),params.s(end),params.Nplot)';
-    rr = interp1(params.s,itervars.r,ss,'pchip');
-    zz = interp1(params.s,itervars.z,ss,'pchip');
+    rr = interp1(params.s,vars_sol.r,ss,'pchip');
+    zz = interp1(params.s,vars_sol.z,ss,'pchip');
 
     % plot the droplet shape
     plot(rr,zz); 
-    rmax = max([itervars.r_star',rr']);
-    zmin = min([itervars.z_star',zz']);
+    rmax = max([vars_sol.r_star',rr']);
+    zmin = min([vars_sol.z_star',zz']);
 
     % rescale the plot
     xlim([0 1.2*rmax]);
@@ -107,8 +107,8 @@ for ii = 1:length(params.fracm)
 
     % plot the surface stresses
     figure;
-    plot(params.sdef,itervars.sigmas,'LineWidth',2); hold on
-    plot(params.sdef,itervars.sigmap,'LineWidth',2);
+    plot(params.sdef,vars_sol.sigmas,'LineWidth',2); hold on
+    plot(params.sdef,vars_sol.sigmap,'LineWidth',2);
     xlabel('s','FontSize',32);
     ylabel('\sigma','FontSize',32);
     legend('\sigma_s','\sigma_\phi','FontSize',24,'Location','northwest');
@@ -118,20 +118,20 @@ for ii = 1:length(params.fracm)
     % determine the curvatures
     % NOTE: kappap = sin(psi)/r, which is problematic for r=0. This is
     % solved here by taking kappap(0) = kappas(0)
-    kappas = params.Ddef*itervars.psi;
+    kappas = params.Ddef*vars_sol.psi;
     kappap = kappas;
-    kappap(2:end) = sin(itervars.psi(2:end))./itervars.r(2:end);
+    kappap(2:end) = sin(vars_sol.psi(2:end))./vars_sol.r(2:end);
 
     % plot the curvatures versus the z-coordinate
     figure;
-    plot(itervars.z,kappas,'LineWidth',2); hold on
-    plot(itervars.z,kappap,'LineWidth',2); hold on
-    plot(itervars.z,kappap+kappas,'LineWidth',2);
+    plot(vars_sol.z,kappas,'LineWidth',2); hold on
+    plot(vars_sol.z,kappap,'LineWidth',2); hold on
+    plot(vars_sol.z,kappap+kappas,'LineWidth',2);
     xlabel('z','FontSize',32);
     ylabel('\kappa','FontSize',32);
     legend('\kappa_s','\kappa_\phi','\kappa_s+\kappa_\phi', ...
         'FontSize',24,'Location','northwest');
-    xlim([itervars.z(1),0])
+    xlim([vars_sol.z(1),0])
     ax = gca; ax.FontSize = 24;
 
 end
