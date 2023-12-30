@@ -1,7 +1,7 @@
-function [A,b] = jacobian_rhs_elastic(params_phys,params_num,vars_sol)
+function [A,b] = jacobian_rhs_elastic(params_phys,vars_sol,vars_num)
     
-    D = params_num.D;
-    w = params_num.w;
+    D = vars_num.D;
+    w = vars_num.w;
     r = vars_sol.r;
     z = vars_sol.z;
     psi = vars_sol.psi;
@@ -10,8 +10,8 @@ function [A,b] = jacobian_rhs_elastic(params_phys,params_num,vars_sol)
     lams = vars_sol.lams;
     lamp = vars_sol.lamp;
     p0 = vars_sol.p0;
-    N = params_num.N;
-    C = params_num.C;
+    N = vars_num.N;
+    C = vars_num.C;
 
     Kmod = params_phys.Kmod;
     Gmod = params_phys.Gmod;
@@ -160,11 +160,11 @@ function [A,b] = jacobian_rhs_elastic(params_phys,params_num,vars_sol)
     % NOTE: this BC is included in the Newton-Raphson iteration
     A41(1,:) = ZL;
     A43(1,:) = ZL;
-    A44(1,:) = (1/lams(1))*params_num.C*D(1,:);
+    A44(1,:) = (1/lams(1))*vars_num.C*D(1,:);
     A45(1,:) = ZL;
     A46(1,:) = ZL;
-    A46(1,1) = -(1/lams(1)^2)*params_num.C*(D(1,:)*sigmas);
-    b4(1) = -(1/lams(1))*params_num.C*(D(1,:)*sigmas);
+    A46(1,1) = -(1/lams(1)^2)*vars_num.C*(D(1,:)*sigmas);
+    b4(1) = -(1/lams(1))*vars_num.C*(D(1,:)*sigmas);
 
     % boundary condition lamp(s0) = 1
     A71(end,:) = ZL;

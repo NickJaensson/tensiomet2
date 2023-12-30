@@ -27,11 +27,11 @@ params_num.maxiter = 100;   % maximum number of iteration steps
 params_num.eps = 1e-12;     % convergence critertion: rms(u) < eps
 
 % solve the Young-Laplace equation for the given parameters
-[vars_sol,params_num] = solve_forward_young_laplace(params_phys, params_num);
+[vars_sol,vars_num] = solve_forward_young_laplace(params_phys, params_num);
 
 % calculate the volume and the area
-volume = pi*params_num.w*(vars_sol.r.^2.*sin(vars_sol.psi))/vars_sol.C;
-area = pi*2*params_num.w*(vars_sol.r)/vars_sol.C;
+volume = pi*vars_num.w*(vars_sol.r.^2.*sin(vars_sol.psi))/vars_sol.C;
+area = pi*2*vars_num.w*(vars_sol.r)/vars_sol.C;
 
 disp(['volume = ', num2str(volume,15)]);
 disp(['area = ', num2str(area,15)]);
@@ -41,9 +41,9 @@ disp(['pressure = ', num2str(vars_sol.p0,15)]);
 % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
 % though all the points (see book of Trefethen on Spectral Methods in 
 % Matlab, page  63). For plotting purposes we use a simpler interpolation 
-ss = linspace(params_num.s(1),params_num.s(end),params_num.Nplot)';
-rr = interp1(params_num.s,vars_sol.r,ss,'pchip');
-zz = interp1(params_num.s,vars_sol.z,ss,'pchip');
+ss = linspace(vars_num.s(1),vars_num.s(end),params_num.Nplot)';
+rr = interp1(vars_num.s,vars_sol.r,ss,'pchip');
+zz = interp1(vars_num.s,vars_sol.z,ss,'pchip');
 
 % plot the shape of the drop on the plotting grid
 figure; hold on
@@ -52,8 +52,8 @@ plot(rr',zz','b');
 set(gca,'DataAspectRatio',[1 1 1])
 
 % store the converged values of C and area0 for the elastic problem
-params_phys.area0 = pi*2*params_num.w*(vars_sol.r)/vars_sol.C;
-params_num.C = vars_sol.C;
+params_phys.area0 = pi*2*vars_num.w*(vars_sol.r)/vars_sol.C;
+vars_num.C = vars_sol.C;
 
 % NOTE: at this stage the initial guesses for r, z, psi and p0 are taken
 % from the solution without elasticity. 
@@ -76,11 +76,11 @@ for ii = 1:length(params_phys.fracm)
     params_phys.frac = params_phys.fracm(ii);
 
     % solve the elastic Young-Laplace equation
-    [vars_sol,params_num] = solve_forward_young_laplace_elastic(vars_sol, params_phys, params_num);
+    [vars_sol,vars_num] = solve_forward_young_laplace_elastic(vars_sol, params_phys, params_num, vars_num);
 
     % calculate the volume and the area
-    volume = pi*params_num.wdef*(vars_sol.r.^2.*sin(vars_sol.psi));
-    area = pi*2*params_num.wdef*(vars_sol.r);
+    volume = pi*vars_num.wdef*(vars_sol.r.^2.*sin(vars_sol.psi));
+    area = pi*2*vars_num.wdef*(vars_sol.r);
 
     disp(['volume = ', num2str(volume,15)]);
     disp(['area = ', num2str(area,15)]);
@@ -92,9 +92,9 @@ for ii = 1:length(params_phys.fracm)
     % Matlab, page  63). For plotting purposes we use a simpler interpolation 
     % NOTE2: the interpolation is performed on the "numerical grid", 
     % this is not the actual value of s
-    ss = linspace(params_num.s(1),params_num.s(end),params_num.Nplot)';
-    rr = interp1(params_num.s,vars_sol.r,ss,'pchip');
-    zz = interp1(params_num.s,vars_sol.z,ss,'pchip');
+    ss = linspace(vars_num.s(1),vars_num.s(end),params_num.Nplot)';
+    rr = interp1(vars_num.s,vars_sol.r,ss,'pchip');
+    zz = interp1(vars_num.s,vars_sol.z,ss,'pchip');
 
     % plot the droplet shape
     plot(rr,zz); 
@@ -108,18 +108,18 @@ for ii = 1:length(params_phys.fracm)
 
     % plot the surface stresses
     figure;
-    plot(params_num.sdef,vars_sol.sigmas,'LineWidth',2); hold on
-    plot(params_num.sdef,vars_sol.sigmap,'LineWidth',2);
+    plot(vars_num.sdef,vars_sol.sigmas,'LineWidth',2); hold on
+    plot(vars_num.sdef,vars_sol.sigmap,'LineWidth',2);
     xlabel('s','FontSize',32);
     ylabel('\sigma','FontSize',32);
     legend('\sigma_s','\sigma_\phi','FontSize',24,'Location','northwest');
-    xlim([0,params_num.sdef(end)])
+    xlim([0,vars_num.sdef(end)])
     ax = gca; ax.FontSize = 24;
 
     % determine the curvatures
     % NOTE: kappap = sin(psi)/r, which is problematic for r=0. This is
     % solved here by taking kappap(0) = kappas(0)
-    kappas = params_num.Ddef*vars_sol.psi;
+    kappas = vars_num.Ddef*vars_sol.psi;
     kappap = kappas;
     kappap(2:end) = sin(vars_sol.psi(2:end))./vars_sol.r(2:end);
 

@@ -1,7 +1,7 @@
-function [A,b] = jacobian_rhs_simple(params_phys,params_num,vars_sol)
+function [A,b] = jacobian_rhs_simple(params_phys,vars_sol,vars_num)
     
-    D = params_num.D;
-    w = params_num.w;
+    D = vars_num.D;
+    w = vars_num.w;
     r = vars_sol.r;
     z = vars_sol.z;
     psi = vars_sol.psi;
@@ -9,10 +9,10 @@ function [A,b] = jacobian_rhs_simple(params_phys,params_num,vars_sol)
     p0 = vars_sol.p0;
     
     % initialize some variables 
-    Z = zeros(params_num.N);            % matrix filled with zeros
-    IDL = [1, zeros(1,params_num.N-1)]; % line with single one and rest zeros
-    ZL = zeros(1,params_num.N);         % line completely filled with zeros 
-    b = ones(3*params_num.N+2,1); % solution vector and right hand side
+    Z = zeros(vars_num.N);            % matrix filled with zeros
+    IDL = [1, zeros(1,vars_num.N-1)]; % line with single one and rest zeros
+    ZL = zeros(1,vars_num.N);         % line completely filled with zeros 
+    b = ones(3*vars_num.N+2,1); % solution vector and right hand side
     
     % determine r from psi
     A11 = C*D; A13 = diag(sin(psi)); A14 = D*r; b1 = -(C*D*r-cos(psi));
@@ -22,10 +22,10 @@ function [A,b] = jacobian_rhs_simple(params_phys,params_num,vars_sol)
     
     % determine psi from Laplace law
     A31 = -params_phys.sigma*diag(sin(psi)./r.^2);
-    A32 = params_phys.grav*params_phys.deltarho*diag(ones(params_num.N,1));
+    A32 = params_phys.grav*params_phys.deltarho*diag(ones(vars_num.N,1));
     A33 = C*params_phys.sigma*D + params_phys.sigma*diag(cos(psi)./r);
     A34 = params_phys.sigma*(D*psi);
-    A35 = -ones(params_num.N,1);
+    A35 = -ones(vars_num.N,1);
     b3 = p0-params_phys.grav*params_phys.deltarho*z-params_phys.sigma*(C*D*psi+sin(psi)./r);
     
     % impose the needle radius as a BC (imposes the domain length)
@@ -58,7 +58,7 @@ function [A,b] = jacobian_rhs_simple(params_phys,params_num,vars_sol)
     b3(1) = -psi(1);
     
     % assemble matrices
-    Z1 = zeros(params_num.N,1);
+    Z1 = zeros(vars_num.N,1);
      
     A = [[A11,   Z, A13, A14,  Z1];
        [  Z, A22, A23, A24,  Z1];

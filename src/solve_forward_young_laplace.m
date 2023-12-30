@@ -1,4 +1,4 @@
-function [vars_sol,params_num] = solve_forward_young_laplace(params_phys,params_num)
+function [vars_sol,vars_num] = solve_forward_young_laplace(params_phys,params_num)
 
     % calculate the Worthinton number
     params_phys.Wo = params_phys.deltarho*params_phys.grav*params_phys.volume0/...
@@ -10,13 +10,15 @@ function [vars_sol,params_num] = solve_forward_young_laplace(params_phys,params_
     smax = s_guess(end); % the total length of the 1D domain
     
     % get the differentation/integration matrices and the grid
-    [params_num.D,~,params_num.w,params_num.s] = numerical_grid(params_num.N,[0,smax]);
+    [vars_num.D,~,vars_num.w,vars_num.s] = numerical_grid(params_num.N,[0,smax]);
     
+    vars_num.N = params_num.N; % copy for convenvience
+
     % interpolate the shape in the Chebyshev points
-    r = interp1(s_guess,r_guess,params_num.s);
-    z = interp1(s_guess,z_guess,params_num.s);
+    r = interp1(s_guess,r_guess,vars_num.s);
+    z = interp1(s_guess,z_guess,vars_num.s);
     
-    psi = atan2(params_num.D*z,params_num.D*r);   % intial psi value 
+    psi = atan2(vars_num.D*z,vars_num.D*r);   % intial psi value 
     C = 1;                                % initial stretch parameter
     p0 = 2*params_phys.sigma/params_phys.rneedle;   % initial pressure
     u = ones(3*params_num.N+2,1);             % initial solution vector
@@ -36,7 +38,7 @@ function [vars_sol,params_num] = solve_forward_young_laplace(params_phys,params_
         end    
     
         % build the Jacobian and RHS
-        [A,b] = jacobian_rhs_simple(params_phys,params_num,vars_sol);
+        [A,b] = jacobian_rhs_simple(params_phys,vars_sol,vars_num);
         
         % solve the system of equations
         u = A\b;
@@ -53,7 +55,7 @@ function [vars_sol,params_num] = solve_forward_young_laplace(params_phys,params_
     end
 
     % the integration and differentation matrices in the solution state
-    params_num.ws = params_num.w/vars_sol.C; 
-    params_num.Ds = vars_sol.C*params_num.D; 
+    vars_num.ws = vars_num.w/vars_sol.C; 
+    vars_num.Ds = vars_sol.C*vars_num.D; 
     
 end
