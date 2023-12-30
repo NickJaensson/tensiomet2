@@ -1,4 +1,4 @@
-function [itervars,params] = solve_young_laplace_elastic(params)
+function [itervars,params] = solve_forward_young_laplace(params)
 
     % calculate the Worthinton number
     params.Wo = params.deltarho*params.grav*params.volume0/...

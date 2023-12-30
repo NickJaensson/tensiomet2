@@ -1,4 +1,4 @@
-function [itervars,params] = solve_young_laplace_elastic(itervars,params)
+function [itervars,params] = solve_forward_young_laplace_elastic(itervars,params)
 
     % determine the current target volume/area
     if params.compresstype == 1
