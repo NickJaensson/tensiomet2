@@ -10,10 +10,8 @@ function [vars_sol,vars_num] = solve_forward_young_laplace(params_phys,params_nu
     smax = s_guess(end); % the total length of the 1D domain
     
     % get the differentation/integration matrices and the grid
-    [vars_num.D,~,vars_num.w,vars_num.s] = numerical_grid(params_num.N,[0,smax]);
+    vars_num = numerical_grid(params_num,[0,smax]);
     
-    vars_num.N = params_num.N; % copy for convenvience
-
     % interpolate the shape in the Chebyshev points
     r = interp1(s_guess,r_guess,vars_num.s);
     z = interp1(s_guess,z_guess,vars_num.s);

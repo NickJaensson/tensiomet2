@@ -1,4 +1,4 @@
-function [d, dd, w, s] = numerical_grid(N, domain)
+function [vars_num] = numerical_grid(params_num, domain)
 % NUMERICAL_GRID Generates numerical grids and differentiation matrices 
 % using Chebyshev points.
 %
@@ -31,9 +31,11 @@ function [d, dd, w, s] = numerical_grid(N, domain)
 %   [d, dd, w, s] = numerical_grid(N, domain);
 
     % diffmat, introw and chebpts are defined in the Chebfun package
-    d = diffmat(N,1,domain);
-    dd = diffmat(N,2,domain);
-    w = introw(N,domain);
-    s = chebpts(N,domain);
+    vars_num.D = diffmat(params_num.N,1,domain);
+    vars_num.DD = diffmat(params_num.N,2,domain);
+    vars_num.w = introw(params_num.N,domain);
+    vars_num.s = chebpts(params_num.N,domain);
+
+    vars_num.N = params_num.N; % copy for convenvience
 
 end
