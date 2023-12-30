@@ -7,28 +7,26 @@ function [vars_num] = numerical_grid(params_num, domain)
 % the Chebfun package.
 %
 % Usage:
-%   [d, dd, w, s] = numerical_grid(N, domain)
+%   vars_num = numerical_grid(params_num, domain)
 %
 % Inputs:
-%   N - The number of points in the grid.
+%   params_num - A structure containing the number of points in the grid.
+%                It should have a field 'N' representing this number.
 %   domain - The left and right boundaries of the 1D domain, specified as 
 %            a vector [left_boundary, right_boundary].
 %
-% Outputs:
-%   d - The first-order differentiation matrix.
-%   dd - The second-order differentiation matrix.
-%   w - The integration weights.
-%   s - The Chebyshev points within the specified domain.
+% Output:
+%   vars_num - A structure containing the following fields:
+%              D: The first-order differentiation matrix.
+%              DD: The second-order differentiation matrix.
+%              w: The integration weights.
+%              s: The Chebyshev points within the specified domain.
+%              N: The number of points in the grid (copied from params_num.N).
 %
 % Requirements:
 %   This function requires the Chebfun package. Ensure that 'set_paths.m' 
 %   in your environment is configured to include the Chebfun installation 
 %   path.
-%
-% Examples:
-%   N = 100;
-%   domain = [0, 1];
-%   [d, dd, w, s] = numerical_grid(N, domain);
 
     % diffmat, introw and chebpts are defined in the Chebfun package
     vars_num.D = diffmat(params_num.N,1,domain);
