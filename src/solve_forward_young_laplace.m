@@ -1,8 +1,9 @@
 function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_num)
-% SOLVE_FORWARD_YOUNG_LAPLACE Solves the forward Young-Laplace equation.
+% SOLVE_FORWARD_YOUNG_LAPLACE Solves the Young-Laplace equation for the
+% shape of a drop.
 %
 % This function solves the Young-Laplace equation for a constant surface 
-% tension.
+% tension, using a Newton-Raphson iteration.
 %
 % Usage:
 %   [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_num)
