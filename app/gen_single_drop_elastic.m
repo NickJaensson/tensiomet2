@@ -4,33 +4,44 @@
 close all; clear
 
 % physical parameters
-params.sigma = 4;        % surface tension
-params.grav = 1.2;       % gravitational acceleration
-params.rneedle = 1.4;    % radius of the needle
-params.volume0 = 16;     % prescribed volume
-params.deltarho = 1.1;   % density difference
-params.maxiter = 100;    % maximum number of iteration steps
-params.eps = 1e-12;      % convergence critertion: rms(u) < eps
+params_phys.sigma = 4;        % surface tension
+params_phys.grav = 1.2;       % gravitational acceleration
+params_phys.rneedle = 1.4;    % radius of the needle
+params_phys.volume0 = 16;     % prescribed volume
+params_phys.deltarho = 1.1;   % density difference
+params_phys.maxiter = 100;    % maximum number of iteration steps
+params_phys.eps = 1e-12;      % convergence critertion: rms(u) < eps
 
 % physical parameters for the elastic problem
-params.Kmod = 3;          % elastic dilational modulus
-params.Gmod = 2;          % elastic shear modulus
-params.compresstype = 1;  % 1: compress the volume other: compress the area
-params.fracm = [0.8];     % compute elastic stresses for these compressions
-params.strainmeasure = 'pepicelli'; % which elastic constitutive model
+params_phys.Kmod = 3;          % elastic dilational modulus
+params_phys.Gmod = 2;          % elastic shear modulus
+params_phys.compresstype = 1;  % 1: compress the volume other: compress the area
+params_phys.fracm = [0.8];     % compute elastic stresses for these compressions
+params_phys.strainmeasure = 'pepicelli'; % which elastic constitutive model
 
 % numerical parameters
-params.N = 40;          % resolution of the discretization for calculation
-params.Nplot = 80;      % resolution of the discretization for plotting
-params.Ncheb = 10;      % number of Chebyshev to describe the shape
-params.alpha = 1;       % relaxation parameter in the Newton-Raphson scheme
+params_num.N = 40;          % resolution of the discretization for calculation
+params_num.Nplot = 80;      % resolution of the discretization for plotting
+params_num.Ncheb = 10;      % number of Chebyshev to describe the shape
+params_num.alpha = 1;       % relaxation parameter in the Newton-Raphson scheme
+
+for fn = fieldnames(params_phys)'
+   params.(fn{1}) = params_phys.(fn{1});
+end
+for fn = fieldnames(params_num)'
+   params.(fn{1}) = params_num.(fn{1});
+end
 
 % solve the Young-Laplace equation for the given parameters
 [vars_sol,params] = solve_forward_young_laplace(params);
 
+for fn = fieldnames(params)'
+   params_num.(fn{1}) = params.(fn{1});
+end
+
 % calculate the volume and the area
-volume = pi*params.w*(vars_sol.r.^2.*sin(vars_sol.psi))/vars_sol.C;
-area = pi*2*params.w*(vars_sol.r)/vars_sol.C;
+volume = pi*params_num.w*(vars_sol.r.^2.*sin(vars_sol.psi))/vars_sol.C;
+area = pi*2*params_num.w*(vars_sol.r)/vars_sol.C;
 
 disp(['volume = ', num2str(volume,15)]);
 disp(['area = ', num2str(area,15)]);
@@ -40,9 +51,9 @@ disp(['pressure = ', num2str(vars_sol.p0,15)]);
 % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
 % though all the points (see book of Trefethen on Spectral Methods in 
 % Matlab, page  63). For plotting purposes we use a simpler interpolation 
-ss = linspace(params.s(1),params.s(end),params.Nplot)';
-rr = interp1(params.s,vars_sol.r,ss,'pchip');
-zz = interp1(params.s,vars_sol.z,ss,'pchip');
+ss = linspace(params_num.s(1),params_num.s(end),params_num.Nplot)';
+rr = interp1(params_num.s,vars_sol.r,ss,'pchip');
+zz = interp1(params_num.s,vars_sol.z,ss,'pchip');
 
 % plot the shape of the drop on the plotting grid
 figure; hold on
@@ -51,8 +62,8 @@ plot(rr',zz','b');
 set(gca,'DataAspectRatio',[1 1 1])
 
 % store the converged values of C and area0 for the elastic problem
-params.area0 = pi*2*params.w*(vars_sol.r)/vars_sol.C;
-params.C = vars_sol.C;
+params_num.area0 = pi*2*params_num.w*(vars_sol.r)/vars_sol.C;
+params_num.C = vars_sol.C;
 
 % NOTE: at this stage the initial guesses for r, z, psi and p0 are taken
 % from the solution without elasticity. 
@@ -61,25 +72,36 @@ params.C = vars_sol.C;
 % NOTE: in the solution procedure, the dlams and dlamp (Newton-Raphson 
 % update variables) are required to be equal at s=0. For the correct 
 % solution, the initial guess must have equal lams and lamp at s=0
-vars_sol.lamp = ones(params.N,1); vars_sol.lams = vars_sol.lamp;
-vars_sol.sigmas = params.sigma*ones(params.N,1); 
+vars_sol.lamp = ones(params_num.N,1); vars_sol.lams = vars_sol.lamp;
+vars_sol.sigmas = params_num.sigma*ones(params_num.N,1); 
 vars_sol.sigmap = vars_sol.sigmas;
 
 % store the coordinates of the reference shape
 vars_sol.r_star = vars_sol.r; vars_sol.z_star = vars_sol.z;
 
 % solve the elastic Young-Laplace equation for the given parameters
-for ii = 1:length(params.fracm)
+for ii = 1:length(params_phys.fracm)
 
     % get the current value of the compression
-    params.frac = params.fracm(ii);
+    params_phys.frac = params_phys.fracm(ii);
+
+    for fn = fieldnames(params_phys)'
+       params.(fn{1}) = params_phys.(fn{1});
+    end
+    for fn = fieldnames(params_num)'
+       params.(fn{1}) = params_num.(fn{1});
+    end
 
     % solve the elastic Young-Laplace equation
     [vars_sol,params] = solve_forward_young_laplace_elastic(vars_sol,params);
 
+    for fn = fieldnames(params)'
+        params_num.(fn{1}) = params.(fn{1});
+    end
+
     % calculate the volume and the area
-    volume = pi*params.wdef*(vars_sol.r.^2.*sin(vars_sol.psi));
-    area = pi*2*params.wdef*(vars_sol.r);
+    volume = pi*params_num.wdef*(vars_sol.r.^2.*sin(vars_sol.psi));
+    area = pi*2*params_num.wdef*(vars_sol.r);
 
     disp(['volume = ', num2str(volume,15)]);
     disp(['area = ', num2str(area,15)]);
@@ -91,9 +113,9 @@ for ii = 1:length(params.fracm)
     % Matlab, page  63). For plotting purposes we use a simpler interpolation 
     % NOTE2: the interpolation is performed on the "numerical grid", 
     % this is not the actual value of s
-    ss = linspace(params.s(1),params.s(end),params.Nplot)';
-    rr = interp1(params.s,vars_sol.r,ss,'pchip');
-    zz = interp1(params.s,vars_sol.z,ss,'pchip');
+    ss = linspace(params_num.s(1),params_num.s(end),params_num.Nplot)';
+    rr = interp1(params_num.s,vars_sol.r,ss,'pchip');
+    zz = interp1(params_num.s,vars_sol.z,ss,'pchip');
 
     % plot the droplet shape
     plot(rr,zz); 
@@ -107,18 +129,18 @@ for ii = 1:length(params.fracm)
 
     % plot the surface stresses
     figure;
-    plot(params.sdef,vars_sol.sigmas,'LineWidth',2); hold on
-    plot(params.sdef,vars_sol.sigmap,'LineWidth',2);
+    plot(params_num.sdef,vars_sol.sigmas,'LineWidth',2); hold on
+    plot(params_num.sdef,vars_sol.sigmap,'LineWidth',2);
     xlabel('s','FontSize',32);
     ylabel('\sigma','FontSize',32);
     legend('\sigma_s','\sigma_\phi','FontSize',24,'Location','northwest');
-    xlim([0,params.sdef(end)])
+    xlim([0,params_num.sdef(end)])
     ax = gca; ax.FontSize = 24;
 
     % determine the curvatures
     % NOTE: kappap = sin(psi)/r, which is problematic for r=0. This is
     % solved here by taking kappap(0) = kappas(0)
-    kappas = params.Ddef*vars_sol.psi;
+    kappas = params_num.Ddef*vars_sol.psi;
     kappap = kappas;
     kappap(2:end) = sin(vars_sol.psi(2:end))./vars_sol.r(2:end);
 
