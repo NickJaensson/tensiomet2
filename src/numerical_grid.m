@@ -30,7 +30,7 @@ function [d, dd, w, s] = numerical_grid(N, domain)
 %   domain = [0, 1];
 %   [d, dd, w, s] = numerical_grid(N, domain);
 
-%   diffmat, introw and chebpts are defined in the Chebfun package
+    % diffmat, introw and chebpts are defined in the Chebfun package
     d = diffmat(N,1,domain);
     dd = diffmat(N,2,domain);
     w = introw(N,domain);
