@@ -15,7 +15,7 @@ params_num.Ncheb = 10;      % number of Chebyshev to describe the shape
 params_num.alpha = 1;       % relaxation parameter in the Newton-Raphson scheme
 params_num.eps = 1e-12;     % convergence critertion: rms(u) < eps
 params_num.maxiter = 100;   % maximum number of iteration steps
-params_num.cheb_eps = 1e-2;     % error for describing the shape
+params_num.cheb_eps = 1e-2; % error for describing the shape
 
 % calculate the Worthinton number
 params_phys.Wo = params_phys.deltarho*params_phys.grav*params_phys.volume0/...
@@ -61,7 +61,7 @@ set(gca,'DataAspectRatio',[1 1 1])
 quiver(rr,zz,nnormals(:,1),nnormals(:,2));
 
 % add noise to the data points
-rng(1,"twister");
+rng(1); % set seed
 sigma_noise = 0.05*params_phys.rneedle;
 tmp=normrnd(0,sigma_noise,[params_num.Nplot,1]);
 for i=1:params_num.Nplot
