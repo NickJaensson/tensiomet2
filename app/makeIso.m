@@ -118,7 +118,7 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
     b2(end) = -z(end);
 
     % determine psi from Laplace law
-    A31 = diag(-sin(psi)./r.^2); % N x N
+    A31 = Gam*diag(-sin(psi)./r.^2); % N x N
     A32 = eye(N); % N x N
     A33 = C*Gam*d+diag(Gam*cos(psi)./r); % N x N
     A345 = [d*psi+sin(psi)./r, -ones(N,1)]; % N x 2
