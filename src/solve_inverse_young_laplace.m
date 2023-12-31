@@ -1,4 +1,4 @@
-function [ tension, pcap, rrlaplace, zzlaplace ] = makeIso(zz_in,rr_in,psi_in,diffmat_in)
+function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(zz_in,rr_in,psi_in,diffmat_in)
     % makeIso(toplot) = [tension, pstat] fits the shape functions to surface 
     % tension and pressure. RMS fitting of R using the Schur complement.
     % toplot specifies if the result is to be plotted.
@@ -9,19 +9,16 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = makeIso(zz_in,rr_in,psi_in,di
     z = zz_in;
     d = diffmat_in;
 
-    g_useP = 0; p_measured = 0;
-
     N = length(r);
-    C = 1;
-    sigma = 10;
-    if g_useP
-        P = p_measured;
-    else
-        P = sigma/2;
-    end
+    
+    % initial guess
+    sigma = 10; 
+    P = sigma/2;
+
     alpha = 0.5;
-    iter = 1;u=1;
-    rmsu = 1e3;
+    u=ones(N,1);
+
+    iter = 1;
 
     while rms(u) > 1e-9
         
@@ -32,14 +29,9 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = makeIso(zz_in,rr_in,psi_in,di
         end  
 
         % create matrix
-        [tA, tb] =  matrix_iso(0,P,sigma,d,0,C,r,z,psi);
+        [tA, tb] =  matrix_iso(0,P,sigma,d,0,r,z,psi);
 
-        % pressure solved or prescribed
-        if g_useP
-            A2 = tA(:,end-1);
-        else
-            A2 = tA(:,end-1:end);
-        end
+        A2 = tA(:,end-1:end);
 
          % Schur Element
         A1 = tA(:,1:end-2);
@@ -62,9 +54,7 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = makeIso(zz_in,rr_in,psi_in,di
         z = z+alpha*u(N+1:2*N);
         psi = psi+alpha*u(2*N+1:3*N);
         sigma = sigma+alpha*u(3*N+1);
-        if ~g_useP
-            P = P+alpha*u(end);
-        end
+        P = P+alpha*u(end);
 
         fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
 
@@ -78,7 +68,7 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = makeIso(zz_in,rr_in,psi_in,di
     
 end
 
-function [ A, b] = matrix_iso(~, P, sigma, d,~,C,r,z,psi)
+function [ A, b] = matrix_iso(~, P, sigma, d,~,r,z,psi)
 
     % matrix and rhs for isotropic interface,
     % its unknowns are: sigma, P.
@@ -94,10 +84,10 @@ function [ A, b] = matrix_iso(~, P, sigma, d,~,C,r,z,psi)
     ZL = zeros(1,N);
 
     % determine r from psi
-    A11 = C*d; % N x N
+    A11 = d; % N x N
     A13 = diag(sin(psi)); % N x N
     A145 = [zeros(N,2)]; % N x 2
-    b1 = cos(psi)-C*d*r;  % N x 1
+    b1 = cos(psi)-d*r;  % N x 1
 
     % boundary condition r(1) = 0
     A11(1,:) = IDL; 
@@ -106,10 +96,10 @@ function [ A, b] = matrix_iso(~, P, sigma, d,~,C,r,z,psi)
     b1(1) = -r(1);
 
     % determine z from psi
-    A22 = C*d;  % N x N
+    A22 = d;  % N x N
     A23 = diag(-cos(psi)); % N x N
     A245 = [zeros(N,2)]; % N x 2
-    b2 = sin(psi)-C*d*z; % N x 1
+    b2 = sin(psi)-d*z; % N x 1
 
     % boundary condition z(end) =0
     A22(end,:) = fliplr(IDL);
@@ -120,9 +110,9 @@ function [ A, b] = matrix_iso(~, P, sigma, d,~,C,r,z,psi)
     % determine psi from Laplace law
     A31 = sigma*diag(-sin(psi)./r.^2); % N x N
     A32 = eye(N); % N x N
-    A33 = C*sigma*d+diag(sigma*cos(psi)./r); % N x N
+    A33 = sigma*d+diag(sigma*cos(psi)./r); % N x N
     A345 = [d*psi+sin(psi)./r, -ones(N,1)]; % N x 2
-    b3 = -z+P-C*sigma*(d*psi)-sigma*sin(psi)./r; % N x 1
+    b3 = -z+P-sigma*(d*psi)-sigma*sin(psi)./r; % N x 1
 
     % boundary condition phi(0) = 0
     A31(1,:) = ZL;

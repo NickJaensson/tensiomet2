@@ -102,7 +102,7 @@ psifit_nag = atan2(vars_num_fit.D*zzfit_nag,vars_num_fit.D*rrfit_nag);
 
 % calculate the best fitting Laplace shape
 [st,press,rrlaplace,zzlaplace] = ...
-    makeIso(zzfit_nag,rrfit_nag,psifit_nag,vars_num_fit.D);
+    solve_inverse_young_laplace(zzfit_nag,rrfit_nag,psifit_nag,vars_num_fit.D);
 
 disp(['estimated surface tension = ',num2str(st,12)]);
 
