@@ -11,7 +11,8 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
 % Inputs:
 %   params_phys - A structure containing physical parameters:
 %                 deltarho (density difference), grav (gravity), volume0 (initial volume),
-%                 sigma (surface tension), rneedle (radius of the needle).
+%                 sigma (surface tension), rneedle (radius of the needle), 
+%                 Wo (Worhtington number).
 %   params_num - A structure containing numerical parameters:
 %                N (number of points), eps (tolerance for convergence),
 %                maxiter (maximum iterations), alpha (relaxation parameter).
@@ -24,10 +25,6 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
 %              Differentiation and integration matrices, Chebyshev points, and modified
 %              matrices post-solution (ws, Ds).
 %
-
-    % calculate the Worthinton number
-    params_phys.Wo = params_phys.deltarho*params_phys.grav*params_phys.volume0/...
-                                        (2*pi*params_phys.sigma*params_phys.rneedle);
 
     % find an initial guess of the shape
     [r_guess, z_guess, s_guess] = guess_shape(params_phys,1000);

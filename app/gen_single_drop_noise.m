@@ -17,6 +17,10 @@ params_num.eps = 1e-12;     % convergence critertion: rms(u) < eps
 params_num.maxiter = 100;   % maximum number of iteration steps
 params_num.cheb_eps = 1e-2;     % error for describing the shape
 
+% calculate the Worthinton number
+params_phys.Wo = params_phys.deltarho*params_phys.grav*params_phys.volume0/...
+                                    (2*pi*params_phys.sigma*params_phys.rneedle);
+
 % solve the Young-Laplace equation for the given parameters
 [vars_sol,vars_num] = solve_forward_young_laplace(params_phys, params_num);
 
