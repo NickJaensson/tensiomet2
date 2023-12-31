@@ -132,8 +132,6 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
 
     % Build small matrix, recheck.
 
-    %A = [[A11, Z, A13,A14];[Z, A22, A23,A24];[A31, A32, A33,A34];[fliplr(IDL), ZL,ZL,zeros(1,num_auxvar)]];
-    %b = [b1;b2;b3;rn-r(end)];
     A = [[A11, Z, A13, A14(:,2:end)];[Z, A22, A23, A24(:,2:end)];[A31, A32, A33, A34(:,2:end)]];
     b = [b1;b2;b3];
     
