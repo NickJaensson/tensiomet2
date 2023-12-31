@@ -15,7 +15,7 @@ params_num.Ncheb = 10;      % number of Chebyshev to describe the shape
 params_num.alpha = 1;       % relaxation parameter in the Newton-Raphson scheme
 params_num.eps = 1e-12;     % convergence critertion: rms(u) < eps
 params_num.maxiter = 100;   % maximum number of iteration steps
-params.cheb_eps = 1e-2;     % error for describing the shape
+params_num.cheb_eps = 1e-2;     % error for describing the shape
 
 % solve the Young-Laplace equation for the given parameters
 [vars_sol,vars_num] = solve_forward_young_laplace(params_phys, params_num);
@@ -83,8 +83,8 @@ rrb = interp1(ss_noise,rr_noise,ssb,'spline');
 zzb = interp1(ss_noise,zz_noise,ssb,'spline');
 
 % fit the points using Chebyshev polynomials
-fr = chebfun(rrb',[ssb(1),ssb(end)],'equi','eps',params.cheb_eps);
-fz = chebfun(zzb',[ssb(1),ssb(end)],'equi','eps',params.cheb_eps);
+fr = chebfun(rrb',[ssb(1),ssb(end)],'equi','eps',params_num.cheb_eps);
+fz = chebfun(zzb',[ssb(1),ssb(end)],'equi','eps',params_num.cheb_eps);
 figure; plot(fr); hold on; scatter(ssb,rrb);
 xlabel('s','FontSize',24); ylabel('r','FontSize',24);
 figure; plot(fz); hold on; scatter(ssb,zzb);
