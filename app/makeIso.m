@@ -19,7 +19,7 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = makeIso(zz_in,rr_in,psi_in,di
     else
         P = sigma/2;
     end
-    alpha = 0.25;
+    alpha = 0.5;
     iter = 1;u=1;
     rmsu = 1e3;
 
