@@ -96,7 +96,7 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
     % determine r from psi
     A11 = C*d; % N x N
     A13 = diag(sin(psi)); % N x N
-    A14 = [d*r, zeros(N,2)]; % N x 3
+    A14 = [zeros(N,1), zeros(N,2)]; % N x 3
     b1 = cos(psi)-C*d*r;  % N x 1
 
     % boundary condition r(1) = 0
@@ -108,7 +108,7 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
     % determine z from psi
     A22 = C*d;  % N x N
     A23 = diag(-cos(psi)); % N x N
-    A24 = [d*z, zeros(N,2)]; % N x 3
+    A24 = [zeros(N,1), zeros(N,2)]; % N x 3
     b2 = sin(psi)-C*d*z; % N x 1
 
     % boundary condition z(end) =0
