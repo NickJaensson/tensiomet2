@@ -94,22 +94,22 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
     ZL = zeros(1,N);
 
     % r-psi identity
-    A11 = C*d;
-    A13 = diag(sin(psi));
-    A14 = [d*r, zeros(N,2)];
-    b1 = cos(psi)-C*d*r;
+    A11 = C*d; % N x N
+    A13 = diag(sin(psi)); % N x N
+    A14 = [d*r, zeros(N,2)]; % N x 3
+    b1 = cos(psi)-C*d*r;  % N x 1
 
     % boundary condition r(1) = 0
-    A11(1,:) = IDL;
+    A11(1,:) = IDL; 
     A13(1,:) = ZL;
     A14(1,:) = zeros(1,3);
     b1(1) = -r(1);
 
     % z-psi identity
-    A22 = C*d;
-    A23 = diag(-cos(psi));
-    A24 = [d*z, zeros(N,2)];
-    b2 = sin(psi)-C*d*z;
+    A22 = C*d;  % N x N
+    A23 = diag(-cos(psi)); % N x N
+    A24 = [d*z, zeros(N,2)]; % N x 3
+    b2 = sin(psi)-C*d*z; % N x 1
 
     % boundary condition z(end) =0
     A22(end,:) = fliplr(IDL);
@@ -117,11 +117,11 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
     A24(end,:) = zeros(1,3);
     b2(end) = -z(end);
 
-    A31 = diag(-sin(psi)./r.^2);
-    A32 = eye(N);
-    A33 = C*Gam*d+diag(Gam*cos(psi)./r);
-    A34 = [Gam*d*psi,d*psi+sin(psi)./r, -ones(N,1) , zeros(N,0)];
-    b3 = -z+P-C*Gam*(d*psi)-Gam*sin(psi)./r;
+    A31 = diag(-sin(psi)./r.^2); % N x N
+    A32 = eye(N); % N x N
+    A33 = C*Gam*d+diag(Gam*cos(psi)./r); % N x N
+    A34 = [Gam*d*psi,d*psi+sin(psi)./r, -ones(N,1) , zeros(N,0)]; % N x 3
+    b3 = -z+P-C*Gam*(d*psi)-Gam*sin(psi)./r; % N x 1
 
     A31(1,:) = ZL;
     A32(1,:) = ZL;
