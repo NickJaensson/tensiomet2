@@ -93,7 +93,7 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
     IDL = [1, zeros(1,N-1)];
     ZL = zeros(1,N);
 
-    % r-psi identity
+    % determine r from psi
     A11 = C*d; % N x N
     A13 = diag(sin(psi)); % N x N
     A14 = [d*r, zeros(N,2)]; % N x 3
@@ -105,7 +105,7 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
     A14(1,:) = zeros(1,3);
     b1(1) = -r(1);
 
-    % z-psi identity
+    % determine z from psi
     A22 = C*d;  % N x N
     A23 = diag(-cos(psi)); % N x N
     A24 = [d*z, zeros(N,2)]; % N x 3
@@ -117,12 +117,14 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
     A24(end,:) = zeros(1,3);
     b2(end) = -z(end);
 
+    % determine psi from Laplace law
     A31 = diag(-sin(psi)./r.^2); % N x N
     A32 = eye(N); % N x N
     A33 = C*Gam*d+diag(Gam*cos(psi)./r); % N x N
     A34 = [Gam*d*psi,d*psi+sin(psi)./r, -ones(N,1) , zeros(N,0)]; % N x 3
     b3 = -z+P-C*Gam*(d*psi)-Gam*sin(psi)./r; % N x 1
 
+    % boundary condition phi(0) = 0
     A31(1,:) = ZL;
     A32(1,:) = ZL;
     A33(1,:) = IDL;
