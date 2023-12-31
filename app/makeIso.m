@@ -13,11 +13,11 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = makeIso(zz_in,rr_in,psi_in,di
 
     N = length(r);
     C = 1;
-    Gam = 10;
+    sigma = 10;
     if g_useP
         P = p_measured;
     else
-        P = Gam/2;
+        P = sigma/2;
     end
     alpha = 0.25;
     iter = 1;u=1;
@@ -32,7 +32,7 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = makeIso(zz_in,rr_in,psi_in,di
         end  
 
         % create matrix
-        [tA, tb] =  matrix_iso(0,P,Gam,d,0,C,r,z,psi);
+        [tA, tb] =  matrix_iso(0,P,sigma,d,0,C,r,z,psi);
 
         % pressure solved or prescribed
         if g_useP
@@ -61,7 +61,7 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = makeIso(zz_in,rr_in,psi_in,di
         r = r+alpha*u(1:N);
         z = z+alpha*u(N+1:2*N);
         psi = psi+alpha*u(2*N+1:3*N);
-        Gam = Gam+alpha*u(3*N+1);
+        sigma = sigma+alpha*u(3*N+1);
         if ~g_useP
             P = P+alpha*u(end);
         end
@@ -73,15 +73,15 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = makeIso(zz_in,rr_in,psi_in,di
 
     rrlaplace = r;
     zzlaplace = z;
-    tension = Gam;
+    tension = sigma;
     pcap = P;
     
 end
 
-function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
+function [ A, b] = matrix_iso(~, P, sigma, d,~,C,r,z,psi)
 
     % matrix and rhs for isotropic interface,
-    % its unknowns are: Gam, P.
+    % its unknowns are: sigma, P.
 
     % Final check uses this routine in all functions for drop create and detect
 
@@ -118,11 +118,11 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
     b2(end) = -z(end);
 
     % determine psi from Laplace law
-    A31 = Gam*diag(-sin(psi)./r.^2); % N x N
+    A31 = sigma*diag(-sin(psi)./r.^2); % N x N
     A32 = eye(N); % N x N
-    A33 = C*Gam*d+diag(Gam*cos(psi)./r); % N x N
+    A33 = C*sigma*d+diag(sigma*cos(psi)./r); % N x N
     A345 = [d*psi+sin(psi)./r, -ones(N,1)]; % N x 2
-    b3 = -z+P-C*Gam*(d*psi)-Gam*sin(psi)./r; % N x 1
+    b3 = -z+P-C*sigma*(d*psi)-sigma*sin(psi)./r; % N x 1
 
     % boundary condition phi(0) = 0
     A31(1,:) = ZL;
