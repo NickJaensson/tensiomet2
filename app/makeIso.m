@@ -131,8 +131,7 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
     A34(1,:) = zeros(1,2);
     b3(1) = -psi(1);
 
-    % Build small matrix, recheck.
-
+    % build complete matrix and RHS
     A = [[A11, Z, A13, A14];[Z, A22, A23, A24];[A31, A32, A33, A34]];
     b = [b1;b2;b3];
     
