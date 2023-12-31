@@ -85,7 +85,6 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
 
     % Final check uses this routine in all functions for drop create and detect
 
-    num_auxvar = 3;
     N = length(r);
 
     % full problem in r,z and psi
@@ -97,37 +96,37 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
     % r-psi identity
     A11 = C*d;
     A13 = diag(sin(psi));
-    A14 = [d*r, zeros(N,num_auxvar-1)];
+    A14 = [d*r, zeros(N,2)];
     b1 = cos(psi)-C*d*r;
 
     % boundary condition r(1) = 0
     A11(1,:) = IDL;
     A13(1,:) = ZL;
-    A14(1,:) = zeros(1,num_auxvar);
+    A14(1,:) = zeros(1,3);
     b1(1) = -r(1);
 
     % z-psi identity
     A22 = C*d;
     A23 = diag(-cos(psi));
-    A24 = [d*z, zeros(N,num_auxvar-1)];
+    A24 = [d*z, zeros(N,2)];
     b2 = sin(psi)-C*d*z;
 
     % boundary condition z(end) =0
     A22(end,:) = fliplr(IDL);
     A23(end,:) = ZL;
-    A24(end,:) = zeros(1,num_auxvar);
+    A24(end,:) = zeros(1,3);
     b2(end) = -z(end);
 
     A31 = diag(-sin(psi)./r.^2);
     A32 = eye(N);
     A33 = C*Gam*d+diag(Gam*cos(psi)./r);
-    A34 = [Gam*d*psi,d*psi+sin(psi)./r, -ones(N,1) , zeros(N,num_auxvar-3)];
+    A34 = [Gam*d*psi,d*psi+sin(psi)./r, -ones(N,1) , zeros(N,0)];
     b3 = -z+P-C*Gam*(d*psi)-Gam*sin(psi)./r;
 
     A31(1,:) = ZL;
     A32(1,:) = ZL;
     A33(1,:) = IDL;
-    A34(1,:) = zeros(1,num_auxvar);
+    A34(1,:) = zeros(1,3);
     b3(1) = -psi(1);
 
     % Build small matrix, recheck.
@@ -136,4 +135,3 @@ function [ A, b] = matrix_iso(~, P, Gam, d,~,C,r,z,psi)
     b = [b1;b2;b3];
     
 end
-
