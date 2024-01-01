@@ -9,45 +9,22 @@ params_num.p0_guess = 5;      % guess for pressure
 params_num.alpha = 0.5;       % relaxation parameter in inverse problem
 params_num.maxiter_inv = 100; % maximum number of iteration steps inverse
 
-% determine the normal vectors
-normals(:,1) = vars_num.Ds*vars_sol.z; % r-component of the normals
-normals(:,2) = -vars_num.Ds*vars_sol.r; % z-component of the normals
-for i=1:size(normals,2)
-    normals(i,:) = normals(i,:)/norm(normals(i,:));
-end
+normals_plot = get_normals(vars_sol, vars_num, s_plot);
 
-% interpolate the numerical solutions on a uniform grid.
-% NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
-% though all the points (see book of Trefethen on Spectral Methods in 
-% Matlab, page  63). For plotting purposes we use a simpler interpolation 
-ss = linspace(vars_num.s(1),vars_num.s(end),params_num.Nplot)';
-rr = interp1(vars_num.s,vars_sol.r,ss,'pchip');
-zz = interp1(vars_num.s,vars_sol.z,ss,'pchip');
-
-nnormals(:,1) = interp1(vars_num.s,normals(:,1),ss,'pchip');
-nnormals(:,2) = interp1(vars_num.s,normals(:,2),ss,'pchip');
-for i=1:size(nnormals,2)
-    nnormals(i,:) = nnormals(i,:)/norm(nnormals(i,:));
-end
-
-% plot the shape of the drop on the plotting grid
-figure; hold on
-scatter(rr',zz','b');
-plot(rr',zz','b');
-set(gca,'DataAspectRatio',[1 1 1])
-quiver(rr,zz,nnormals(:,1),nnormals(:,2));
+plot_shape(z_plot, r_plot, vars_sol);
+quiver(r_plot,z_plot,normals_plot(:,1),normals_plot(:,2));
 
 % add noise to the data points
 rng(1); % set seed
 sigma_noise = 0.05*params_phys.rneedle;
 tmp=normrnd(0,sigma_noise,[params_num.Nplot,1]);
 for i=1:params_num.Nplot
-    rr_noise(i) = rr(i) + tmp(i)*nnormals(i,1);
-    zz_noise(i) = zz(i) + tmp(i)*nnormals(i,2);
+    rr_noise(i) = r_plot(i) + tmp(i)*normals_plot(i,1);
+    zz_noise(i) = z_plot(i) + tmp(i)*normals_plot(i,2);
 end
 figure; hold on
 scatter(rr_noise',zz_noise','b');
-plot(rr',zz','r');
+plot(r_plot',z_plot','r');
 set(gca,'DataAspectRatio',[1 1 1])
 
 % get continuous s around full shape
