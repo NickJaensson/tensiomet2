@@ -56,14 +56,14 @@ function [vars_sol, vars_num] = solve_forward_young_laplace_elastic(vars_sol, pa
         u = A\b;
     
         % update variables
-        vars_sol.r   = vars_sol.r + params_num.alpha*u(1:params_num.N);
-        vars_sol.z   = vars_sol.z + params_num.alpha*u(params_num.N+1:2*params_num.N);
-        vars_sol.psi = vars_sol.psi + params_num.alpha*u(2*params_num.N+1:3*params_num.N);    
-        vars_sol.sigmas = vars_sol.sigmas + params_num.alpha*u(3*params_num.N+1:4*params_num.N);
-        vars_sol.sigmap = vars_sol.sigmap + params_num.alpha*u(4*params_num.N+1:5*params_num.N);
-        vars_sol.lams = vars_sol.lams + params_num.alpha*u(5*params_num.N+1:6*params_num.N);
-        vars_sol.lamp = vars_sol.lamp + params_num.alpha*u(6*params_num.N+1:7*params_num.N);
-        vars_sol.p0  = vars_sol.p0 + params_num.alpha*u(end);
+        vars_sol.r   = vars_sol.r + u(1:params_num.N);
+        vars_sol.z   = vars_sol.z + u(params_num.N+1:2*params_num.N);
+        vars_sol.psi = vars_sol.psi + u(2*params_num.N+1:3*params_num.N);    
+        vars_sol.sigmas = vars_sol.sigmas + u(3*params_num.N+1:4*params_num.N);
+        vars_sol.sigmap = vars_sol.sigmap + u(4*params_num.N+1:5*params_num.N);
+        vars_sol.lams = vars_sol.lams + u(5*params_num.N+1:6*params_num.N);
+        vars_sol.lamp = vars_sol.lamp + u(6*params_num.N+1:7*params_num.N);
+        vars_sol.p0  = vars_sol.p0 + u(end);
 
         fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
 

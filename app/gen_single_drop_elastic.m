@@ -21,7 +21,6 @@ params_phys.strainmeasure = 'pepicelli'; % which elastic constitutive model
 % numerical parameters
 params_num.N = 40;          % resolution of the discretization for calculation
 params_num.Nplot = 80;      % resolution of the discretization for plotting
-params_num.alpha = 1;       % relaxation parameter in the Newton-Raphson scheme
 params_num.maxiter = 100;   % maximum number of iteration steps
 params_num.eps_fw = 1e-12;  % convergence critertion forward: rms(u) < eps
 

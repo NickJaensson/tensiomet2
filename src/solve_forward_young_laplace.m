@@ -64,11 +64,11 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
         u = A\b;
         
         % update variables
-        vars_sol.r   = vars_sol.r   + params_num.alpha*u(1:params_num.N);
-        vars_sol.z   = vars_sol.z   + params_num.alpha*u(params_num.N+1:2*params_num.N);
-        vars_sol.psi = vars_sol.psi + params_num.alpha*u(2*params_num.N+1:3*params_num.N); 
-        vars_sol.C   = vars_sol.C   + params_num.alpha*u(3*params_num.N+1);
-        vars_sol.p0  = vars_sol.p0  + params_num.alpha*u(3*params_num.N+2);    
+        vars_sol.r   = vars_sol.r   + u(1:params_num.N);
+        vars_sol.z   = vars_sol.z   + u(params_num.N+1:2*params_num.N);
+        vars_sol.psi = vars_sol.psi + u(2*params_num.N+1:3*params_num.N); 
+        vars_sol.C   = vars_sol.C   + u(3*params_num.N+1);
+        vars_sol.p0  = vars_sol.p0  + u(3*params_num.N+2);    
         
         fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
     
