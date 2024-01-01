@@ -68,18 +68,5 @@ function [vars_sol, vars_num] = solve_forward_young_laplace_elastic(vars_sol, pa
         fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
 
     end
-
-    % the integration and differentation matrices in the deformed state
-    % NOTE: this construction of Ddef is simlar to first applying D*f/C,
-    % and then dividing the components by the components of (1/lams)
-    vars_num.wdef = vars_num.w.*vars_sol.lams'/vars_num.C; 
-    vars_num.Ddef = vars_num.C*vars_num.D.*repelem((1./vars_sol.lams)',params_num.N,1); 
-
-    % construct the integration matrix from the integration vector
-    vars_num.wmat = repmat(vars_num.w,params_num.N,1);
-    vars_num.wmat = tril(vars_num.wmat);
-
-    % compute the value of s in the deformed state
-    vars_num.sdef = vars_num.wmat*vars_sol.lams/vars_num.C;
    
 end

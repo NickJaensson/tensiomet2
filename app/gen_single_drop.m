@@ -29,15 +29,11 @@ vars_sol = solve_forward_young_laplace(params_phys, params_num, ...
     shape_guess, vars_num);
 
 % update the values in the numerical grid
-vars_num = update_numerical_grid(vars_sol,vars_num);
+vars_num = update_numerical_grid(vars_sol,vars_num,0);
 
-% calculate the volume and the area
-volume = pi*vars_num.ws*(vars_sol.r.^2.*sin(vars_sol.psi));
-area = pi*2*vars_num.ws*(vars_sol.r);
+[volume,area] = calculate_volume_area(vars_sol,vars_num,1);
 
-disp(['volume = ', num2str(volume,15)]);
-disp(['area = ', num2str(area,15)]);
-disp(['pressure = ', num2str(vars_sol.p0,15)]);
+
 
 % interpolate the numerical solutions on a finer grid. 
 % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 

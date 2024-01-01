@@ -38,15 +38,9 @@ vars_sol = solve_forward_young_laplace(params_phys, params_num, ...
     shape_guess, vars_num);
 
 % update the values in the numerical grid
-vars_num = update_numerical_grid(vars_sol,vars_num);
+vars_num = update_numerical_grid(vars_sol,vars_num,0);
 
-% calculate the volume and the area
-volume = pi*vars_num.w*(vars_sol.r.^2.*sin(vars_sol.psi))/vars_sol.C;
-area = pi*2*vars_num.w*(vars_sol.r)/vars_sol.C;
-
-disp(['volume = ', num2str(volume,15)]);
-disp(['area = ', num2str(area,15)]);
-disp(['pressure = ', num2str(vars_sol.p0,15)]);
+[volume,area] = calculate_volume_area(vars_sol,vars_num,1);
 
 % interpolate the numerical solutions on a finer grid. 
 % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
@@ -89,13 +83,9 @@ for ii = 1:length(params_phys.fracm)
     % solve the elastic Young-Laplace equation
     [vars_sol,vars_num] = solve_forward_young_laplace_elastic(vars_sol, params_phys, params_num, vars_num);
 
-    % calculate the volume and the area
-    volume = pi*vars_num.wdef*(vars_sol.r.^2.*sin(vars_sol.psi));
-    area = pi*2*vars_num.wdef*(vars_sol.r);
+    vars_num = update_numerical_grid(vars_sol,vars_num,1);
 
-    disp(['volume = ', num2str(volume,15)]);
-    disp(['area = ', num2str(area,15)]);
-    disp(['pressure = ', num2str(vars_sol.p0,15)]);
+    [volume,area] = calculate_volume_area(vars_sol,vars_num,1);
 
     % interpolate the numerical solutions on a finer grid. 
     % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
@@ -119,18 +109,18 @@ for ii = 1:length(params_phys.fracm)
 
     % plot the surface stresses
     figure;
-    plot(vars_num.sdef,vars_sol.sigmas,'LineWidth',2); hold on
-    plot(vars_num.sdef,vars_sol.sigmap,'LineWidth',2);
+    plot(vars_num.s,vars_sol.sigmas,'LineWidth',2); hold on
+    plot(vars_num.s,vars_sol.sigmap,'LineWidth',2);
     xlabel('s','FontSize',32);
     ylabel('\sigma','FontSize',32);
     legend('\sigma_s','\sigma_\phi','FontSize',24,'Location','northwest');
-    xlim([0,vars_num.sdef(end)])
+    xlim([0,vars_num.s(end)])
     ax = gca; ax.FontSize = 24;
 
     % determine the curvatures
     % NOTE: kappap = sin(psi)/r, which is problematic for r=0. This is
     % solved here by taking kappap(0) = kappas(0)
-    kappas = vars_num.Ddef*vars_sol.psi;
+    kappas = vars_num.D*vars_sol.psi;
     kappap = kappas;
     kappap(2:end) = sin(vars_sol.psi(2:end))./vars_sol.r(2:end);
 
