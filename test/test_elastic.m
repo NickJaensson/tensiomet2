@@ -11,11 +11,11 @@ close all
 % disp ( abs(max(sigmap)-3.86864491619739) );
 
 % compare to old values (gen-pendant-drop before refactoring:
-eps2 = 1e-10; 
-assert ( abs(volume-12.8000000000001) < eps2 );
-assert ( abs(area-22.5156483902096) < eps2 );
-assert ( abs(vars_sol.p0-2.02056164104124) < eps2 );
-assert ( abs(max(vars_sol.sigmas)-3.33958761227925) < eps2 );
-assert ( abs(max(vars_sol.sigmap)-3.86864491619756) < eps2 );
+eps_test = 1e-10; 
+assert ( abs(volume-12.8000000000001) < eps_test );
+assert ( abs(area-22.5156483902096) < eps_test );
+assert ( abs(vars_sol.p0-2.02056164104124) < eps_test );
+assert ( abs(max(vars_sol.sigmas)-3.33958761227925) < eps_test );
+assert ( abs(max(vars_sol.sigmap)-3.86864491619756) < eps_test );
 
 disp('All tests passed!')
