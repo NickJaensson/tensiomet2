@@ -28,11 +28,9 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
 
     % find an initial guess of the shape
     [r_guess, z_guess, s_guess] = guess_shape(params_phys,1000);
-    
-    smax = s_guess(end); % the total length of the 1D domain
-    
+        
     % get the differentation/integration matrices and the grid
-    vars_num = numerical_grid(params_num,[0,smax]);
+    vars_num = numerical_grid(params_num,[0,s_guess(end)]);
     
     % interpolate the shape in the Chebyshev points
     r = interp1(s_guess,r_guess,vars_num.s0);
