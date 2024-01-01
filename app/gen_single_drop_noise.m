@@ -16,7 +16,7 @@ for i=1:size(normals,2)
     normals(i,:) = normals(i,:)/norm(normals(i,:));
 end
 
-% interpolate the numerical solutions on a finer grid.
+% interpolate the numerical solutions on a uniform grid.
 % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
 % though all the points (see book of Trefethen on Spectral Methods in 
 % Matlab, page  63). For plotting purposes we use a simpler interpolation 
