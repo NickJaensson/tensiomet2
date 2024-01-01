@@ -14,7 +14,7 @@ params_num.Nplot = 80;      % resolution of the discretization for plotting
 params_num.alpha = 1;       % relaxation parameter in the Newton-Raphson scheme
 params_num.eps = 1e-12;     % convergence critertion: rms(u) < eps
 params_num.maxiter = 100;   % maximum number of iteration steps
-params_num.cheb_eps = 1e-2; % error for describing the shape
+params_num.eps_cheb = 1e-2; % error for describing the shape
 
 % calculate the Worthinton number
 params_phys.Wo = params_phys.deltarho*params_phys.grav*params_phys.volume0/...
@@ -86,8 +86,8 @@ rrb = interp1(ss_noise,rr_noise,ssb,'spline');
 zzb = interp1(ss_noise,zz_noise,ssb,'spline');
 
 % fit the points using Chebyshev polynomials
-fr = chebfun(rrb',[ssb(1),ssb(end)],'equi','eps',params_num.cheb_eps);
-fz = chebfun(zzb',[ssb(1),ssb(end)],'equi','eps',params_num.cheb_eps);
+fr = chebfun(rrb',[ssb(1),ssb(end)],'equi','eps',params_num.eps_cheb);
+fz = chebfun(zzb',[ssb(1),ssb(end)],'equi','eps',params_num.eps_cheb);
 figure; plot(fr); hold on; scatter(ssb,rrb);
 xlabel('s','FontSize',24); ylabel('r','FontSize',24);
 figure; plot(fz); hold on; scatter(ssb,zzb);
