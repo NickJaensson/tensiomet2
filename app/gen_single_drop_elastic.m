@@ -10,7 +10,6 @@ params_phys.rneedle = 1.4;    % radius of the needle
 params_phys.volume0 = 16;     % prescribed volume
 params_phys.deltarho = 1.1;   % density difference
 
-
 % physical parameters for the elastic problem
 params_phys.Kmod = 3;          % elastic dilational modulus
 params_phys.Gmod = 2;          % elastic shear modulus
