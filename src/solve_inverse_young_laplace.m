@@ -11,16 +11,17 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
 
     N = length(r);
     
-    % initial guess
-    sigma = 10; 
-    P = sigma/2;
+    alpha = params_num.alpha;
 
-    alpha = 0.5;
-    u=ones(N,1);
+    % initial guess
+    sigma = params_num.sigma_guess; 
+    P = sigma/(2*params_phys.rneedle);
+
+    u = ones(N,1);
 
     iter = 1;
 
-    while rms(u) > 1e-9
+    while rms(u) > params_num.eps_inv
         
         iter = iter+1;
         
