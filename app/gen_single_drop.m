@@ -1,3 +1,5 @@
+% calculate the Laplace shape for a given surface tension and given
+% pressure/volume/area
 
 close all; clear
 
