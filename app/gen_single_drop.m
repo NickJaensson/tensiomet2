@@ -33,18 +33,12 @@ vars_num = update_numerical_grid(vars_sol,vars_num,0);
 
 [volume,area] = calculate_volume_area(vars_sol,vars_num,1);
 
-% interpolate the numerical solutions on a uniform grid. 
-% NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
-% though all the points (see book of Trefethen on Spectral Methods in 
-% Matlab, page  63). For plotting purposes we use a simpler interpolation 
-ss = linspace(vars_num.s(1),vars_num.s(end),params_num.Nplot)';
-rr = interp1(vars_num.s,vars_sol.r,ss,'pchip');
-zz = interp1(vars_num.s,vars_sol.z,ss,'pchip');
+[s_plot,r_plot,z_plot] = interpolate_solutions(vars_sol, vars_num, params_num);
 
 % plot the shape of the drop on the plotting grid
 figure; hold on
-scatter(rr',zz','b');
-plot(rr',zz','b');
+scatter(r_plot',z_plot','b');
+plot(r_plot',z_plot','b');
 set(gca,'DataAspectRatio',[1 1 1])
 
 % determine the curvatures
