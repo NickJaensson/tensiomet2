@@ -9,15 +9,16 @@ params_phys.volume0 = 16;     % prescribed volume
 params_phys.deltarho = 1.1;   % density difference
 
 % numerical parameters
-params_num.N = 40;          % resolution of the discretization for calculation
-params_num.Nplot = 80;      % resolution of the discretization for plotting
-params_num.eps_fw = 1e-12;  % convergence critertion forward: rms(u) < eps
-params_num.maxiter = 100;   % maximum number of iteration steps
-params_num.eps_cheb = 1e-2; % error for describing the shape
-params_num.eps_inv = 1e-9;  % convergence critertion forward: rms(u) < eps
-params_num.sigma_guess = 10;% guess for interfacial tension value
-params_num.p0_guess = 5;    % guess for pressure
-params_num.alpha = 0.5;     % relaxation parameter in inverse problem
+params_num.N = 40;            % resolution of the discretization for calculation
+params_num.Nplot = 80;        % resolution of the discretization for plotting
+params_num.eps_fw = 1e-12;    % convergence critertion forward: rms(u) < eps
+params_num.maxiter = 100;     % maximum number of iteration steps
+params_num.eps_cheb = 1e-2;   % error for describing the shape
+params_num.eps_inv = 1e-9;    % convergence critertion forward: rms(u) < eps
+params_num.sigma_guess = 10;  % guess for interfacial tension value
+params_num.p0_guess = 5;      % guess for pressure
+params_num.alpha = 0.5;       % relaxation parameter in inverse problem
+params_num.maxiter_inv = 100; % maximum number of iteration steps inverse
 
 % calculate the Worthinton number
 params_phys.Wo = params_phys.deltarho*params_phys.grav*params_phys.volume0/...

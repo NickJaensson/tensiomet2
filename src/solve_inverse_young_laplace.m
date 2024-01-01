@@ -22,7 +22,7 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
         
         iter = iter+1;
         
-        if iter > 100
+        if iter > params_num.maxiter_inv
             error('Iteration did not converge!')
         end  
 
