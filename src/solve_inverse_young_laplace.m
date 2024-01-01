@@ -27,7 +27,7 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
         end  
 
         % create matrix
-        [tA, tb] =  matrix_iso(0,P,sigma,D,0,r,z,psi);
+        [tA, tb] =  matrix_iso(0,P,sigma,D,0,r,z,psi,params_phys);
 
         A2 = tA(:,end-1:end);
 
@@ -66,7 +66,7 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
     
 end
 
-function [ A, b] = matrix_iso(~, P, sigma, D,~,r,z,psi)
+function [ A, b] = matrix_iso(~, P, sigma, D,~,r,z,psi,params_phys)
 
     % matrix and rhs for isotropic interface,
     % its unknowns are: sigma, P.
@@ -107,10 +107,10 @@ function [ A, b] = matrix_iso(~, P, sigma, D,~,r,z,psi)
 
     % determine psi from Laplace law
     A31 = sigma*diag(-sin(psi)./r.^2); % N x N
-    A32 = eye(N); % N x N
+    A32 = params_phys.deltarho*params_phys.grav*eye(N); % N x N
     A33 = sigma*D+diag(sigma*cos(psi)./r); % N x N
     A345 = [D*psi+sin(psi)./r, -ones(N,1)]; % N x 2
-    b3 = -z+P-sigma*(D*psi)-sigma*sin(psi)./r; % N x 1
+    b3 = -params_phys.deltarho*params_phys.grav*z+P-sigma*(D*psi)-sigma*sin(psi)./r; % N x 1
 
     % boundary condition phi(0) = 0
     A31(1,:) = ZL;

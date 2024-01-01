@@ -3,10 +3,10 @@ close all; clear
 
 % physical parameters
 params_phys.sigma = 4;        % surface tension
-params_phys.grav = 1.0;       % gravitational acceleration
-params_phys.rneedle = 1.0;    % radius of the needle
+params_phys.grav = 1.2;       % gravitational acceleration
+params_phys.rneedle = 1.4;    % radius of the needle
 params_phys.volume0 = 16;     % prescribed volume
-params_phys.deltarho = 1.0;   % density difference
+params_phys.deltarho = 1.1;   % density difference
 
 % numerical parameters
 params_num.N = 40;          % resolution of the discretization for calculation
@@ -109,5 +109,5 @@ psi_fit = atan2(vars_num_fit.D*zz_fit,vars_num_fit.D*rr_fit);
 disp(['estimated surface tension = ',num2str(st,12)]);
 
 % current output:
-% iter 37: rms(u) = 7.169377e-10
-% estimated surface tension = 5.4216880968
+% iter 60: rms(u) = 9.315356e-10
+% estimated surface tension = 8.10429126234
