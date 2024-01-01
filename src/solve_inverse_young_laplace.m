@@ -8,17 +8,14 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
     r = rr_in;
     z = zz_in;
     D = vars_num.D;
-
-    N = length(r);
+    N = params_num.N;
     
-    alpha = params_num.alpha;
-
     % initial guess
     sigma = params_num.sigma_guess; 
-    P = sigma/(2*params_phys.rneedle);
+    P = params_num.p0_guess; 
 
+    % initialize the iteration
     u = ones(N,1);
-
     iter = 1;
 
     while rms(u) > params_num.eps_inv
@@ -51,11 +48,11 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
         u = [u1;u2];
 
         % update variables
-        r = r+alpha*u(1:N);
-        z = z+alpha*u(N+1:2*N);
-        psi = psi+alpha*u(2*N+1:3*N);
-        sigma = sigma+alpha*u(3*N+1);
-        P = P+alpha*u(end);
+        r = r+params_num.alpha*u(1:N);
+        z = z+params_num.alpha*u(N+1:2*N);
+        psi = psi+params_num.alpha*u(2*N+1:3*N);
+        sigma = sigma+params_num.alpha*u(3*N+1);
+        P = P+params_num.alpha*u(end);
 
         fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
 

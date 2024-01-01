@@ -16,7 +16,8 @@ params_num.maxiter = 100;   % maximum number of iteration steps
 params_num.eps_cheb = 1e-2; % error for describing the shape
 params_num.eps_inv = 1e-9;  % convergence critertion forward: rms(u) < eps
 params_num.sigma_guess = 10;% guess for interfacial tension value
-params_num.alpha = 0.25;    % relaxation parameter in inverse problem
+params_num.p0_guess = 5;    % guess for pressure
+params_num.alpha = 0.5;     % relaxation parameter in inverse problem
 
 % calculate the Worthinton number
 params_phys.Wo = params_phys.deltarho*params_phys.grav*params_phys.volume0/...
