@@ -27,8 +27,18 @@ params_num.eps_fw = 1e-12;  % convergence critertion forward: rms(u) < eps
 params_phys.Wo = params_phys.deltarho*params_phys.grav*params_phys.volume0/...
                                     (2*pi*params_phys.sigma*params_phys.rneedle);
 
+% find an initial guess of the shape
+shape_guess = guess_shape(params_phys,1000);
+
+% get the differentation/integration matrices and the grid
+vars_num = numerical_grid(params_num,[0,shape_guess.s(end)]);
+
 % solve the Young-Laplace equation for the given parameters
-[vars_sol,vars_num] = solve_forward_young_laplace(params_phys, params_num);
+vars_sol = solve_forward_young_laplace(params_phys, params_num, ...
+    shape_guess, vars_num);
+
+% update the values in the numerical grid
+vars_num = update_numerical_grid(vars_sol,vars_num);
 
 % calculate the volume and the area
 volume = pi*vars_num.w*(vars_sol.r.^2.*sin(vars_sol.psi))/vars_sol.C;

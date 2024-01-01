@@ -1,4 +1,4 @@
-function [r, z, s] = guess_shape(params_phys, Npoints)
+function shape_guess = guess_shape(params_phys, Npoints)
 % GUESS_SHAPE Predicts the initial shape of a droplet based on physical 
 % parameters.
 %
@@ -66,5 +66,9 @@ function [r, z, s] = guess_shape(params_phys, Npoints)
         s = cumsum(ds);
         
     end
+
+    shape_guess.r = r;
+    shape_guess.z = z;
+    shape_guess.s = s;
 
 end

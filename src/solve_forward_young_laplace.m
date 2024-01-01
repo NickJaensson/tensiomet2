@@ -1,4 +1,4 @@
-function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_num)
+function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_num, shape_guess, vars_num)
 % SOLVE_FORWARD_YOUNG_LAPLACE Solves the Young-Laplace equation for the
 % shape of a drop.
 %
@@ -25,16 +25,10 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
 %              Differentiation and integration matrices, Chebyshev points, and modified
 %              matrices post-solution (ws, Ds).
 %
-
-    % find an initial guess of the shape
-    [r_guess, z_guess, s_guess] = guess_shape(params_phys,1000);
-        
-    % get the differentation/integration matrices and the grid
-    vars_num = numerical_grid(params_num,[0,s_guess(end)]);
     
     % interpolate the shape in the Chebyshev points
-    r = interp1(s_guess,r_guess,vars_num.s0);
-    z = interp1(s_guess,z_guess,vars_num.s0);
+    r = interp1(shape_guess.s,shape_guess.r,vars_num.s0);
+    z = interp1(shape_guess.s,shape_guess.z,vars_num.s0);
     
     psi = atan2(vars_num.D*z,vars_num.D*r);   % intial psi value 
     C = 1;                                % initial stretch parameter
@@ -71,10 +65,5 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
         fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
     
     end
-
-    % the integration and differentation matrices in the solution state
-    vars_num.ws = vars_num.w/vars_sol.C; 
-    vars_num.Ds = vars_sol.C*vars_num.D; 
-    vars_num.s = vars_num.s0/C;
 
 end
