@@ -1,4 +1,4 @@
-function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(zz_in,rr_in,psi_in,diffmat_in)
+function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(zz_in, rr_in, psi_in, params_phys, params_num, vars_num)
     % makeIso(toplot) = [tension, pstat] fits the shape functions to surface 
     % tension and pressure. RMS fitting of R using the Schur complement.
     % toplot specifies if the result is to be plotted.
@@ -7,7 +7,7 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
     psi = psi_in;
     r = rr_in;
     z = zz_in;
-    d = diffmat_in;
+    D = vars_num.D;
 
     N = length(r);
     
@@ -29,7 +29,7 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
         end  
 
         % create matrix
-        [tA, tb] =  matrix_iso(0,P,sigma,d,0,r,z,psi);
+        [tA, tb] =  matrix_iso(0,P,sigma,D,0,r,z,psi);
 
         A2 = tA(:,end-1:end);
 
@@ -68,7 +68,7 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
     
 end
 
-function [ A, b] = matrix_iso(~, P, sigma, d,~,r,z,psi)
+function [ A, b] = matrix_iso(~, P, sigma, D,~,r,z,psi)
 
     % matrix and rhs for isotropic interface,
     % its unknowns are: sigma, P.
@@ -84,10 +84,10 @@ function [ A, b] = matrix_iso(~, P, sigma, d,~,r,z,psi)
     ZL = zeros(1,N);
 
     % determine r from psi
-    A11 = d; % N x N
+    A11 = D; % N x N
     A13 = diag(sin(psi)); % N x N
     A145 = [zeros(N,2)]; % N x 2
-    b1 = cos(psi)-d*r;  % N x 1
+    b1 = cos(psi)-D*r;  % N x 1
 
     % boundary condition r(1) = 0
     A11(1,:) = IDL; 
@@ -96,10 +96,10 @@ function [ A, b] = matrix_iso(~, P, sigma, d,~,r,z,psi)
     b1(1) = -r(1);
 
     % determine z from psi
-    A22 = d;  % N x N
+    A22 = D;  % N x N
     A23 = diag(-cos(psi)); % N x N
     A245 = [zeros(N,2)]; % N x 2
-    b2 = sin(psi)-d*z; % N x 1
+    b2 = sin(psi)-D*z; % N x 1
 
     % boundary condition z(end) =0
     A22(end,:) = fliplr(IDL);
@@ -110,9 +110,9 @@ function [ A, b] = matrix_iso(~, P, sigma, d,~,r,z,psi)
     % determine psi from Laplace law
     A31 = sigma*diag(-sin(psi)./r.^2); % N x N
     A32 = eye(N); % N x N
-    A33 = sigma*d+diag(sigma*cos(psi)./r); % N x N
-    A345 = [d*psi+sin(psi)./r, -ones(N,1)]; % N x 2
-    b3 = -z+P-sigma*(d*psi)-sigma*sin(psi)./r; % N x 1
+    A33 = sigma*D+diag(sigma*cos(psi)./r); % N x N
+    A345 = [D*psi+sin(psi)./r, -ones(N,1)]; % N x 2
+    b3 = -z+P-sigma*(D*psi)-sigma*sin(psi)./r; % N x 1
 
     % boundary condition phi(0) = 0
     A31(1,:) = ZL;

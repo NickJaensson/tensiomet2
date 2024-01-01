@@ -100,8 +100,8 @@ zz_fit = gridsample(fz,params_num.N,[0,ssb(end)]);
 psi_fit = atan2(vars_num_fit.D*zz_fit,vars_num_fit.D*rr_fit);
 
 % calculate the best fitting Laplace shape
-[st,press,rrlaplace,zzlaplace] = ...
-    solve_inverse_young_laplace(zz_fit,rr_fit,psi_fit,vars_num_fit.D);
+[st,press,rrlaplace,zzlaplace] = solve_inverse_young_laplace(zz_fit, ...
+    rr_fit, psi_fit, params_phys, params_num, vars_num_fit);
 
 disp(['estimated surface tension = ',num2str(st,12)]);
 
