@@ -34,6 +34,6 @@ vars_num = update_numerical_grid(vars_sol, vars_num, 0);
 [s_plot,r_plot,z_plot] = interpolate_solutions(vars_sol, vars_num, ...
                                                params_num);
 
-plot_shape(z_plot, r_plot);
+plot_shape(z_plot, r_plot, vars_sol);
 
-[kappas,kappap] = find_curvature(vars_sol, vars_num,1);
+[kappas,kappap] = find_curvature(vars_sol, vars_num, 1);
