@@ -95,16 +95,16 @@ xlabel('s','FontSize',24); ylabel('z','FontSize',24);
 
 vars_num_fit = numerical_grid(params_num,[0,ssb(end)]);
 
-rrfit_nag = gridsample(fr,params_num.N,[0,ssb(end)]);
-zzfit_nag = gridsample(fz,params_num.N,[0,ssb(end)]);
-psifit_nag = atan2(vars_num_fit.D*zzfit_nag,vars_num_fit.D*rrfit_nag);
+rr_fit = gridsample(fr,params_num.N,[0,ssb(end)]);
+zz_fit = gridsample(fz,params_num.N,[0,ssb(end)]);
+psi_fit = atan2(vars_num_fit.D*zz_fit,vars_num_fit.D*rr_fit);
 
 % calculate the best fitting Laplace shape
 [st,press,rrlaplace,zzlaplace] = ...
-    solve_inverse_young_laplace(zzfit_nag,rrfit_nag,psifit_nag,vars_num_fit.D);
+    solve_inverse_young_laplace(zz_fit,rr_fit,psi_fit,vars_num_fit.D);
 
 disp(['estimated surface tension = ',num2str(st,12)]);
 
 % current output:
-% iter 76: rms(u) = 8.590498e-10
-% estimated surface tension = 5.39130511842
+% iter 37: rms(u) = 7.169377e-10
+% estimated surface tension = 5.4216880968
