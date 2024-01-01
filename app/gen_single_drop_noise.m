@@ -1,39 +1,13 @@
 
-close all; clear
+gen_single_drop;
 
-% physical parameters
-params_phys.sigma = 4;        % surface tension
-params_phys.grav = 1.2;       % gravitational acceleration
-params_phys.rneedle = 1.4;    % radius of the needle
-params_phys.volume0 = 16;     % prescribed volume
-params_phys.deltarho = 1.1;   % density difference
-
-% numerical parameters
-params_num.N = 40;            % resolution of the discretization for calculation
-params_num.Nplot = 80;        % resolution of the discretization for plotting
-params_num.eps_fw = 1e-12;    % convergence critertion forward: rms(u) < eps
-params_num.maxiter = 100;     % maximum number of iteration steps
+% numerical parameters for inverse problem
 params_num.eps_cheb = 1e-2;   % error for describing the shape
 params_num.eps_inv = 1e-9;    % convergence critertion forward: rms(u) < eps
 params_num.sigma_guess = 10;  % guess for interfacial tension value
 params_num.p0_guess = 5;      % guess for pressure
 params_num.alpha = 0.5;       % relaxation parameter in inverse problem
 params_num.maxiter_inv = 100; % maximum number of iteration steps inverse
-
-% calculate the Worthinton number
-params_phys.Wo = params_phys.deltarho*params_phys.grav*params_phys.volume0/...
-                                    (2*pi*params_phys.sigma*params_phys.rneedle);
-
-% solve the Young-Laplace equation for the given parameters
-[vars_sol,vars_num] = solve_forward_young_laplace(params_phys, params_num);
-
-% calculate the volume and the area
-volume = pi*vars_num.ws*(vars_sol.r.^2.*sin(vars_sol.psi));
-area = pi*2*vars_num.ws*(vars_sol.r);
-
-disp(['volume = ', num2str(volume,15)]);
-disp(['area = ', num2str(area,15)]);
-disp(['pressure = ', num2str(vars_sol.p0,15)]);
 
 % determine the normal vectors
 normals(:,1) = vars_num.Ds*vars_sol.z; % r-component of the normals
@@ -42,7 +16,7 @@ for i=1:size(normals,2)
     normals(i,:) = normals(i,:)/norm(normals(i,:));
 end
 
-% interpolate the numerical solutions on a finer grid. 
+% interpolate the numerical solutions on a finer grid.
 % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
 % though all the points (see book of Trefethen on Spectral Methods in 
 % Matlab, page  63). For plotting purposes we use a simpler interpolation 
