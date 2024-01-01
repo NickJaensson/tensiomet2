@@ -34,11 +34,11 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
          % Schur Element
         A1 = tA(:,1:end-2);
 
-        A3 = [diag(rr_in-r), zeros(1*N,2*N)];
+        A3 = [-2*diag(rr_in-r), zeros(1*N,2*N)];
 
         IA1 = inv(A1);
         SchurA = A3*(IA1*A2);
-        b = A3*(IA1*tb)-(rr_in-r).^2;
+        b = A3*(IA1*tb)+(rr_in-r).^2;
         
         if ( iter==2 ); warning('off', 'MATLAB:rankDeficientMatrix'); end
         u2 = SchurA\b;

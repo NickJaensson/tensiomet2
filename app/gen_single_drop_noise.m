@@ -110,5 +110,5 @@ psi_fit = atan2(vars_num_fit.D*zz_fit,vars_num_fit.D*rr_fit);
 disp(['estimated surface tension = ',num2str(st,12)]);
 
 % current output:
-% iter 60: rms(u) = 9.315356e-10
-% estimated surface tension = 8.10429126234
+% iter 32: rms(u) = 7.486974e-10
+% estimated surface tension = 8.10429126183
