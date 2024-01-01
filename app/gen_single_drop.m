@@ -35,27 +35,6 @@ vars_num = update_numerical_grid(vars_sol,vars_num,0);
 
 [s_plot,r_plot,z_plot] = interpolate_solutions(vars_sol, vars_num, params_num);
 
-% plot the shape of the drop on the plotting grid
-figure; hold on
-scatter(r_plot',z_plot','b');
-plot(r_plot',z_plot','b');
-set(gca,'DataAspectRatio',[1 1 1])
+plot_shape(z_plot,r_plot);
 
-% determine the curvatures
-% NOTE: kappap = sin(psi)/r, which is problematic for r=0. This is
-% solved here by taking kappap(0) = kappas(0)
-kappas = vars_num.Ds*vars_sol.psi;
-kappap = kappas;
-kappap(2:end) = sin(vars_sol.psi(2:end))./vars_sol.r(2:end);
-
-% plot the curvatures versus the z-coordinate
-figure;
-plot(vars_sol.z,kappas,'LineWidth',2); hold on
-plot(vars_sol.z,kappap,'LineWidth',2); hold on
-plot(vars_sol.z,kappap+kappas,'LineWidth',2);
-xlabel('z','FontSize',32);
-ylabel('\kappa','FontSize',32);
-legend('\kappa_s','\kappa_\phi','\kappa_s+\kappa_\phi', ...
-    'FontSize',24,'Location','northwest');
-xlim([vars_sol.z(1),0])
-ax = gca; ax.FontSize = 24;
+[kappas,kappap] = find_curvature(vars_sol,vars_num,1);
