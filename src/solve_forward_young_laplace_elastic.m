@@ -15,7 +15,7 @@ function [vars_sol, vars_num] = solve_forward_young_laplace_elastic(vars_sol, pa
 %                 volume0 (initial volume), frac (volume fraction for compression),
 %                 compresstype (type of compression, currently only '1' for volume compression is implemented).
 %   params_num - A structure containing numerical parameters:
-%                N (number of points), eps (tolerance for convergence),
+%                N (number of points), eps_fw (tolerance for convergence),
 %                maxiter (maximum iterations), alpha (relaxation parameter).
 %   vars_num - A structure containing numerical variables used in the solution of the reference state:
 %              Differentiation and integration matrices, Chebyshev points, and modified
@@ -41,7 +41,7 @@ function [vars_sol, vars_num] = solve_forward_young_laplace_elastic(vars_sol, pa
     iter = 0; u = ones(3*params_num.N+2,1);
 
     % start the Newton-Raphson iteration
-    while rms(u) > params_num.eps
+    while rms(u) > params_num.eps_fw
     
         iter = iter + 1;
         

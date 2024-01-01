@@ -14,7 +14,7 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
 %                 sigma (surface tension), rneedle (radius of the needle), 
 %                 Wo (Worhtington number).
 %   params_num - A structure containing numerical parameters:
-%                N (number of points), eps (tolerance for convergence),
+%                N (number of points), eps_fw (tolerance for convergence),
 %                maxiter (maximum iterations), alpha (relaxation parameter).
 %
 % Outputs:
@@ -49,7 +49,7 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
     vars_sol.C = C; vars_sol.p0 = p0; 
     
     % start the Newton-Raphson iteration
-    while rms(u) > params_num.eps
+    while rms(u) > params_num.eps_fw
     
         iter = iter + 1;
         
