@@ -80,5 +80,5 @@ plot_shape(rr_noise, zz_noise, 4);
 plot_shape(rrlaplace, zzlaplace, 4);
 
 % current output:
-% iter 37: rms(u) = 5.546009e-10
-% estimated surface tension = 3.97102734319
+% iter 195: rms(u) = 9.940579e-10
+% estimated surface tension = 3.03343162445
