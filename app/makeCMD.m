@@ -12,7 +12,7 @@ function [ taus, taup ] = makeCMD(params_phys, psi, r, z, vars_num, p0)
     taus = zeros(vars_num.N,1);
     taus(2:end) = ( R(2:end) + fac*Vi(2:end) ) ./ L(2:end);
 
-    % regularize at the apex with d sigma^s(0)/ds =0
+    % regularize at the apex with dsigma^s(0)/ds =0
     taus(1) = -(vars_num.Ds(1,2:end)*taus(2:end))./vars_num.Ds(1,1);
 
     taup = (p0-fac*z-taus.*(vars_num.Ds*psi)).*r./sin(psi);
