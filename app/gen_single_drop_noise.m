@@ -10,27 +10,38 @@ params_num.p0_guess = 5;      % guess for pressure
 params_num.alpha = 0.5;       % relaxation parameter in inverse problem
 params_num.maxiter_inv = 100; % maximum number of iteration steps inverse
 
-Nsample = 40;
+% number of points for the synthetic droplet shape
+Nsample = 80;
 
-[s_plot,r_plot,z_plot] = interpolate_solutions(vars_sol, vars_num, Nsample);
+% interpolate the numerical solutions on a uniform grid.
+% NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
+% though all the points (see book of Trefethen on Spectral Methods in 
+% Matlab, page  63). For plotting purposes we use a simpler interpolation 
+s_plot = linspace(vars_num.s(1),vars_num.s(end),Nsample)';
+r_plot = interp1(vars_num.s,vars_sol.r,s_plot,'pchip');
+z_plot = interp1(vars_num.s,vars_sol.z,s_plot,'pchip');
 
-normals_plot = get_normals(vars_sol, vars_num, s_plot);
+normals = get_normals(vars_sol, vars_num);
+
+nnormals(:,1) = interp1(vars_num.s,normals(:,1),s_plot,'pchip');
+nnormals(:,2) = interp1(vars_num.s,normals(:,2),s_plot,'pchip');
+for i=1:size(nnormals,2)
+    nnormals(i,:) = nnormals(i,:)/norm(nnormals(i,:));
+end
 
 plot_shape(r_plot, z_plot, 1);
-quiver(r_plot,z_plot,normals_plot(:,1),normals_plot(:,2));
+quiver(r_plot,z_plot,nnormals(:,1),nnormals(:,2));
 
 % add noise to the data points
 rng(1); % set seed
-sigma_noise = 0.01*params_phys.rneedle;
+sigma_noise = 0.05*params_phys.rneedle;
 tmp=normrnd(0,sigma_noise,[Nsample,1]);
 for i=1:Nsample
-    rr_noise(i) = r_plot(i) + tmp(i)*normals_plot(i,1);
-    zz_noise(i) = z_plot(i) + tmp(i)*normals_plot(i,2);
+    rr_noise(i) = r_plot(i) + tmp(i)*nnormals(i,1);
+    zz_noise(i) = z_plot(i) + tmp(i)*nnormals(i,2);
 end
-figure; hold on
-scatter(rr_noise',zz_noise','b');
-plot(r_plot',z_plot','r');
-set(gca,'DataAspectRatio',[1 1 1])
+
+plot_shape(rr_noise, zz_noise, 1);
 
 % get continuous s around full shape
 ds = sqrt((zz_noise(2:end)-zz_noise(1:end-1)).^2+(rr_noise(2:end)-rr_noise(1:end-1)).^2);
@@ -66,5 +77,5 @@ psi_fit = atan2(vars_num_fit.D*zz_fit,vars_num_fit.D*rr_fit);
 disp(['estimated surface tension = ',num2str(st,12)]);
 
 % current output:
-% iter 32: rms(u) = 7.486974e-10
+% iter 32: rms(u) = 7.486966e-10
 % estimated surface tension = 8.10429126183
