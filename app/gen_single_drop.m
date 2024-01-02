@@ -31,3 +31,7 @@ vars_num = update_numerical_grid(vars_sol, vars_num, false);
 [volume,area] = calculate_volume_area(vars_sol, vars_num, true);
 
 plot_shape(vars_sol.r, vars_sol.z, 1);
+
+[kappas,kappap] = find_curvature(vars_sol, vars_num);
+
+plot_curvature(vars_sol.z, kappas, kappap, 2);
