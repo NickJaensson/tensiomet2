@@ -3,7 +3,7 @@ gen_single_drop_elastic;
 close all
 
 % numerical parameters for inverse problem
-params_num.eps_cheb = 1e-2;   % error for describing the shape
+params_num.eps_cheb = 1e-5;   % error for describing the shape
 params_num.eps_inv = 1e-9;    % convergence critertion forward: rms(u) < eps
 params_num.sigma_guess = 10;  % guess for interfacial tension value
 params_num.p0_guess = 5;      % guess for pressure
@@ -12,6 +12,9 @@ params_num.maxiter_inv = 1000; % maximum number of iteration steps inverse
 
 % number of points for the synthetic droplet shape
 Nsample = 80;
+
+% noise level
+sigma_noise = 0.0*params_phys.rneedle;
 
 % interpolate the numerical solutions on a uniform grid.
 % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
@@ -34,8 +37,8 @@ quiver(r_plot, z_plot, nnormals(:,1), nnormals(:,2));
 
 % add noise to the data points
 rng(1); % set seed
-sigma_noise = 0.001*params_phys.rneedle;
-tmp=normrnd(0,sigma_noise,[Nsample,1]);
+tmp = normrnd(0,sigma_noise,[Nsample,1]);
+rr_noise = zeros(Nsample,1); zz_noise = rr_noise;
 for i=1:Nsample
     rr_noise(i) = r_plot(i) + tmp(i)*nnormals(i,1);
     zz_noise(i) = z_plot(i) + tmp(i)*nnormals(i,2);
@@ -72,15 +75,37 @@ rr_fit = gridsample(fr,params_num.N,[0,ssb(end)]);
 zz_fit = gridsample(fz,params_num.N,[0,ssb(end)]);
 psi_fit = atan2(vars_num_fit.Ds*zz_fit,vars_num_fit.Ds*rr_fit);
 
-% calculate the best fitting Laplace shape
-[st,press,rrlaplace,zzlaplace] = solve_inverse_young_laplace(zz_fit, ...
-    rr_fit, psi_fit, params_phys, params_num, vars_num_fit);
-
-disp(['estimated surface tension = ',num2str(st,12)]);
-
-plot_shape(rr_noise, zz_noise, 4);
-plot_shape(rrlaplace, zzlaplace, 4);
+% % calculate the best fitting Laplace shape
+% [st,press,rrlaplace,zzlaplace] = solve_inverse_young_laplace(zz_fit, ...
+%     rr_fit, psi_fit, params_phys, params_num, vars_num_fit);
+% 
+% disp(['estimated surface tension = ',num2str(st,12)]);
+% 
+% plot_shape(rr_noise, zz_noise, 4);
+% plot_shape(rrlaplace, zzlaplace, 4);
 
 % current output:
 % iter 195: rms(u) = 9.940579e-10
 % estimated surface tension = 3.03343162445
+
+
+vars_sol_fit.r = rr_fit;
+vars_sol_fit.z = zz_fit;
+vars_sol_fit.psi = psi_fit;
+
+[kappas,kappap] = find_curvature(vars_sol_fit, vars_num_fit);
+
+plot_curvature(vars_sol.z, kappas, kappap, 8);
+
+
+
+% [sigmas, sigmap] = makeCMD(params_phys, psi_fit, rr_fit, ...
+%                            zz_fit, vars_num_fit, vars_sol.p0);
+% 
+% plot_surface_stress(vars_num.s, sigmas, sigmap, 5);
+% plot_surface_stress(vars_num.s, vars_sol.sigmas, vars_sol.sigmap, 5);
+% ylim([3.3,3.9])
+% 
+% plot_surface_stress(vars_num.s, vars_sol.sigmas, vars_sol.sigmap, 6);
+% 
+% plot_shape(rr_fit,zz_fit,7);
