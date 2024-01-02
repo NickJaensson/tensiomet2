@@ -10,7 +10,7 @@ function [vars_num] = update_numerical_grid(vars_sol, vars_num, elastic)
         % NOTE: this construction of Ddef is simlar to first applying D*f/C,
         % and then dividing the components by the components of (1/lams)
         vars_num.ws = vars_num.w.*vars_sol.lams'/vars_num.C; 
-        vars_num.Ds = vars_num.C*vars_num.D.*repelem((1./vars_sol.lams)',vars_num.N,1); 
+        vars_num.Ds = vars_num.C*vars_num.D.*repelem((1./vars_sol.lams),1,vars_num.N); 
     
         % construct the integration matrix from the integration vector
         vars_num.wsmat = repmat(vars_num.w,vars_num.N,1);
