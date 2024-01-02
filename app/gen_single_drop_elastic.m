@@ -44,8 +44,10 @@ for ii = 1:length(params_phys.fracm)
 
     plot_surface_stress(vars_num.s, vars_sol.sigmas, vars_sol.sigmap, 2);
 
+    plot_surface_strain(vars_num.s, vars_sol.lams, vars_sol.lamp, 3);
+
     [kappas,kappap] = find_curvature(vars_sol, vars_num);
 
-    plot_curvature(vars_sol.z, kappas, kappap, 3);
+    plot_curvature(vars_sol.z, kappas, kappap, 4);
 
 end
