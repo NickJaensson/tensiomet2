@@ -40,7 +40,7 @@ for ii = 1:length(params_phys.fracm)
 
     [volume,area] = calculate_volume_area(vars_sol, vars_num, true);
 
-    plot_shape(vars_sol, 1);
+    plot_shape(vars_sol.r, vars_sol.z, 1);
 
     plot_surface_stress(vars_num, vars_sol, 2);
 
