@@ -1,0 +1,16 @@
+function [] =     plot_curvature(vars_sol, kappas, kappap, fig_num)
+
+    % plot the curvatures versus the z-coordinate
+    figure(fig_num); hold on
+    plot(vars_sol.z,kappas,'LineWidth',2); hold on
+    plot(vars_sol.z,kappap,'LineWidth',2); hold on
+    plot(vars_sol.z,kappap+kappas,'LineWidth',2);
+    xlabel('z','FontSize',32);
+    ylabel('\kappa','FontSize',32);
+    legend('\kappa_s','\kappa_\phi','\kappa_s+\kappa_\phi', ...
+        'FontSize',24,'Location','northwest');
+    xlim([vars_sol.z(1),0])
+    ax = gca; ax.FontSize = 24;
+
+end
+

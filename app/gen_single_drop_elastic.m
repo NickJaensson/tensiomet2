@@ -36,17 +36,16 @@ for ii = 1:length(params_phys.fracm)
         solve_forward_young_laplace_elastic(vars_sol, params_phys, ...
                                             params_num, vars_num);
 
-    vars_num = update_numerical_grid(vars_sol,vars_num,1);
+    vars_num = update_numerical_grid(vars_sol, vars_num,true);
 
-    [volume,area] = calculate_volume_area(vars_sol,vars_num,1);
+    [volume,area] = calculate_volume_area(vars_sol, vars_num, true);
 
-    [s_plot,r_plot,z_plot] = interpolate_solutions(vars_sol, vars_num, ...
-                                                   params_num);
+    plot_shape(vars_sol, 1);
 
-    plot_shape(z_plot, r_plot, vars_sol);
+    plot_surface_stress(vars_num, vars_sol, 2);
 
-    plot_surface_stress(vars_num, vars_sol); % TODO: interpolation s_plot
+    [kappas,kappap] = find_curvature(vars_sol, vars_num);
 
-    [kappas,kappap] = find_curvature(vars_sol, vars_num, 1);
+    plot_curvature(vars_sol, kappas, kappap, 3);
 
 end

@@ -12,7 +12,6 @@ params_phys.deltarho = 1.1; % density difference
 
 % numerical parameters
 params_num.N = 40;          % grid points for calculation
-params_num.Nplot = 80;      % grid points for plotting
 params_num.eps_fw = 1e-12;  % convergence criterion forward: rms(u) < eps
 params_num.maxiter = 100;   % maximum number of iteration steps
 
@@ -27,13 +26,8 @@ vars_num = numerical_grid(params_num, [0,shape_guess.s(end)]);
 vars_sol = solve_forward_young_laplace(params_phys, params_num, ...
                                        shape_guess, vars_num);
 
-vars_num = update_numerical_grid(vars_sol, vars_num, 0);
+vars_num = update_numerical_grid(vars_sol, vars_num, false);
 
-[volume,area] = calculate_volume_area(vars_sol, vars_num, 1);
+[volume,area] = calculate_volume_area(vars_sol, vars_num, true);
 
-[s_plot,r_plot,z_plot] = interpolate_solutions(vars_sol, vars_num, ...
-                                               params_num);
-
-plot_shape(z_plot, r_plot, vars_sol);
-
-[kappas,kappap] = find_curvature(vars_sol, vars_num, 1);
+plot_shape(vars_sol, 1);

@@ -1,7 +1,7 @@
-function [] =     plot_surface_stress(vars_num,vars_sol)
+function [] =     plot_surface_stress(vars_num, vars_sol, fig_num)
 
     % plot the surface stresses
-    figure;
+    figure(fig_num); hold on
     plot(vars_num.s,vars_sol.sigmas,'LineWidth',2); hold on
     plot(vars_num.s,vars_sol.sigmap,'LineWidth',2);
     xlabel('s','FontSize',32);

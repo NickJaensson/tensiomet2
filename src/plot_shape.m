@@ -1,12 +1,9 @@
-function [] = plot_shape(z_plot,r_plot,vars_sol)
+function [] = plot_shape(vars_sol, fig_num)
 
     % plot the shape of the drop on the plotting grid
 
-    % if ~isfield( vars_sol, 'r_star' )
-         figure; hold on
-    % end
-    scatter(r_plot',z_plot','b');
-    plot(r_plot',z_plot','b');
+    figure(fig_num); hold on
+    plot(vars_sol.r,vars_sol.z,'-o');
 
     % rescale the plot
     % if isfield( vars_sol, 'r_star' )
