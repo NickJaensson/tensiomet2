@@ -34,7 +34,7 @@ quiver(r_plot,z_plot,nnormals(:,1),nnormals(:,2));
 
 % add noise to the data points
 rng(1); % set seed
-sigma_noise = 0.05*params_phys.rneedle;
+sigma_noise = 0.001*params_phys.rneedle;
 tmp=normrnd(0,sigma_noise,[Nsample,1]);
 for i=1:Nsample
     rr_noise(i) = r_plot(i) + tmp(i)*nnormals(i,1);
@@ -76,6 +76,9 @@ psi_fit = atan2(vars_num_fit.D*zz_fit,vars_num_fit.D*rr_fit);
 
 disp(['estimated surface tension = ',num2str(st,12)]);
 
+plot_shape(rr_noise, zz_noise, 4);
+plot_shape(rrlaplace, zzlaplace, 4);
+
 % current output:
-% iter 32: rms(u) = 7.486966e-10
-% estimated surface tension = 8.10429126183
+% iter 37: rms(u) = 5.546009e-10
+% estimated surface tension = 3.97102734319
