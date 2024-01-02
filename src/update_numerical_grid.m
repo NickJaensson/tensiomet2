@@ -13,11 +13,11 @@ function [vars_num] = update_numerical_grid(vars_sol, vars_num, elastic)
         vars_num.Ds = vars_num.C*vars_num.D.*repelem((1./vars_sol.lams),1,vars_num.N); 
     
         % construct the integration matrix from the integration vector
-        vars_num.wsmat = repmat(vars_num.w,vars_num.N,1);
-        vars_num.wsmat = tril(vars_num.wsmat);
+        wmat = repmat(vars_num.w,vars_num.N,1);
+        vars_num.wsmat = tril(wmat)/vars_num.C;
     
         % compute the value of s in the deformed state
-        vars_num.s = vars_num.wsmat*vars_sol.lams/vars_num.C;
+        vars_num.s = vars_num.wsmat*vars_sol.lams;
     end    
 
 end
