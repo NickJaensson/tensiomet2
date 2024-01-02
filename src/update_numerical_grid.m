@@ -1,4 +1,4 @@
-function [vars_num] = update_numerical_grid(vars_sol,vars_num,elastic)
+function [vars_num] = update_numerical_grid(vars_sol, vars_num, elastic)
 
     % the integration and differentation matrices in the solution state
     if ~elastic

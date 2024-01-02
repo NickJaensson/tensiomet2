@@ -36,7 +36,7 @@ for ii = 1:length(params_phys.fracm)
         solve_forward_young_laplace_elastic(vars_sol, params_phys, ...
                                             params_num, vars_num);
 
-    vars_num = update_numerical_grid(vars_sol, vars_num,true);
+    vars_num = update_numerical_grid(vars_sol, vars_num, true);
 
     [volume,area] = calculate_volume_area(vars_sol, vars_num, true);
 
