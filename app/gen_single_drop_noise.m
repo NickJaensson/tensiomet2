@@ -1,5 +1,6 @@
 
-gen_single_drop;
+gen_single_drop; 
+close all
 
 % numerical parameters for inverse problem
 params_num.eps_cheb = 1e-2;   % error for describing the shape
@@ -9,16 +10,20 @@ params_num.p0_guess = 5;      % guess for pressure
 params_num.alpha = 0.5;       % relaxation parameter in inverse problem
 params_num.maxiter_inv = 100; % maximum number of iteration steps inverse
 
+Nsample = 40;
+
+[s_plot,r_plot,z_plot] = interpolate_solutions(vars_sol, vars_num, Nsample);
+
 normals_plot = get_normals(vars_sol, vars_num, s_plot);
 
-plot_shape(z_plot, r_plot, vars_sol);
+plot_shape(r_plot, z_plot, 1);
 quiver(r_plot,z_plot,normals_plot(:,1),normals_plot(:,2));
 
 % add noise to the data points
 rng(1); % set seed
-sigma_noise = 0.05*params_phys.rneedle;
-tmp=normrnd(0,sigma_noise,[params_num.Nplot,1]);
-for i=1:params_num.Nplot
+sigma_noise = 0.01*params_phys.rneedle;
+tmp=normrnd(0,sigma_noise,[Nsample,1]);
+for i=1:Nsample
     rr_noise(i) = r_plot(i) + tmp(i)*normals_plot(i,1);
     zz_noise(i) = z_plot(i) + tmp(i)*normals_plot(i,2);
 end
