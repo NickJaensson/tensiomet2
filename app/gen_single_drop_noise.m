@@ -65,10 +65,12 @@ figure; plot(fz); hold on; scatter(ssb,zzb);
 xlabel('s','FontSize',24); ylabel('z','FontSize',24);
 
 vars_num_fit = numerical_grid(params_num,[0,ssb(end)]);
+dummy.C = 1;
+vars_num_fit = update_numerical_grid(dummy, vars_num_fit, false);
 
 rr_fit = gridsample(fr,params_num.N,[0,ssb(end)]);
 zz_fit = gridsample(fz,params_num.N,[0,ssb(end)]);
-psi_fit = atan2(vars_num_fit.D*zz_fit,vars_num_fit.D*rr_fit);
+psi_fit = atan2(vars_num_fit.Ds*zz_fit,vars_num_fit.Ds*rr_fit);
 
 % calculate the best fitting Laplace shape
 [st,press,rrlaplace,zzlaplace] = solve_inverse_young_laplace(zz_fit, ...
