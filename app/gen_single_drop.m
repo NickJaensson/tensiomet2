@@ -35,3 +35,9 @@ plot_shape(vars_sol.r, vars_sol.z, 1);
 [kappas,kappap] = find_curvature(vars_sol, vars_num);
 
 plot_curvature(vars_sol.z, kappas, kappap, 2);
+
+% % the following code can be used to test the CMD implementation
+% [sigmas, sigmap] = makeCMD(params_phys, vars_sol.psi, vars_sol.r, ...
+%                            vars_sol.z, vars_num, vars_sol.p0);
+% 
+% plot_surface_stress(vars_num.s, sigmas, sigmap, 3);
