@@ -9,7 +9,7 @@ params_num.eps_cheb = 1e-3;   % error for describing the shape
 params_num.eps_inv = 1e-9;    % convergence critertion forward: rms(u) < eps
 params_num.sigma_guess = 10;  % guess for interfacial tension value
 params_num.p0_guess = 5;      % guess for pressure
-params_num.alpha = 0.1;       % relaxation parameter in inverse problem
+params_num.alpha = 0.5;       % relaxation parameter in inverse problem
 params_num.maxiter_inv = 1000; % maximum number of iteration steps inverse
 
 % number of points for the synthetic droplet shape
@@ -124,7 +124,6 @@ vars_sol_fit.psi = psi_fit;
 [kappas,kappap] = find_curvature(vars_sol_fit, vars_num_fit);
 
 plot_curvature(vars_sol.z, kappas, kappap, 8);
-
 
 [sigmas, sigmap] = makeCMD(params_phys, psi_fit, rr_fit, ...
                            zz_fit, vars_num_fit, vars_sol.p0);
