@@ -115,32 +115,36 @@ function [A,b] = jacobian_rhs_elastic(params_phys,vars_sol,vars_num)
     A46 = -C*diag(r.*(D*sigmas)./lams);
     b4 = -C*r.*(D*sigmas)+lams.*cos(psi).*(sigmap-sigmas);
 
+    % define some convenient variables for constitutive equation
+    lamsm1 = lams.^(-1); lamsm2 = lams.^(-2); lamsm3 = lams.^(-3);
+    lampm1 = lamp.^(-1); lampm2 = lamp.^(-2); lampm3 = lamp.^(-3);
+    J = lams.*lamp;
+    K = params_phys.Kmod;
+    G = params_phys.Gmod;
+        
     switch params_phys.strainmeasure
-    
+
+    case 'hencky'
+
+        A54 = eye(N);
+        A56 = diag(-G*lamsm1 -K*lamsm1);
+        A57 = diag( G*lampm1 -K*lampm1);
+        b5 = params_phys.sigma - sigmas + K*log(J) + G*log(lams.*lampm1);
+
+        A65 = eye(N);
+        A66 = diag( G*lamsm1 -K*lamsm1);
+        A67 = diag(-G*lampm1 -K*lampm1);
+        b6 = params_phys.sigma - sigmap + K*log(J) + G*log(lamp.*lamsm1);
+
     case 'pepicelli'
 
-        % define some convenient variables
-        lamsm1 = lams.^(-1); lamsm2 = lams.^(-2); lamsm3 = lams.^(-3);
-        lampm1 = lamp.^(-1); lampm2 = lamp.^(-2); lampm3 = lamp.^(-3);
-        J = lams.*lamp;
-        K = params_phys.Kmod;
-        G = params_phys.Gmod;
-        
-        % determine sigma^r
-        % A54 = 1
-        % A56 = (K*log(lams*lamp))/(lams^2*lamp) - K/(lams^2*lamp) - G/lams^3
-        % A57 = G/lamp^3 - K/(lams*lamp^2) + (K*log(lams*lamp))/(lams*lamp^2)
-        % b5 = gamma - sigmas - (G*(1/lams^2 - 1/lamp^2))/2 + (K*log(lams*lamp))/(lams*lamp)
+        % determine sigma^p
         A54 = eye(N);
         A56 = diag(K*log(J).*lamsm2.*lampm1 - K*lamsm2.*lampm1 - G*lamsm3);
         A57 = diag(G*lampm3 - K*lamsm1.*lampm2 + K*log(J).*lamsm1.*lampm2);
         b5 = params_phys.sigma - sigmas - G*(lamsm2-lampm2)/2 + K*log(J)./J;
         
         % determine lambda^s
-        % A65 = 1
-        % A66 = (K*log(lams*lamp))/(lams^2*lamp) - K/(lams^2*lamp) + G/lams^3
-        % A67 = - G/lamp^3 - K/(lams*lamp^2) + (K*log(lams*lamp))/(lams*lamp^2)
-        % b6 = gamma - sigmap + (G*(1/lams^2 - 1/lamp^2))/2 + (K*log(lams*lamp))/(lams*lamp)
         A65 = eye(N);
         A66 = diag(K*log(J).*lamsm2.*lampm1 - K*lamsm2.*lampm1 + G*lamsm3);
         A67 = diag(-G*lampm3 - K*lamsm1.*lampm2 + K*log(J).*lamsm1.*lampm2);

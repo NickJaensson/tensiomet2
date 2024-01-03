@@ -15,8 +15,14 @@ f{2} = C*z_prime/lams - sin(psi);
 f{3} = (kappat*sigmap+kappas*sigmas) - P + rho*g*z;
 f{4} = r*C*sigmas_prime/lams - cos(psi)*(sigmap-sigmas);
 
-f{5} = sigmas - sigma - (K/J)*log(J) - (G/2)*(1/lamp^2 - 1/lams^2);
-f{6} = sigmap - sigma - (K/J)*log(J) + (G/2)*(1/lamp^2 - 1/lams^2);
+% Pepicelli
+% f{5} = sigmas - sigma - (K/J)*log(J) - (G/2)*(1/lamp^2 - 1/lams^2);
+% f{6} = sigmap - sigma - (K/J)*log(J) + (G/2)*(1/lamp^2 - 1/lams^2);
+
+% Hencky
+f{5} = sigmas - sigma - K*log(J) - G*log(lams/lamp);
+f{6} = sigmap - sigma - K*log(J) - G*log(lamp/lams);
+
 f{7} = lamp - r/rstar;
 f{8} = int*(pi*r^2*sin(psi)*lams/C) - V;
 

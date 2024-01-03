@@ -12,10 +12,20 @@ close all
 
 % compare to old values (gen-pendant-drop before refactoring:
 eps_test = 1e-10; 
-assert ( abs(volume-12.8000000000001) < eps_test );
-assert ( abs(area-22.5156483902096) < eps_test );
-assert ( abs(vars_sol.p0-2.02056164104124) < eps_test );
-assert ( abs(max(vars_sol.sigmas)-3.33958761227925) < eps_test );
-assert ( abs(max(vars_sol.sigmap)-3.86864491619756) < eps_test );
+if strcmp(params_phys.strainmeasure, 'pepicelli')
+    assert ( abs(volume-12.8000000000001) < eps_test );
+    assert ( abs(area-22.5156483902096) < eps_test );
+    assert ( abs(vars_sol.p0-2.02056164104124) < eps_test );
+    assert ( abs(max(vars_sol.sigmas)-3.33958761227925) < eps_test );
+    assert ( abs(max(vars_sol.sigmap)-3.86864491619756) < eps_test );
+elseif strcmp(params_phys.strainmeasure, 'hencky')
+    assert ( abs(volume-12.8000000000161) < eps_test );
+    assert ( abs(area-22.4710131205708) < eps_test );
+    assert ( abs(vars_sol.p0-2.14853807101509) < eps_test );
+    assert ( abs(max(vars_sol.sigmas)-3.42627115493715) < eps_test );
+    assert ( abs(max(vars_sol.sigmap)-3.88525423098743) < eps_test );
+else
+    error('Error test_elastic: incorrect strain measure')
+end
 
 disp('All tests passed!')
