@@ -98,14 +98,8 @@ zz_fit = gridsample(fz,params_num.N,[ssb(end)/2,ssb(end)]);
 plot_shape(rr_noise, zz_noise, 3);
 plot_shape(rr_fit, zz_fit, 3);
 
-% we use the length of the fitted shape for the new numerical domain
-% NOTE: this could perhaps be improved by performing the integration
-% using chebfun on fr and fz
-new_length = 0;
-for i = 1:size(rr_fit,1)-1
-    new_length = new_length + ...
-        norm([rr_fit(i+1)-rr_fit(i),zz_fit(i+1)-zz_fit(i)]);
-end
+% we use the length of the FITTED shape for the new numerical domain
+new_length = integral(sqrt(diff(fr)^2+diff(fz)^2))/2;
 
 % now the mesh is for half of the domain
 vars_num_fit = numerical_grid(params_num,[0,new_length]);
