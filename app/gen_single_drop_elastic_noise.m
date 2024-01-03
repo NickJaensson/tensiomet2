@@ -1,9 +1,11 @@
 
 gen_single_drop_elastic; 
+%gen_single_drop; 
+
 close all
 
 % numerical parameters for inverse problem
-params_num.eps_cheb = 1e-5;   % error for describing the shape
+params_num.eps_cheb = 1e-3;   % error for describing the shape
 params_num.eps_inv = 1e-9;    % convergence critertion forward: rms(u) < eps
 params_num.sigma_guess = 10;  % guess for interfacial tension value
 params_num.p0_guess = 5;      % guess for pressure
@@ -12,9 +14,12 @@ params_num.maxiter_inv = 1000; % maximum number of iteration steps inverse
 
 % number of points for the synthetic droplet shape
 Nsample = 80;
+Nsample_full = 2*Nsample-1;
 
 % noise level
-sigma_noise = 0.0*params_phys.rneedle;
+sigma_noise = 0.001*params_phys.rneedle;
+
+rng(1); % set seed
 
 % interpolate the numerical solutions on a uniform grid.
 % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
@@ -32,26 +37,18 @@ for i=1:size(normals_plot,2)
     normals_plot(i,:) = normals_plot(i,:)/norm(normals_plot(i,:));
 end
 
-
 [s_plot_full,r_plot_full,z_plot_full,normals_plot_full] = ...
                                mirror_shape(s_plot,r_plot,z_plot,normals_plot);
 
-close all
 plot_shape(r_plot_full, z_plot_full, 1)
 quiver(r_plot_full, z_plot_full, normals_plot_full(:,1), normals_plot_full(:,2));
 
-error(' ')
-
-plot_shape(vars_sol.r, vars_sol.z, 1);
-quiver(r_plot, z_plot, normals_plot(:,1), normals_plot(:,2));
-
 % add noise to the data points
-rng(1); % set seed
-tmp = normrnd(0,sigma_noise,[Nsample,1]);
-rr_noise = zeros(Nsample,1); zz_noise = rr_noise;
-for i=1:Nsample
-    rr_noise(i) = r_plot(i) + tmp(i)*normals_plot(i,1);
-    zz_noise(i) = z_plot(i) + tmp(i)*normals_plot(i,2);
+tmp = normrnd(0,sigma_noise,[Nsample_full,1]);
+rr_noise = zeros(Nsample_full,1); zz_noise = rr_noise;
+for i=1:Nsample_full
+    rr_noise(i) = r_plot_full(i) + tmp(i)*normals_plot_full(i,1);
+    zz_noise(i) = z_plot_full(i) + tmp(i)*normals_plot_full(i,2);
 end
 
 plot_shape(rr_noise, zz_noise, 1);
@@ -70,34 +67,55 @@ rrb = interp1(ss_noise,rr_noise,ssb,'spline');
 zzb = interp1(ss_noise,zz_noise,ssb,'spline');
 
 % fit the points using Chebyshev polynomials
-fr = chebfun(rrb',[ssb(1),ssb(end)],'equi','eps',params_num.eps_cheb);
-fz = chebfun(zzb',[ssb(1),ssb(end)],'equi','eps',params_num.eps_cheb);
+frr = chebfun(rrb',[ssb(1),ssb(end)],'equi','eps',params_num.eps_cheb);
+fzz = chebfun(zzb',[ssb(1),ssb(end)],'equi','eps',params_num.eps_cheb);
+
+coeffs_r = chebcoeffs(frr);
+for i = 1:size(coeffs_r,1)
+    if rem(i,2) ~= 0 % odd number
+        coeffs_r(i) = 0;
+    end
+end
+
+coeffs_z = chebcoeffs(fzz);
+for i = 1:size(coeffs_z,1)
+    if rem(i,2) == 0 % even number
+        coeffs_z(i) = 0;
+    end
+end
+
+fr = chebfun(coeffs_r,[ssb(1),ssb(end)],'coeffs');
+fz = chebfun(coeffs_z,[ssb(1),ssb(end)],'coeffs');
+
 figure; plot(fr); hold on; scatter(ssb,rrb);
 xlabel('s','FontSize',24); ylabel('r','FontSize',24);
 figure; plot(fz); hold on; scatter(ssb,zzb);
 xlabel('s','FontSize',24); ylabel('z','FontSize',24);
 
-vars_num_fit = numerical_grid(params_num,[0,ssb(end)]);
+rr_fit = gridsample(fr,params_num.N,[ssb(end)/2,ssb(end)]);
+zz_fit = gridsample(fz,params_num.N,[ssb(end)/2,ssb(end)]);
+
+plot_shape(rr_fit, zz_fit, 4);
+
+% now the mesh is for half of the domain
+vars_num_fit = numerical_grid(params_num,[0,ssb(end)/2]); % should this be untis s(end) of FITTED shape?!
 dummy.C = 1;
 vars_num_fit = update_numerical_grid(dummy, vars_num_fit, false);
 
-rr_fit = gridsample(fr,params_num.N,[0,ssb(end)]);
-zz_fit = gridsample(fz,params_num.N,[0,ssb(end)]);
 psi_fit = atan2(vars_num_fit.Ds*zz_fit,vars_num_fit.Ds*rr_fit);
 
-% % calculate the best fitting Laplace shape
-% [st,press,rrlaplace,zzlaplace] = solve_inverse_young_laplace(zz_fit, ...
-%     rr_fit, psi_fit, params_phys, params_num, vars_num_fit);
-% 
-% disp(['estimated surface tension = ',num2str(st,12)]);
-% 
-% plot_shape(rr_noise, zz_noise, 4);
-% plot_shape(rrlaplace, zzlaplace, 4);
+% calculate the best fitting Laplace shape
+[st,press,rrlaplace,zzlaplace] = solve_inverse_young_laplace(zz_fit, ...
+    rr_fit, psi_fit, params_phys, params_num, vars_num_fit);
+
+disp(['estimated surface tension = ',num2str(st,12)]);
+
+plot_shape(rr_noise, zz_noise, 4);
+plot_shape(rrlaplace, zzlaplace, 4);
 
 % current output:
 % iter 195: rms(u) = 9.940579e-10
 % estimated surface tension = 3.03343162445
-
 
 vars_sol_fit.r = rr_fit;
 vars_sol_fit.z = zz_fit;
@@ -108,14 +126,14 @@ vars_sol_fit.psi = psi_fit;
 plot_curvature(vars_sol.z, kappas, kappap, 8);
 
 
+[sigmas, sigmap] = makeCMD(params_phys, psi_fit, rr_fit, ...
+                           zz_fit, vars_num_fit, vars_sol.p0);
 
-% [sigmas, sigmap] = makeCMD(params_phys, psi_fit, rr_fit, ...
-%                            zz_fit, vars_num_fit, vars_sol.p0);
-% 
-% plot_surface_stress(vars_num.s, sigmas, sigmap, 5);
-% plot_surface_stress(vars_num.s, vars_sol.sigmas, vars_sol.sigmap, 5);
-% ylim([3.3,3.9])
-% 
-% plot_surface_stress(vars_num.s, vars_sol.sigmas, vars_sol.sigmap, 6);
-% 
-% plot_shape(rr_fit,zz_fit,7);
+plot_surface_stress(vars_num.s, sigmas, sigmap, 5);
+
+if isfield(vars_sol,'sigmas')
+    plot_surface_stress(vars_num.s, vars_sol.sigmas, vars_sol.sigmap, 5);
+else
+    sigma_vec = params_phys.sigma*ones(vars_num.N,1);
+    plot_surface_stress(vars_num.s, sigma_vec, sigma_vec, 5);
+end
