@@ -26,22 +26,32 @@ z_plot = interp1(vars_num.s,vars_sol.z,s_plot,'pchip');
 
 normals = get_normals(vars_sol, vars_num);
 
-nnormals(:,1) = interp1(vars_num.s,normals(:,1),s_plot,'pchip');
-nnormals(:,2) = interp1(vars_num.s,normals(:,2),s_plot,'pchip');
-for i=1:size(nnormals,2)
-    nnormals(i,:) = nnormals(i,:)/norm(nnormals(i,:));
+normals_plot(:,1) = interp1(vars_num.s,normals(:,1),s_plot,'pchip');
+normals_plot(:,2) = interp1(vars_num.s,normals(:,2),s_plot,'pchip');
+for i=1:size(normals_plot,2)
+    normals_plot(i,:) = normals_plot(i,:)/norm(normals_plot(i,:));
 end
 
+
+[s_plot_full,r_plot_full,z_plot_full,normals_plot_full] = ...
+                               mirror_shape(s_plot,r_plot,z_plot,normals_plot);
+
+close all
+plot_shape(r_plot_full, z_plot_full, 1)
+quiver(r_plot_full, z_plot_full, normals_plot_full(:,1), normals_plot_full(:,2));
+
+error(' ')
+
 plot_shape(vars_sol.r, vars_sol.z, 1);
-quiver(r_plot, z_plot, nnormals(:,1), nnormals(:,2));
+quiver(r_plot, z_plot, normals_plot(:,1), normals_plot(:,2));
 
 % add noise to the data points
 rng(1); % set seed
 tmp = normrnd(0,sigma_noise,[Nsample,1]);
 rr_noise = zeros(Nsample,1); zz_noise = rr_noise;
 for i=1:Nsample
-    rr_noise(i) = r_plot(i) + tmp(i)*nnormals(i,1);
-    zz_noise(i) = z_plot(i) + tmp(i)*nnormals(i,2);
+    rr_noise(i) = r_plot(i) + tmp(i)*normals_plot(i,1);
+    zz_noise(i) = z_plot(i) + tmp(i)*normals_plot(i,2);
 end
 
 plot_shape(rr_noise, zz_noise, 1);
