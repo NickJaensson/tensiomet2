@@ -87,15 +87,16 @@ end
 fr = chebfun(coeffs_r,[ssb(1),ssb(end)],'coeffs');
 fz = chebfun(coeffs_z,[ssb(1),ssb(end)],'coeffs');
 
-figure; plot(fr); hold on; scatter(ssb,rrb);
+figure(2); plot(fr); hold on; scatter(ssb,rrb);
 xlabel('s','FontSize',24); ylabel('r','FontSize',24);
-figure; plot(fz); hold on; scatter(ssb,zzb);
+figure(2); plot(fz); hold on; scatter(ssb,zzb);
 xlabel('s','FontSize',24); ylabel('z','FontSize',24);
 
 rr_fit = gridsample(fr,params_num.N,[ssb(end)/2,ssb(end)]);
 zz_fit = gridsample(fz,params_num.N,[ssb(end)/2,ssb(end)]);
 
-plot_shape(rr_fit, zz_fit, 4);
+plot_shape(rr_noise, zz_noise, 3);
+plot_shape(rr_fit, zz_fit, 3);
 
 % now the mesh is for half of the domain
 vars_num_fit = numerical_grid(params_num,[0,ssb(end)/2]); % should this be untis s(end) of FITTED shape?!
@@ -123,16 +124,16 @@ vars_sol_fit.psi = psi_fit;
 
 [kappas,kappap] = find_curvature(vars_sol_fit, vars_num_fit);
 
-plot_curvature(vars_sol.z, kappas, kappap, 8);
+plot_curvature(vars_sol.z, kappas, kappap, 5);
 
 [sigmas, sigmap] = makeCMD(params_phys, psi_fit, rr_fit, ...
                            zz_fit, vars_num_fit, vars_sol.p0);
 
-plot_surface_stress(vars_num.s, sigmas, sigmap, 5);
+plot_surface_stress(vars_num.s, sigmas, sigmap, 6);
 
 if isfield(vars_sol,'sigmas')
-    plot_surface_stress(vars_num.s, vars_sol.sigmas, vars_sol.sigmap, 5);
+    plot_surface_stress(vars_num.s, vars_sol.sigmas, vars_sol.sigmap, 6);
 else
     sigma_vec = params_phys.sigma*ones(vars_num.N,1);
-    plot_surface_stress(vars_num.s, sigma_vec, sigma_vec, 5);
+    plot_surface_stress(vars_num.s, sigma_vec, sigma_vec, 6);
 end
