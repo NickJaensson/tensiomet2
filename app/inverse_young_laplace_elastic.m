@@ -1,6 +1,6 @@
 
 gen_single_drop_elastic; 
-%gen_single_drop; 
+% gen_single_drop; 
 
 close all
 
@@ -17,7 +17,7 @@ Nsample = 80;
 Nsample_full = 2*Nsample-1;
 
 % noise level
-sigma_noise = 0.001*params_phys.rneedle;
+sigma_noise = 0.01*params_phys.rneedle;
 
 rng(1); % set seed
 
@@ -98,8 +98,17 @@ zz_fit = gridsample(fz,params_num.N,[ssb(end)/2,ssb(end)]);
 plot_shape(rr_noise, zz_noise, 3);
 plot_shape(rr_fit, zz_fit, 3);
 
+% we use the length of the fitted shape for the new numerical domain
+% NOTE: this could perhaps be improved by performing the integration
+% using chebfun on fr and fz
+new_length = 0;
+for i = 1:size(rr_fit,1)-1
+    new_length = new_length + ...
+        norm([rr_fit(i+1)-rr_fit(i),zz_fit(i+1)-zz_fit(i)]);
+end
+
 % now the mesh is for half of the domain
-vars_num_fit = numerical_grid(params_num,[0,ssb(end)/2]); % should this be untis s(end) of FITTED shape?!
+vars_num_fit = numerical_grid(params_num,[0,new_length]);
 dummy.C = 1;
 vars_num_fit = update_numerical_grid(dummy, vars_num_fit, false);
 
