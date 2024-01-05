@@ -177,3 +177,9 @@ glob_ts(:,2) = vars_sol.sigmas;
 glob_tr(:,2) = vars_sol.sigmap;
 
 [moduliS, lambda_s, lambda_r]  = makeSFE();
+
+errorG = abs(moduliS(1)-params_phys.Gmod)/params_phys.Gmod;
+errorK = abs(moduliS(2)-params_phys.Kmod)/params_phys.Kmod;
+
+disp(['Error in G = ', num2str(errorG*100,4), ' %']);
+disp(['Error in K = ', num2str(errorK*100,4), ' %']);
