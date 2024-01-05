@@ -35,6 +35,10 @@ function [vars_num] = numerical_grid(params_num, domain)
     vars_num.w = introw(params_num.N,domain);
     vars_num.s0 = chebpts(params_num.N,domain);
 
+    vars_num.D0 = vars_num.D;
+    vars_num.w0 = vars_num.w;
+    vars_num.wmat0 = vars_num.wmat;
+
     vars_num.N = params_num.N; % copy for convenvience
 
 end
