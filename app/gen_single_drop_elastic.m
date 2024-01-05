@@ -11,6 +11,9 @@ params_phys.compresstype = 1;  % 1: compress the volume other: compress the area
 params_phys.fracm = [0.8];     % compute elastic stresses for these compressions
 params_phys.strainmeasure = 'pepicelli'; % which elastic constitutive model
 
+vars_num_ref = vars_num; % used in makeSFE
+vars_sol_ref = vars_sol; % used in makeSFE
+
 % store the converged values of C and area0 for the elastic problem
 params_phys.area0 = area;
 vars_num.C = vars_sol.C;

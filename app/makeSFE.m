@@ -5,6 +5,18 @@ function [GK, lams, lamr] = makeSFE(GuessGK,toplot)
 
 global g_strainmeasure g_memptr g_error g_echo glob_w glob_d glob_s glob_r glob_z glob_ts glob_tr
 
+% g_strainmeasure: strain measure, e.g., hencky
+% g_memptr: g_memptr(state): pointer to state=state1 and state=state2
+% g_error: error of the fitted moduli
+% g_echo: print some info to screen or not? 
+% glob_w(state,:): w in state=1 and state=2 (determined in getShape)
+% glob_d(:,:,state): d in state=1 and state=2 (determined in getShape)
+% glob_s(:,state): s in state=1 and state=2 (determined in getShape)
+% glob_r(:,state): r in state=1 and state=2 (determined in getShape)
+% glob_z(:,state): z in state=1 and state=2 (determined in getShape)
+% glob_ts(:,state): taus in state=1 and state=2 (determined in makeCMD)
+% glob_tr(:,state): taup in state=1 and state=2 (determined in makeCMD)
+
 if length(g_memptr)<2
     disp('Requires g_memptr to indicate 2 states');
     GK= [-1,-1];

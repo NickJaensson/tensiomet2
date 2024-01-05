@@ -140,3 +140,40 @@ else
     sigma_vec = params_phys.sigma*ones(vars_num.N,1);
     plot_surface_stress(vars_num.s, sigma_vec, sigma_vec, 6);
 end
+
+
+global g_strainmeasure g_memptr g_error g_echo glob_w glob_d glob_s 
+global glob_r glob_z glob_ts glob_tr
+
+g_strainmeasure = 'hencky';
+g_memptr = [1,2];
+g_echo = 1;
+
+glob_w = zeros(2,params_num.N);
+glob_d = zeros(params_num.N,params_num.N,2);
+glob_s = zeros(params_num.N,2);
+glob_r = glob_s;
+glob_z = glob_s;
+glob_ts = glob_s;
+glob_tr = glob_s;
+
+% BELOW SHOULD ALL BE CHECKED TO MAKE SURE WE USE THE CORRECT NUMERICAL
+% VARIABLES !
+
+glob_w(1,:) = vars_num_ref.ws;
+glob_d(:,:,1) = vars_num_ref.Ds;
+glob_s(:,1) = vars_num_ref.s;
+glob_r(:,1) = vars_sol_ref.r;
+glob_z(:,1) = vars_sol_ref.z;
+glob_ts(:,1) = params_phys.sigma*ones(vars_num.N,1);
+glob_tr(:,1) = params_phys.sigma*ones(vars_num.N,1);
+
+glob_w(2,:) = vars_num.ws;
+glob_d(:,:,2) = vars_num.Ds;
+glob_s(:,2) = vars_num.s;
+glob_r(:,2) = vars_sol.r;
+glob_z(:,2) = vars_sol.z;
+glob_ts(:,2) = vars_sol.sigmas;
+glob_tr(:,2) = vars_sol.sigmap;
+
+[moduliS, lambda_s, lambda_r]  = makeSFE();
