@@ -63,12 +63,13 @@ function [A,b] = jacobian_rhs_elastic(params_phys,vars_sol,vars_num)
     b3 = lams*p0 - lams.*sigmap.*sin(psi)./r ...
                   - lams.*z*params_phys.deltarho*params_phys.grav -C*sigmas.*(D*psi);
 
-    % A81 = (2*int*lams*r*pi*sin(psi))
-    % A83 = (int*lams*r^2*pi*cos(psi))
-    % A86 = (int*r^2*pi*sin(psi))
-    % b8 = V*C - (int*lams*r^2*pi*sin(psi))
+
     if params_phys.compresstype == 1
         % determine pressure - use volume
+        % A81 = (2*int*lams*r*pi*sin(psi))
+        % A83 = (int*lams*r^2*pi*cos(psi))
+        % A86 = (int*r^2*pi*sin(psi))
+        % b8 = V*C - (int*lams*r^2*pi*sin(psi))        
         wdef = w.*lams'/C; 
         A81 = 2*pi*wdef.*(r.*sin(psi))';
         A83 =   pi*wdef.*(r.^2.*cos(psi))';
@@ -76,7 +77,14 @@ function [A,b] = jacobian_rhs_elastic(params_phys,vars_sol,vars_num)
         b8 =   -pi*wdef*((r.^2).*sin(psi))+params_phys.volume;
     else
         % determine pressure - use area
-        error('area compression not implemented')    
+        % A81 = (2*int*lams*pi)/C
+        % A86 = (2*int*r*pi)/C
+        % b8 = A - (2*int*lams*r*pi)/C
+        wdef = w.*lams'/C; 
+        A81 = 2*pi*wdef;
+        A83 =   zeros(1,N);
+        A86 =   pi*wdef.*r';
+        b8 =   -2*pi*wdef*r+params_phys.area;
     end
 
     % boundary condition r(0) = 0

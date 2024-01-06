@@ -1,6 +1,6 @@
 close all; clear
 
-syms sigma rho g V C K G
+syms sigma rho g V A C K G
 
 syms r z psi sigmas sigmap lams lamp P psi_prime r_prime z_prime sigmas_prime sigmap_prime lams_prime lamp_prime P_prime
 syms dr dz dpsi dsigmas dsigmap dlams dlamp dP dpsi_prime dr_prime dz_prime dsigmas_prime dsigmap_prime dlams_prime dlamp_prime dP_prime
@@ -24,7 +24,12 @@ f{5} = sigmas - sigma - K*log(J) - G*log(lams/lamp);
 f{6} = sigmap - sigma - K*log(J) - G*log(lamp/lams);
 
 f{7} = lamp - r/rstar;
-f{8} = int*(pi*r^2*sin(psi)*lams/C) - V;
+
+% impose volume
+% f{8} = int*(pi*r^2*sin(psi)*lams/C) - V;
+
+% impose area
+f{8} = int*(2*pi*r*lams/C) - A;
 
 for i=1:length(f)
 

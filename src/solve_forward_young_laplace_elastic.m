@@ -34,7 +34,7 @@ function [vars_sol, vars_num] = solve_forward_young_laplace_elastic(vars_sol, pa
     if params_phys.compresstype == 1
         params_phys.volume = params_phys.volume0*params_phys.frac;
     else
-        error('area compression not implemented')    
+        params_phys.area = params_phys.area0*params_phys.frac;
     end
 
     % store some variables for the iteration
