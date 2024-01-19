@@ -145,7 +145,7 @@ end
 global g_strainmeasure g_memptr g_error g_echo glob_w glob_d glob_s 
 global glob_r glob_z glob_ts glob_tr
 
-g_strainmeasure = 'hencky';
+g_strainmeasure = params_phys.strainmeasure;
 g_memptr = [1,2];
 g_echo = 1;
 
