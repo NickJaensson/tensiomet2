@@ -132,6 +132,18 @@ function [A,b] = jacobian_rhs_elastic(params_phys,vars_sol,vars_num)
         
     switch params_phys.strainmeasure
 
+    case 'linear_hookean'
+
+        A54 = eye(N);
+        A56 = (-G-K)*eye(N);
+        A57 =  (G-K)*eye(N);
+        b5 = params_phys.sigma - sigmas + (lams - 1)*(G + K) - (G - K)*(lamp - 1);
+
+        A65 = eye(N);
+        A66 = (G-K)*eye(N);
+        A67 = (-G-K)*eye(N);
+        b6 = params_phys.sigma - sigmap + (lamp - 1)*(G + K) - (G - K)*(lams - 1);
+        
     case 'hencky'
 
         A54 = eye(N);

@@ -23,6 +23,14 @@ f{4} = r*C*sigmas_prime/lams - cos(psi)*(sigmap-sigmas);
 f{5} = sigmas - sigma - K*log(J) - G*log(lams/lamp);
 f{6} = sigmap - sigma - K*log(J) - G*log(lamp/lams);
 
+% Hookean (linear)
+% NOTE: can be derived from the Hencky model by linearizing the Hencky
+% model around lams=1 and lamp=1: 
+%     log(lams*lamp) ~= (lams-1)+(lamp-1)
+%     log(lams/lamp) ~= (lams-1)-(lamp-1)
+% f{5} = sigmas - sigma - (K+G)*(lams-1) - (K-G)*(lamp-1);
+% f{6} = sigmap - sigma - (K+G)*(lamp-1) - (K-G)*(lams-1);
+
 f{7} = lamp - r/rstar;
 
 % impose volume
