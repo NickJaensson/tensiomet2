@@ -29,20 +29,20 @@ function [A,b] = jacobian_rhs_elastic(params_phys,vars_sol,vars_num)
     % A13 = lams*sin(psi)
     % A16 = -(C*D*r)/lams
     % b1 = lams*cos(psi) - (C*D*r)
-    A11 = C*D;
-    A13 = diag(lams.*sin(psi));
-    A16 = -C*diag((D*r)./lams);
-    b1 = lams.*cos(psi)-C*D*r;
+    A11 = C*diag(1./lams)*D;
+    A13 = diag(sin(psi));
+    A16 = -C*diag((D*r)./(lams.^2));
+    b1 = cos(psi)-C*(D*r)./lams;
 
     % determine z from psi (incl lams)
     % A22 = C*D
     % A23 = -lams*cos(psi)
     % A26 = -(C*D*z)/lams
     % b2 = lams*sin(psi) - (C*D*z)
-    A22 = C*D;
-    A23 = diag(-lams.*cos(psi));
-    A26 = -C*diag((D*z)./lams);
-    b2 = lams.*sin(psi)-C*D*z;
+    A22 = C*diag(1./lams)*D;
+    A23 = diag(-cos(psi));
+    A26 = -C*diag((D*z)./(lams.^2));
+    b2 = sin(psi)-C*(D*z)./lams;
 
     % determine psi from laplace law
     % A31 = -lams*(sigmap*sin(psi))/r^2
@@ -53,15 +53,15 @@ function [A,b] = jacobian_rhs_elastic(params_phys,vars_sol,vars_num)
     % A36 = -(C*D*psi*sigmas)/lams
     % A38 = -lams
     % b3 = lams*P - lams*(sigmap*sin(psi))/r - lams*g*rho*z - (C*D*psi*sigmas)
-    A31 = -diag(lams.*sigmap.*sin(psi)./(r.^2));
-    A32 = diag(lams)*params_phys.deltarho*params_phys.grav;
-    A33 = diag(lams.*sigmap.*cos(psi)./r)+C*diag(sigmas)*D;
-    A34 = C*diag(D*psi);
-    A35 = diag(lams.*sin(psi)./r);
-    A36 = -C*diag((D*psi).*sigmas./lams);
-    A38 = -lams;
-    b3 = lams*p0 - lams.*sigmap.*sin(psi)./r ...
-                  - lams.*z*params_phys.deltarho*params_phys.grav -C*sigmas.*(D*psi);
+    A31 = -diag(sigmap.*sin(psi)./(r.^2));
+    A32 = eye(N)*params_phys.deltarho*params_phys.grav;
+    A33 = diag(sigmap.*cos(psi)./r)+C*diag(sigmas./lams)*D;
+    A34 = C*diag((D*psi)./lams);
+    A35 = diag(sin(psi)./r);
+    A36 = -C*diag((D*psi).*sigmas./(lams.^2));
+    A38 = -ones(N,1);
+    b3 = p0 - sigmap.*sin(psi)./r ...
+                  - z*params_phys.deltarho*params_phys.grav -C*sigmas.*(D*psi)./lams;
 
 
     if params_phys.compresstype == 1
@@ -73,7 +73,7 @@ function [A,b] = jacobian_rhs_elastic(params_phys,vars_sol,vars_num)
         wdef = w.*lams'/C; 
         A81 = 2*pi*wdef.*(r.*sin(psi))';
         A83 =   pi*wdef.*(r.^2.*cos(psi))';
-        A86 =   pi*wdef.*((r.^2).*sin(psi))';
+        A86 =   pi*(w/C).*((r.^2).*sin(psi))';
         b8 =   -pi*wdef*((r.^2).*sin(psi))+params_phys.volume;
     else
         % determine pressure - use area
@@ -83,7 +83,7 @@ function [A,b] = jacobian_rhs_elastic(params_phys,vars_sol,vars_num)
         wdef = w.*lams'/C; 
         A81 = 2*pi*wdef;
         A83 =   zeros(1,N);
-        A86 =   pi*wdef.*r';
+        A86 =   2*pi*(w/C).*r';
         b8 =   -2*pi*wdef*r+params_phys.area;
     end
 
@@ -116,12 +116,12 @@ function [A,b] = jacobian_rhs_elastic(params_phys,vars_sol,vars_num)
     % A45 = -lams*cos(psi)
     % A46 = -(C*r*D*sigmas)/lams
     % b4 = - lams*cos(psi)*(sigmas - sigmap) - (C*r*D*sigmas)    
-    A41 = C*diag(D*sigmas);
-    A43 = diag(lams.*sin(psi).*(sigmap-sigmas));
-    A44 = diag(lams.*cos(psi))+C*diag(r)*D;
-    A45 = -diag(lams.*cos(psi));
-    A46 = -C*diag(r.*(D*sigmas)./lams);
-    b4 = -C*r.*(D*sigmas)+lams.*cos(psi).*(sigmap-sigmas);
+    A41 = C*diag((D*sigmas)./lams);
+    A43 = diag(sin(psi).*(sigmap-sigmas));
+    A44 = diag(cos(psi))+C*diag(r./lams)*D;
+    A45 = -diag(cos(psi));
+    A46 = -C*diag(r.*(D*sigmas)./(lams.^2));
+    b4 = -C*r.*(D*sigmas)./lams+cos(psi).*(sigmap-sigmas);
 
     % define some convenient variables for constitutive equation
     lamsm1 = lams.^(-1); lamsm2 = lams.^(-2); lamsm3 = lams.^(-3);
