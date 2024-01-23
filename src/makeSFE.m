@@ -68,7 +68,9 @@ Itg(:,1) = zeros(N,1);
 s1 = ts(:,ptr1);
 s2 = tr(:,ptr1);
 
-while (rms(u(1:end))>1e-4)&&(iter<300)
+u=ones(N+2,1); % initialize to get while-loop going
+
+while (rms(u(N+1:N+2))>1e-4)&&(iter<300)
     % material equations
     if strcmp(g_strainmeasure,'generic')
     A  = [[ diag(2*K./lams), 2*log(lams.*lamr), zeros(N,1)];...
@@ -85,13 +87,17 @@ while (rms(u(1:end))>1e-4)&&(iter<300)
         ];
         b = [ts(:,ptr2)+tr(:,ptr2)-s1-s2-2*K*log(lams.*lamr);...
         ts(:,ptr2)-tr(:,ptr2)-s1+s2-2*G*log(lams./lamr); sold(end,ptr1)-wold*(1./lams)];
-    else 
+    elseif strcmp(g_strainmeasure,'linear_hookean')
         % Hookean
         A  = [[ eye(N)*2*K, 2*(lams+lamr-2), zeros(N,1)];...
         [eye(N)*2*G, zeros(N,1), (lams-lamr)];...
         [-wold*diag(1./lams.^2), 0, 0]];   
         b = [ts(:,ptr2)+tr(:,ptr2)-ts(:,ptr1)-tr(:,ptr1)-2*K*(lams+lamr-2);...
         ts(:,ptr2)-tr(:,ptr2)-s1+s2-2*G*(lams-lamr); sold(end,ptr1)-wold*(1./lams)];
+
+    else
+
+        error('strainmeasure not available!')
     
     end
     
@@ -138,7 +144,7 @@ while (rms(u(1:end))>1e-4)&&(iter<300)
     end
     oldb = rms(b);
 
-        fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
+        fprintf('iter %d: rms(u) = %d\n',iter,rms(u(N+1:N+2)));
 
 end
 
