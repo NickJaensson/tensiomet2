@@ -7,8 +7,13 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
     psi = psi_in;
     r = rr_in;
     z = zz_in;
-    D = vars_num.D;
     N = params_num.N;
+
+    % NOTE: by using Ds here, we can solve the problem on meshes with C~=0
+    % for an image detected shape this is not relevant (there C=1), but the
+    % main purpose is to check the implementation using the numerical
+    % solution of the forward problem
+    D = vars_num.Ds; % by using 
     
     % initial guess
     sigma = params_num.sigma_guess; 

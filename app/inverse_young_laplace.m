@@ -9,11 +9,6 @@ params_num.eps_inv = 1e-9;    % convergence critertion forward: rms(u) < eps
 params_num.maxiter_inv = 1000; % maximum number of iteration steps inverse
 params_num.alpha = 0.5;       % relaxation parameter in inverse problem
 
-% this step is needed since the solve_inverse_young_laplce routine assumes
-% a value of C=1
-vars_num = numerical_grid(params_num,[0,vars_num.s(end)]);
-dummy.C = 1;
-vars_num = update_numerical_grid(dummy, vars_num, false);
 
 % calculate the best fitting Laplace shape
 [st,press,rrlaplace,zzlaplace] = solve_inverse_young_laplace(vars_sol.z, ...
