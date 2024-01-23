@@ -137,6 +137,9 @@ while (rms(u(1:end))>1e-4)&&(iter<300)
         break;
     end
     oldb = rms(b);
+
+        fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
+
 end
 
 % print result to screen
