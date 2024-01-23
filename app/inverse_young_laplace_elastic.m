@@ -101,7 +101,7 @@ plot_shape(rr_fit, zz_fit, 3);
 % we use the length of the FITTED shape for the new numerical domain
 new_length = integral(sqrt(diff(fr)^2+diff(fz)^2))/2;
 
-% now the mesh is for half of the domain
+% now the mesh is for half of the shape (similar to forward problem)
 vars_num_fit = numerical_grid(params_num,[0,new_length]);
 dummy.C = 1;
 vars_num_fit = update_numerical_grid(dummy, vars_num_fit, false);
