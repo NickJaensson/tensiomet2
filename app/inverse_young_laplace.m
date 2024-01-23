@@ -3,6 +3,7 @@ gen_single_drop;
 
 close all
 
+% numerical parameters for inverse problem
 params_num.sigma_guess = 10;  % guess for interfacial tension value
 params_num.p0_guess = 5;      % guess for pressure
 params_num.eps_inv = 1e-9;    % convergence critertion forward: rms(u) < eps
