@@ -39,10 +39,10 @@ g_echo = 1;
 glob_w = zeros(2,params_num.N);
 glob_d = zeros(params_num.N,params_num.N,2);
 glob_s = zeros(params_num.N,2);
-glob_r = glob_s;
-glob_z = glob_s;
-glob_ts = glob_s;
-glob_tr = glob_s;
+glob_r = zeros(params_num.N,2);
+glob_z = zeros(params_num.N,2);
+glob_ts = zeros(params_num.N,2);
+glob_tr = zeros(params_num.N,2);
 
 % BELOW SHOULD ALL BE CHECKED TO MAKE SURE WE USE THE CORRECT NUMERICAL
 % VARIABLES !
@@ -70,3 +70,5 @@ errorK = abs(moduliS(2)-params_phys.Kmod)/params_phys.Kmod;
 
 disp(['Error in G = ', num2str(errorG*100,4), ' %']);
 disp(['Error in K = ', num2str(errorK*100,4), ' %']);
+
+plot_surface_strain(vars_num.s, lambda_s, lambda_r, 3);
