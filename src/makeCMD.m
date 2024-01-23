@@ -3,19 +3,23 @@ function [ taus, taup ] = makeCMD(params_phys, psi, r, z, vars_num, p0)
 % Advances in Colloid and Interface Science 233 (2016) 223?239
         
     fac = params_phys.deltarho*params_phys.grav;
+    d = vars_num.Ds;
 
-    Vi = pi*vars_num.wsmat*(r.^2.*sin(psi));
-
-    L = pi*2*r.*sin(psi);
-    R = pi*(r.^2*p0 - fac*z.*r.^2);
-
-    taus = zeros(vars_num.N,1);
-    taus(2:end) = ( R(2:end) + fac*Vi(2:end) ) ./ L(2:end);
-
-    % regularize at the apex with dsigma^s(0)/ds =0
-    taus(1) = -(vars_num.Ds(1,2:end)*taus(2:end))./vars_num.Ds(1,1);
-
-    taup = (p0-fac*z-taus.*(vars_num.Ds*psi)).*r./sin(psi);
+    % compute body force
+    intH = [0; d(2:end,2:end)\(r(2:end).*r(2:end).*sin(psi(2:end)))];
+    % line force for unknown surface stress
+    L = 2*r.*sin(psi);
+    % known forces
+    rhs = fac*intH - fac*z.*r.^2 + r.^2*p0;
+    
+    taus = zeros(length(r),1);
+    % force balance to obtain the meridional surface stress
+    taus(2:end) = rhs(2:end)./L(2:end);
+    % regularize at the apex with d sigma^s(0)/ds =0
+    taus(1) = -(d(1,2:end)*taus(2:end))./d(1,1);
+    
+    % formulation like in Danov et al.
+    taup = (p0-fac*z-taus.*(d*psi)).*r./sin(psi);
     taup(1) = taus(1);
 
 end
