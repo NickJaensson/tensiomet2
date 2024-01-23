@@ -19,16 +19,6 @@ params_num.maxiter_inv = 1000; % maximum number of iteration steps inverse
 plot_surface_stress(vars_num.s, sigmas, sigmap, 2);
 
 
-% this step is needed since the makeSFE routine assumes
-% a value of C=1
-vars_num = numerical_grid(params_num,[0,vars_num.s(end)]);
-dummy.C = 1;
-vars_num = update_numerical_grid(dummy, vars_num, false);
-
-vars_num_ref = numerical_grid(params_num,[0,vars_num_ref.s(end)]);
-dummy.C = 1;
-vars_num_ref = update_numerical_grid(dummy, vars_num_ref, false);
-
 global g_strainmeasure g_memptr g_error g_echo glob_w glob_d glob_s 
 global glob_r glob_z glob_ts glob_tr
 
