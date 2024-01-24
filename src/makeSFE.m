@@ -188,18 +188,5 @@ end
 g_error = [oldb;(KK(iter-1)-KK(iter-2))/(RS(iter-1)-RS(iter-2));(GG(iter-1)-GG(iter-2))/(RS(iter-1)-RS(iter-2))];
 GK = [G, K];
 
-if(exist('toplot','var'))
-    if(toplot)
-        %% Plot
-        if toplot==1
-            figure;
-        else
-            hold on;
-        end
-        plot(zold(:,ptr2),lams,'b',zold(:,ptr2),lamr,'r--');
-        ylabel('Strains meridional (b) and azimuthal (r)');
-        xlabel(z);
-    end
-end
 end
 
