@@ -18,10 +18,6 @@ params_num.maxiter_inv = 100; % maximum number of iteration steps inverse
 
 plot_surface_stress(vars_num.s, sigmas, sigmap, 2);
 
-% fill in the stress at the reference state
-vars_sol_ref.sigmas = params_phys.sigma*ones(vars_num.N,1);
-vars_sol_ref.sigmap = params_phys.sigma*ones(vars_num.N,1);
-
 [moduliS, lambda_s, lambda_r]  = makeSFE(params_phys.strainmeasure,...
     vars_sol_ref,vars_num_ref,vars_sol,vars_num,params_num);
 
