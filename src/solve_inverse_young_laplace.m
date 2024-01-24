@@ -1,12 +1,12 @@
-function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(zz_in, rr_in, psi_in, params_phys, params_num, vars_num)
+function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(vars_sol, params_phys, params_num, vars_num)
     % makeIso(toplot) = [tension, pstat] fits the shape functions to surface 
     % tension and pressure. RMS fitting of R using the Schur complement.
     % toplot specifies if the result is to be plotted.
 
     % assign some local variables
-    psi = psi_in;
-    r = rr_in;
-    z = zz_in;
+    psi = vars_sol.psi;
+    r = vars_sol.r;
+    z = vars_sol.z;
     N = params_num.N;
 
     % NOTE: by using Ds here, we can solve the problem on meshes with C~=0
@@ -23,10 +23,10 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
     u = ones(N,1);
     iter = 1;
 
-    while rms(u) > params_num.eps_inv
+    while rms(u(end-1:end)) > params_num.eps_inv || iter <= 2
         
         iter = iter+1;
-        
+
         if iter > params_num.maxiter_inv
             error('Iteration did not converge!')
         end  
@@ -39,11 +39,11 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
          % Schur Element
         A1 = tA(:,1:end-2);
 
-        A3 = [-2*diag(rr_in-r), zeros(1*N,2*N)];
+        A3 = [-2*diag(vars_sol.r-r), zeros(1*N,2*N)];
 
         IA1 = inv(A1);
         SchurA = A3*(IA1*A2);
-        b = A3*(IA1*tb)+(rr_in-r).^2;
+        b = A3*(IA1*tb)+(vars_sol.r-r).^2;
         
         if ( iter==2 ); warning('off', 'MATLAB:rankDeficientMatrix'); end
         u2 = SchurA\b;
@@ -59,9 +59,10 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(z
         sigma = sigma+params_num.alpha*u(3*N+1);
         P = P+params_num.alpha*u(end);
 
-        fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
+        fprintf('iter %d: rms(u(end-1:end)) = %d\n',iter,rms(u(end-1:end)));
 
         rmsb = rms(tb);
+
     end
 
     rrlaplace = r;

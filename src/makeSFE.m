@@ -174,7 +174,7 @@ while (rms(u(N+1:N+2))>params_num.eps_inv)&&(iter<params_num.maxiter_inv)
 %     end
     oldb = rms(b);
 
-        fprintf('iter %d: rms(u) = %d\n',iter,rms(u(N+1:N+2)));
+        fprintf('iter %d: rms(u(N+1:N+2)) = %d\n',iter,rms(u(N+1:N+2)));
 
 end
 

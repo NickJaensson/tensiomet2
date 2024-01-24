@@ -13,13 +13,12 @@ params_num.maxiter_inv = 100; % maximum number of iteration steps inverse
 
 
 % the following code can be used to test the CMD implementation
-[sigmas, sigmap] = makeCMD(params_phys, vars_sol.psi, vars_sol.r, ...
-                           vars_sol.z, vars_num, vars_sol.p0);
+[sigmas, sigmap] = makeCMD(params_phys, vars_sol, vars_num);
 
 plot_surface_stress(vars_num.s, sigmas, sigmap, 2);
 
 [moduliS, lambda_s, lambda_r]  = makeSFE(params_phys.strainmeasure,...
-    vars_sol_ref,vars_num_ref,vars_sol,vars_num,params_num);
+    vars_sol_ref, vars_num_ref, vars_sol, vars_num,params_num);
 
 errorG = abs(moduliS(1)-params_phys.Gmod)/params_phys.Gmod;
 errorK = abs(moduliS(2)-params_phys.Kmod)/params_phys.Kmod;

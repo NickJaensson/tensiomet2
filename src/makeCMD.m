@@ -1,7 +1,12 @@
-function [ taus, taup ] = makeCMD(params_phys, psi, r, z, vars_num, p0)
+function [ taus, taup ] = makeCMD(params_phys, vars_sol, vars_num)
 % compute stresses from the shape and a pressure following Danov et al. 
 % Advances in Colloid and Interface Science 233 (2016) 223?239
-        
+
+    psi = vars_sol.psi; 
+    r = vars_sol.r;
+    z = vars_sol.z;
+    p0 = vars_sol.p0;
+
     fac = params_phys.deltarho*params_phys.grav;
     d = vars_num.Ds;
 

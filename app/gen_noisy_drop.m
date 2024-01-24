@@ -1,6 +1,6 @@
 
-gen_single_drop_elastic; 
-% gen_single_drop; 
+%gen_single_drop_elastic; 
+gen_single_drop; 
 
 close all
 
@@ -49,3 +49,10 @@ plot_shape(rr_noise, zz_noise, 1);
 
 plot_shape(rr_noise, zz_noise, 3);
 plot_shape(vars_sol_fit.r, vars_sol_fit.z, 3);
+
+
+% calculate the best fitting Laplace shape
+[st,press,rrlaplace,zzlaplace] = solve_inverse_young_laplace(vars_sol_fit, ...
+    params_phys, params_num, vars_num_fit);
+
+disp(['estimated surface tension = ',num2str(st,12)]);
