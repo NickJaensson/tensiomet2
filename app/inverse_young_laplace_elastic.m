@@ -5,7 +5,7 @@ gen_single_drop_elastic;
 
 % numerical parameters for inverse problem
 params_num.eps_cheb = 1e-3;   % error for describing the shape
-params_num.eps_inv = 1e-9;    % convergence critertion forward: rms(u) < eps
+params_num.eps_inv = 1e-3;    % convergence critertion inverse problem
 params_num.sigma_guess = 10;  % guess for interfacial tension value
 params_num.p0_guess = 5;      % guess for pressure
 params_num.alpha = 1.0;       % relaxation parameter in inverse problem

@@ -1,7 +1,7 @@
 
 gen_single_drop; 
 
-close all
+% close all
 
 % numerical parameters for inverse problem
 params_num.sigma_guess = 10;  % guess for interfacial tension value

@@ -100,7 +100,7 @@ s2 = tr(:,ptr1);
 
 u=ones(N+2,1); % initialize to get while-loop going
 
-while (rms(u(N+1:N+2))>1e-4)&&(iter<300)
+while (rms(u(N+1:N+2))>params_num.eps_inv)&&(iter<params_num.maxiter_inv)
     % material equations
     if strcmp(g_strainmeasure,'generic')
     A  = [[ diag(2*K./lams), 2*log(lams.*lamr), zeros(N,1)];...
@@ -168,10 +168,10 @@ while (rms(u(N+1:N+2))>1e-4)&&(iter<300)
     lamr = lamr-0.25*dlam;
     lams = lams+0.25*dlam;
    
-% if the error is small and re-increases stop the iteration    
-    if (oldb<1e-1)&&(oldb<rms(b))
-        break;
-    end
+% % if the error is small and re-increases stop the iteration    
+%     if (oldb<1e-1)&&(oldb<rms(b))
+%         break;
+%     end
     oldb = rms(b);
 
         fprintf('iter %d: rms(u) = %d\n',iter,rms(u(N+1:N+2)));
