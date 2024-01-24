@@ -1,9 +1,7 @@
-function [GK, lams, lamr] = makeSFE(GuessGK,toplot)
+function [GK, lams, lamr] = makeSFE(strainmeasure,vars_sol_ref,vars_num_ref,vars_sol,vars_num,params_num)
 % makeSFE(guessed G and K) = [[GK], lams, lamr]
 % Computes the deformations with a material model and returns the material
 % parameters. Does not need an initial state or a surfac tension
-
-global g_strainmeasure g_memptr g_error g_echo glob_w glob_d glob_s glob_r glob_z glob_ts glob_tr
 
 % g_strainmeasure: strain measure, e.g., hencky
 % g_memptr: g_memptr(state): pointer to state=state1 and state=state2
@@ -16,6 +14,38 @@ global g_strainmeasure g_memptr g_error g_echo glob_w glob_d glob_s glob_r glob_
 % glob_z(:,state): z in state=1 and state=2 (determined in getShape)
 % glob_ts(:,state): taus in state=1 and state=2 (determined in makeCMD)
 % glob_tr(:,state): taup in state=1 and state=2 (determined in makeCMD)
+
+g_strainmeasure = strainmeasure;
+g_memptr = [1,2];
+g_echo = 1;
+
+glob_w = zeros(2,params_num.N);
+glob_d = zeros(params_num.N,params_num.N,2);
+glob_s = zeros(params_num.N,2);
+glob_r = zeros(params_num.N,2);
+glob_z = zeros(params_num.N,2);
+glob_ts = zeros(params_num.N,2);
+glob_tr = zeros(params_num.N,2);
+
+% BELOW SHOULD ALL BE CHECKED TO MAKE SURE WE USE THE CORRECT NUMERICAL
+% VARIABLES !
+
+glob_w(1,:) = vars_num_ref.ws;
+glob_d(:,:,1) = vars_num_ref.Ds;
+glob_s(:,1) = vars_num_ref.s;
+glob_r(:,1) = vars_sol_ref.r;
+glob_z(:,1) = vars_sol_ref.z;
+glob_ts(:,1) = vars_sol_ref.sigmas;
+glob_tr(:,1) = vars_sol_ref.sigmap;
+
+glob_w(2,:) = vars_num.ws;
+glob_d(:,:,2) = vars_num.Ds;
+glob_s(:,2) = vars_num.s;
+glob_r(:,2) = vars_sol.r;
+glob_z(:,2) = vars_sol.z;
+glob_ts(:,2) = vars_sol.sigmas;
+glob_tr(:,2) = vars_sol.sigmap;
+
 
 if length(g_memptr)<2
     disp('Requires g_memptr to indicate 2 states');
