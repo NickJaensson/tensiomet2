@@ -1,4 +1,4 @@
-function [s_uniform, f_interpolated] = interpolate_on_uniform_grid(vars_num,f,Ngrid)
+function varargout = interpolate_on_uniform_grid(vars_num,f,Ngrid)
 
     % interpolate the numerical solutions on a uniform grid.
     % NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
@@ -7,6 +7,10 @@ function [s_uniform, f_interpolated] = interpolate_on_uniform_grid(vars_num,f,Ng
 
     s_uniform = linspace(vars_num.s(1),vars_num.s(end),Ngrid)';
 
-    f_interpolated = interp1(vars_num.s,f,s_uniform,'pchip');
+    varargout{1} = s_uniform;
+
+    for i = 1:size(f,2)
+        varargout{i+1} = interp1(vars_num.s,f(:,i),s_uniform,'pchip');
+    end
 
 end

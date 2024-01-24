@@ -24,13 +24,12 @@ rng(1); % set seed
 normals = get_normals(vars_sol, vars_num);
 
 % interpolate all fields on a uniform grid
-[s_plot,r_plot] = interpolate_on_uniform_grid(vars_num,vars_sol.r,Nsample);
-[~     ,z_plot] = interpolate_on_uniform_grid(vars_num,vars_sol.z,Nsample);
-[~     ,normals_plot(:,1)] = interpolate_on_uniform_grid(vars_num,normals(:,1),Nsample);
-[~     ,normals_plot(:,2)] = interpolate_on_uniform_grid(vars_num,normals(:,2),Nsample);
+[s_plot,r_plot,z_plot,normals_plot(:,1),normals_plot(:,2)] = ...
+    interpolate_on_uniform_grid(vars_num, ...
+    [vars_sol.r, vars_sol.z, normals], Nsample); 
 
 [s_plot_full,r_plot_full,z_plot_full,normals_plot_full] = ...
-                               mirror_shape(s_plot,r_plot,z_plot,normals_plot);
+    mirror_shape(s_plot,r_plot,z_plot,normals_plot);
 
 plot_shape(r_plot_full, z_plot_full, 1)
 quiver(r_plot_full, z_plot_full, normals_plot_full(:,1), normals_plot_full(:,2));
