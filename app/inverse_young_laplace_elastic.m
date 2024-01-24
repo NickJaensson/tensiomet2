@@ -8,8 +8,8 @@ params_num.eps_cheb = 1e-3;   % error for describing the shape
 params_num.eps_inv = 1e-9;    % convergence critertion forward: rms(u) < eps
 params_num.sigma_guess = 10;  % guess for interfacial tension value
 params_num.p0_guess = 5;      % guess for pressure
-params_num.alpha = 0.5;       % relaxation parameter in inverse problem
-params_num.maxiter_inv = 1000; % maximum number of iteration steps inverse
+params_num.alpha = 1.0;       % relaxation parameter in inverse problem
+params_num.maxiter_inv = 100; % maximum number of iteration steps inverse
 
 
 % the following code can be used to test the CMD implementation

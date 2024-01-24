@@ -68,7 +68,7 @@ ts = glob_ts;
 tr = glob_tr;
 
 N = length(tr(:,1));
-alpha = 0.05;
+alpha = params_num.alpha;
 
 % init K and G
 if ~exist('GuessGK','var')
