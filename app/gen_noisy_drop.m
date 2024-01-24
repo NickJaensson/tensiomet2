@@ -6,11 +6,11 @@ close all
 
 % numerical parameters for inverse problem
 params_num.eps_cheb = 1e-3;   % error for describing the shape
-params_num.eps_inv = 1e-9;    % convergence critertion forward: rms(u) < eps
+params_num.eps_inv = 1e-3;    % convergence critertion inverse problem
 params_num.sigma_guess = 10;  % guess for interfacial tension value
 params_num.p0_guess = 5;      % guess for pressure
-params_num.alpha = 0.5;       % relaxation parameter in inverse problem
-params_num.maxiter_inv = 1000; % maximum number of iteration steps inverse
+params_num.alpha = 1.0;       % relaxation parameter in inverse problem
+params_num.maxiter_inv = 100; % maximum number of iteration steps inverse
 
 % number of points for the synthetic droplet shape
 Nsample = 80;
@@ -21,21 +21,13 @@ sigma_noise = 0.01*params_phys.rneedle;
 
 rng(1); % set seed
 
-% interpolate the numerical solutions on a uniform grid.
-% NOTE: the "right" way to interpolate is to fit a higher-orde polynomial 
-% though all the points (see book of Trefethen on Spectral Methods in 
-% Matlab, page  63). For plotting purposes we use a simpler interpolation 
-s_plot = linspace(vars_num.s(1),vars_num.s(end),Nsample)';
-r_plot = interp1(vars_num.s,vars_sol.r,s_plot,'pchip');
-z_plot = interp1(vars_num.s,vars_sol.z,s_plot,'pchip');
-
 normals = get_normals(vars_sol, vars_num);
 
-normals_plot(:,1) = interp1(vars_num.s,normals(:,1),s_plot,'pchip');
-normals_plot(:,2) = interp1(vars_num.s,normals(:,2),s_plot,'pchip');
-for i=1:size(normals_plot,2)
-    normals_plot(i,:) = normals_plot(i,:)/norm(normals_plot(i,:));
-end
+% interpolate all fields on a uniform grid
+[s_plot,r_plot] = interpolate_on_uniform_grid(vars_num,vars_sol.r,Nsample);
+[~     ,z_plot] = interpolate_on_uniform_grid(vars_num,vars_sol.z,Nsample);
+[~     ,normals_plot(:,1)] = interpolate_on_uniform_grid(vars_num,normals(:,1),Nsample);
+[~     ,normals_plot(:,2)] = interpolate_on_uniform_grid(vars_num,normals(:,2),Nsample);
 
 [s_plot_full,r_plot_full,z_plot_full,normals_plot_full] = ...
                                mirror_shape(s_plot,r_plot,z_plot,normals_plot);
