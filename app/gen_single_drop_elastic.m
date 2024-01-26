@@ -9,7 +9,7 @@ params_phys.Kmod = 3;          % elastic dilational modulus
 params_phys.Gmod = 2;          % elastic shear modulus
 params_phys.compresstype = 1;  % 1: compress the volume other: compress the area
 params_phys.fracm = [0.8];     % compute elastic stresses for these compressions
-params_phys.strainmeasure = 'hencky'; % which elastic constitutive model
+params_phys.strainmeasure = 'pepicelli'; % which elastic constitutive model
 
 vars_num_ref = vars_num; % used in makeSFE
 vars_sol_ref = vars_sol; % used in makeSFE
