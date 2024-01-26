@@ -15,9 +15,13 @@ J = lams*lamp;
 % NOTE: in makeSFE, these are multiplied by 2. It is not completely clear
 % why, but this is needed to give the correct results
 
+% Pepicelli
+f{1} = 2*(K/J)*log(J);
+f{2} = 2*(G/2)*(1/lamp^2 - 1/lams^2);
+
 % Hencky
-f{1} = 2*K*log(J);
-f{2} = 2*G*log(lams/lamp);
+% f{1} = 2*K*log(J);
+% f{2} = 2*G*log(lams/lamp);
 
 % Hookean (linear)
 % NOTE: can be derived from the Hencky model by linearizing the Hencky

@@ -127,6 +127,26 @@ while rms(u(N+1:N+2))>params_num.eps_inv
              ts(:,ptr2)-tr(:,ptr2)-s1+s2-2*G*log(lams./lamr);...
                                sold(end,ptr1)-wold*(1./lams)];
 
+    elseif strcmp(g_strainmeasure,'pepicelli')
+
+        A11 = (2*K)./(lamr.*lams.^2) - (2*K*log(lamr.*lams))./(lamr.*lams.^2);
+        A11 = diag(A11);
+        A12 = (2*log(lamr.*lams))./(lamr.*lams);
+        b1 = -(2*K*log(lamr.*lams))./(lamr.*lams);
+
+        A21 = (2*G)./lams.^3;
+        A21 = diag(A21);
+        A23 = 1./lamr.^2 - 1./lams.^2;
+        b2 = -G*(1./lamr.^2 - 1./lams.^2);
+
+        A  = [[                   A11,              A12,        zeros(N,1)];...
+              [                   A21,        zeros(N,1),              A23];...
+              [-wold*diag(1./lams.^2),                 0,                 0]];
+
+        b = [ts(:,ptr2)+tr(:,ptr2)-s1-s2-b1;...
+             ts(:,ptr2)-tr(:,ptr2)-s1+s2-b2;...
+                               sold(end,ptr1)-wold*(1./lams)];
+
     else
 
         error('strainmeasure not available!')
