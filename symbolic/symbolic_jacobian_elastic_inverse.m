@@ -10,21 +10,22 @@ kappat = sin(psi)/r;
 kappas = C*psi_prime/lams;
 J = lams*lamp;
 
-% Pepicelli
-% f{1} = sigmas - sigma - (K/J)*log(J) - (G/2)*(1/lamp^2 - 1/lams^2);
-% f{2} = sigmap - sigma - (K/J)*log(J) + (G/2)*(1/lamp^2 - 1/lams^2);
+% The following two equations are the dilational part and the shear part of
+% the constitutive equations for sigmas. 
+% NOTE: in makeSFE, these are multiplied by 2. It is not completely clear
+% why, but this is needed to give the correct results
 
 % Hencky
-f{1} = sigmas - sigma - K*log(J) - G*log(lams/lamp);
-f{2} = sigmap - sigma - K*log(J) - G*log(lamp/lams);
+f{1} = 2*K*log(J);
+f{2} = 2*G*log(lams/lamp);
 
 % Hookean (linear)
 % NOTE: can be derived from the Hencky model by linearizing the Hencky
 % model around lams=1 and lamp=1: 
 %     log(lams*lamp) ~= (lams-1)+(lamp-1)
 %     log(lams/lamp) ~= (lams-1)-(lamp-1)
-% f{1} = sigmas - sigma - (K+G)*(lams-1) - (K-G)*(lamp-1);
-% f{2} = sigmap - sigma - (K+G)*(lamp-1) - (K-G)*(lams-1);
+% f{1} = 2*K*(lams+lamp-2);
+% f{2} = 2*G*(lams-lamp);
 
 for i=1:length(f)
 
