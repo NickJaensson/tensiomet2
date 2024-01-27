@@ -23,11 +23,11 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(v
     u = ones(N,1);
     iter = 1;
 
-    while rms(u(end-1:end)) > params_num.eps_inv || iter <= 2
+    while rms(u(end-1:end)) > params_num.eps_inv_yl || iter <= 2
         
         iter = iter+1;
 
-        if iter > params_num.maxiter_inv
+        if iter > params_num.maxiter_inv_yl
             error('Iteration did not converge!')
         end  
 
@@ -53,11 +53,11 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(v
         u = [u1;u2];
 
         % update variables
-        r = r+params_num.alpha*u(1:N);
-        z = z+params_num.alpha*u(N+1:2*N);
-        psi = psi+params_num.alpha*u(2*N+1:3*N);
-        sigma = sigma+params_num.alpha*u(3*N+1);
-        P = P+params_num.alpha*u(end);
+        r = r+params_num.alpha_yl*u(1:N);
+        z = z+params_num.alpha_yl*u(N+1:2*N);
+        psi = psi+params_num.alpha_yl*u(2*N+1:3*N);
+        sigma = sigma+params_num.alpha_yl*u(3*N+1);
+        P = P+params_num.alpha_yl*u(end);
 
         fprintf('iter %d: rms(u(end-1:end)) = %d\n',iter,rms(u(end-1:end)));
 

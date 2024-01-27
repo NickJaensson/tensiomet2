@@ -41,11 +41,11 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
     vars_sol.C = C; vars_sol.p0 = p0; 
     
     % start the Newton-Raphson iteration
-    while rms(u) > params_num.eps_fw
+    while rms(u) > params_num.eps_fw_simple
     
         iter = iter + 1;
         
-        if iter > params_num.maxiter
+        if iter > params_num.maxiter_simple
             error('Iteration did not converge!')
         end    
     

@@ -41,11 +41,11 @@ function [vars_sol, vars_num] = solve_forward_young_laplace_elastic(vars_sol, pa
     iter = 0; u = ones(3*params_num.N+2,1);
 
     % start the Newton-Raphson iteration
-    while rms(u) > params_num.eps_fw
+    while rms(u) > params_num.eps_fw_elastic
     
         iter = iter + 1;
         
-        if iter > params_num.maxiter
+        if iter > params_num.maxiter_elastic
             error('Iteration did not converge!')
         end    
     

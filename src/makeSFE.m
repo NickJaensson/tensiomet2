@@ -68,7 +68,6 @@ ts = glob_ts;
 tr = glob_tr;
 
 N = length(tr(:,1));
-alpha = params_num.alpha;
 
 K = params_num.K_guess;
 G = params_num.G_guess;
@@ -94,10 +93,10 @@ s2 = tr(:,ptr1);
 
 u=ones(N+2,1); % initialize to get while-loop going
 
-while rms(u(N+1:N+2))>params_num.eps_inv
+while rms(u(N+1:N+2))>params_num.eps_inv_sfe
 
 
-    if iter > params_num.maxiter_inv
+    if iter > params_num.maxiter_inv_sfe
         error('Iteration did not converge!')
     end  
 
@@ -158,10 +157,10 @@ while rms(u(N+1:N+2))>params_num.eps_inv
     u = [0;u0];
     
 % update variables    
-    lams = lams + alpha*u(1:N);
+    lams = lams + params_num.alpha_sfe*u(1:N);
     lams(1) =  -dold(1,2:end,ptr2)*lams(2:end)./dold(1,1,ptr2);
-    K = K + alpha*u(N+1);
-    G = G + alpha*u(N+2);
+    K = K + params_num.alpha_sfe*u(N+1);
+    G = G + params_num.alpha_sfe*u(N+2);
     
 %   Possible to plot the evolution of K and G
     KK(iter) = K;
