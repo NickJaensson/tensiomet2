@@ -68,6 +68,10 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
 
     end
 
+    if any ( vars_sol.r < -1e-6 )
+        error('Negative r-coordinates encountered')
+    end
+
     vars_sol.sigmas = params_phys.sigma*ones(vars_num.N,1);
     vars_sol.sigmap = params_phys.sigma*ones(vars_num.N,1);
 

@@ -66,6 +66,10 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(v
         rmsb = rms(tb);
 
     end
+    
+    if any ( r < -1e-6 )
+        error('Negative r-coordinates encountered')
+    end
 
     rrlaplace = r;
     zzlaplace = z;
