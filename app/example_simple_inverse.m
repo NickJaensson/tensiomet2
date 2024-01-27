@@ -10,13 +10,11 @@ parameters_simple;
 parameters_inverse;
 rng(1); % set seed for reproducibility
 
-
 % parameters for generating the artificial interface points
 
 Nsample = 80;  % number of sample points on interface
                % NOTE: total number of points will be 2*Nsample-1
 sigma_noise = 1e-2*params_phys.rneedle; % noise level for sampled points
-
 
 % solve for the droplet shape (Young-Laplace)
 
