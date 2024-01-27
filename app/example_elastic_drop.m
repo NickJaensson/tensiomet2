@@ -1,5 +1,5 @@
-% calculate the shape for a given elastic interface using surface or 
-% volume compressions/dilations
+% calculate the shape for an elastic interface using surface or volume
+% compressions / expansions
 
 close all; clear
 
