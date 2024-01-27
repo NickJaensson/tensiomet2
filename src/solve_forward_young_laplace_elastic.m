@@ -1,4 +1,4 @@
-function [vars_sol, vars_num] = solve_forward_young_laplace_elastic(vars_sol, params_phys, params_num, vars_num)
+function [vars_sol, vars_num] = solve_forward_young_laplace_elastic(vars_sol, params_phys, params_num, vars_num, verbose)
 % SOLVE_FORWARD_YOUNG_LAPLACE_ELASTIC Solves the elastic Young-Laplace 
 % equation for the shape of a drop, for different compressions
 %
@@ -65,7 +65,9 @@ function [vars_sol, vars_num] = solve_forward_young_laplace_elastic(vars_sol, pa
         vars_sol.lamp = vars_sol.lamp + u(6*params_num.N+1:7*params_num.N);
         vars_sol.p0  = vars_sol.p0 + u(end);
 
-        fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
+        if verbose
+            fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
+        end
 
     end
    

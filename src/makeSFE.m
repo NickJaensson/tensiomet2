@@ -1,4 +1,4 @@
-function [GK, lams, lamr] = makeSFE(strainmeasure,vars_sol_ref,vars_num_ref,vars_sol,vars_num,params_num)
+function [GK, lams, lamr] = makeSFE(strainmeasure,vars_sol_ref,vars_num_ref,vars_sol,vars_num,params_num,verbose)
 % makeSFE(guessed G and K) = [[GK], lams, lamr]
 % Computes the deformations with a material model and returns the material
 % parameters. Does not need an initial state or a surfac tension
@@ -17,7 +17,6 @@ function [GK, lams, lamr] = makeSFE(strainmeasure,vars_sol_ref,vars_num_ref,vars
 
 g_strainmeasure = strainmeasure;
 g_memptr = [1,2];
-g_echo = 1;
 
 glob_w = zeros(2,params_num.N);
 glob_d = zeros(params_num.N,params_num.N,2);
@@ -189,12 +188,13 @@ while rms(u(N+1:N+2))>params_num.eps_inv_sfe
 %     end
     oldb = rms(b);
 
-        fprintf('iter %d: rms(u(N+1:N+2)) = %d\n',iter,rms(u(N+1:N+2)));
-
+        if verbose
+            fprintf('iter %d: rms(u(N+1:N+2)) = %d\n',iter,rms(u(N+1:N+2)));
+        end
 end
 
 % print result to screen
-if g_echo
+if verbose
     display(strcat('SFE converged to K=',num2str(K),' and G=',num2str(G),' Residual=',num2str(oldb)));
 end
 

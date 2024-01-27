@@ -11,10 +11,11 @@ parameters_elastic;
 
 % solve for the reference state and the deformed state
 
-[vars_num_ref, vars_sol_ref] = gen_single_drop(params_phys, params_num);
+[vars_num_ref, vars_sol_ref] = gen_single_drop(params_phys, ...
+    params_num, true);
 
 [vars_num, vars_sol] = gen_single_drop_elastic(params_phys, ...
-    params_num, vars_num_ref, vars_sol_ref);
+    params_num, vars_num_ref, vars_sol_ref, true);
 
 % post processing and plotting
 

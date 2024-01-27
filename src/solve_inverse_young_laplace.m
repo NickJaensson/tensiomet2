@@ -1,4 +1,4 @@
-function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(vars_sol, params_phys, params_num, vars_num)
+function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(vars_sol, params_phys, params_num, vars_num, verbose)
     % makeIso(toplot) = [tension, pstat] fits the shape functions to surface 
     % tension and pressure. RMS fitting of R using the Schur complement.
     % toplot specifies if the result is to be plotted.
@@ -59,7 +59,9 @@ function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(v
         sigma = sigma+params_num.alpha_yl*u(3*N+1);
         P = P+params_num.alpha_yl*u(end);
 
-        fprintf('iter %d: rms(u(end-1:end)) = %d\n',iter,rms(u(end-1:end)));
+        if verbose
+            fprintf('iter %d: rms(u(end-1:end)) = %d\n',iter,rms(u(end-1:end)));
+        end
 
         rmsb = rms(tb);
 

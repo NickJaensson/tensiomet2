@@ -10,7 +10,7 @@ parameters_simple;
 
 % solve for the droplet shape (Young-Laplace)
 
-[vars_num, vars_sol] = gen_single_drop(params_phys, params_num);
+[vars_num, vars_sol] = gen_single_drop(params_phys, params_num, true);
 
 % post processing and plotting
 

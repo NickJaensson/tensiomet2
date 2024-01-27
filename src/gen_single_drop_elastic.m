@@ -1,6 +1,6 @@
 
 function [vars_num, vars_sol] = gen_single_drop_elastic(params_phys, ...
-    params_num, vars_num_ref,vars_sol_ref)
+    params_num, vars_num_ref,vars_sol_ref, verbose)
 
     vars_num = vars_num_ref;
     vars_sol = vars_sol_ref;
@@ -20,7 +20,7 @@ function [vars_num, vars_sol] = gen_single_drop_elastic(params_phys, ...
         
     [vars_sol,vars_num] = ...
         solve_forward_young_laplace_elastic(vars_sol, params_phys, ...
-                                            params_num, vars_num);
+                                            params_num, vars_num, verbose);
 
     vars_num = update_numerical_grid(vars_sol, vars_num, true);
 

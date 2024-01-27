@@ -19,10 +19,11 @@ sigma_noise = 1e-4*params_phys.rneedle; % noise level for sampled points
 
 % solve for the reference state and the deformed state
 
-[vars_num_ref, vars_sol_ref] = gen_single_drop(params_phys, params_num);
+[vars_num_ref, vars_sol_ref] = gen_single_drop(params_phys, ...
+    params_num, true);
 
 [vars_num, vars_sol] = gen_single_drop_elastic(params_phys, ...
-    params_num, vars_num_ref, vars_sol_ref);
+    params_num, vars_num_ref, vars_sol_ref, true);
 
 % generate uniform data points with noise
 
@@ -69,7 +70,7 @@ vars_sol_fit.p0 = vars_sol.p0;
 
 [moduliS, lambda_s, lambda_r]  = makeSFE(params_phys.strainmeasure,...
     vars_sol_ref_fit, vars_num_ref_fit, vars_sol_fit, vars_num_fit, ...
-    params_num);
+    params_num, true);
 
 % post processing and plotting
 

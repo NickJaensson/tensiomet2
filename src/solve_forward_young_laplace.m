@@ -1,4 +1,4 @@
-function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_num, shape_guess, vars_num)
+function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_num, shape_guess, vars_num, verbose)
 % SOLVE_FORWARD_YOUNG_LAPLACE Solves the Young-Laplace equation for the
 % shape of a drop.
 %
@@ -62,8 +62,10 @@ function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_
         vars_sol.C   = vars_sol.C   + u(3*params_num.N+1);
         vars_sol.p0  = vars_sol.p0  + u(3*params_num.N+2);    
         
-        fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
-    
+        if verbose
+            fprintf('iter %d: rms(u) = %d\n',iter,rms(u));
+        end
+
     end
 
     vars_sol.sigmas = params_phys.sigma*ones(vars_num.N,1);

@@ -18,7 +18,7 @@ sigma_noise = 1e-2*params_phys.rneedle; % noise level for sampled points
 
 % solve for the droplet shape (Young-Laplace)
 
-[vars_num, vars_sol] = gen_single_drop(params_phys, params_num);
+[vars_num, vars_sol] = gen_single_drop(params_phys, params_num, true);
 
 % generate uniform data points with noise
 
@@ -37,7 +37,7 @@ vars_sol.normals = get_normals(vars_sol, vars_num);
 % best-case scenario)
 
 [st, press, rrlaplace, zzlaplace] = solve_inverse_young_laplace ( ...
-    vars_sol_fit, params_phys, params_num, vars_num_fit);
+    vars_sol_fit, params_phys, params_num, vars_num_fit, true);
 
 % post processing and plotting
 

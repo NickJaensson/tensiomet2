@@ -16,12 +16,13 @@ for ii = 1:2
         params_phys.strainmeasure = 'hencky';
     end
 
-    [vars_num_ref, vars_sol_ref] = gen_single_drop(params_phys, params_num);
+    [vars_num_ref, vars_sol_ref] = gen_single_drop(params_phys, ...
+        params_num, false);
     
     [vars_num,vars_sol] = gen_single_drop_elastic(params_phys, params_num,...
-        vars_num_ref, vars_sol_ref);
+        vars_num_ref, vars_sol_ref, false);
     
-    [volume,area] = calculate_volume_area(vars_sol, vars_num, true);
+    [volume,area] = calculate_volume_area(vars_sol, vars_num, false);
     
     % compare to old values (gen-pendant-drop before refactoring:
     eps_test = 1e-10; 
