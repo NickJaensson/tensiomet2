@@ -1,7 +1,5 @@
 
-gen_single_drop; 
-
-% close all
+example_simple_drop; 
 
 % numerical parameters for inverse problem
 params_num.eps_cheb = 1e-3;   % error for describing the shape

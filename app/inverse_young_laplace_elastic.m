@@ -1,7 +1,5 @@
 
-gen_single_drop_elastic; 
-
-% close all
+example_elastic_drop;  
 
 % numerical parameters for inverse problem
 params_num.eps_cheb = 1e-4;   % error for describing the shape
