@@ -1,5 +1,5 @@
 % numerical parameters for inverse problem
-params_num.eps_cheb = 1e-4;      % error for describing the shape
+params_num.eps_cheb = 1e-3;      % error for describing the shape
 
 % parameters for Young-Laplace inverse problem
 params_num.eps_inv_yl = 1e-5;    % convergence critertion inverse problem
@@ -12,6 +12,5 @@ params_num.maxiter_inv_yl = 500; % maximum number of iteration steps invers
 params_num.eps_inv_sfe = 1e-5;   % convergence critertion inverse problem
 params_num.K_guess = 1;          % guess for dilational modulus
 params_num.G_guess = 1;          % guess for shear moduls
-params_num.alpha_sfe = 1.0;      % relaxation parameter in inverse problem
+params_num.alpha_sfe = 0.5;      % relaxation parameter in inverse problem
 params_num.maxiter_inv_sfe = 500;% maximum number of iteration steps invers
-
