@@ -3,13 +3,19 @@
 
 close all; clear
 
-example_parameters; % load the parameters values
+% load the parameters values
 
-[vars_num,vars_sol] = gen_single_drop(params_phys, params_num);
+example_parameters;
 
-[volume,area] = calculate_volume_area(vars_sol, vars_num, true);
+% solve for the droplet shape (Young-Laplace)
 
-[kappas,kappap] = find_curvature(vars_sol, vars_num);
+[vars_num, vars_sol] = gen_single_drop(params_phys, params_num);
+
+% post processing and plotting
+
+[volume, area] = calculate_volume_area(vars_sol, vars_num, true);
+
+[kappas, kappap] = find_curvature(vars_sol, vars_num);
 
 plot_shape(vars_sol.r, vars_sol.z, 1);
 plot_curvature(vars_sol.z, kappas, kappap, 2);

@@ -3,12 +3,18 @@
 
 close all; clear
 
-example_parameters; % load the parameters values
+% load the parameters values
+
+example_parameters; 
+
+% solve for the reference state and the deformed state
 
 [vars_num_ref, vars_sol_ref] = gen_single_drop(params_phys, params_num);
 
 [vars_num, vars_sol] = gen_single_drop_elastic(params_phys, ...
     params_num, vars_num_ref, vars_sol_ref);
+
+% post processing and plotting
 
 [volume, area] = calculate_volume_area(vars_sol, vars_num, true);
 
