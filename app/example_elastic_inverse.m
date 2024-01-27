@@ -54,6 +54,13 @@ vars_sol_fit.p0 = vars_sol.p0;
 [vars_sol_ref_fit.sigmas, vars_sol_ref_fit.sigmap] = ...
     makeCMD(params_phys, vars_sol_ref_fit, vars_num_ref_fit);
 
+% NOTE: in the reference state, we could also fit the YL equations to find
+% the stresses. Uncomment the code below to use that approach
+% [st, ~, ~, ~] = solve_inverse_young_laplace ( ...
+%     vars_sol_ref_fit, params_phys, params_num, vars_num_ref_fit);
+% vars_sol_ref_fit.sigmas = st*ones(vars_num.N,1);
+% vars_sol_ref_fit.sigmap = st*ones(vars_num.N,1);
+
 [vars_sol_fit.sigmas, vars_sol_fit.sigmap] = ...
     makeCMD(params_phys, vars_sol_fit, vars_num_fit);
 
