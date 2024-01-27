@@ -17,16 +17,11 @@ function [vars_num, vars_sol] = gen_single_drop_elastic(params_phys, ...
     vars_sol.sigmap = vars_sol.sigmas;
     
     vars_sol.r_star = vars_sol.r; vars_sol.z_star = vars_sol.z;
-    
-    for ii = 1:length(params_phys.fracm)
-    
-        params_phys.frac = params_phys.fracm(ii);
-    
-        [vars_sol,vars_num] = ...
-            solve_forward_young_laplace_elastic(vars_sol, params_phys, ...
-                                                params_num, vars_num);
-    
-        vars_num = update_numerical_grid(vars_sol, vars_num, true);
         
-    end
+    [vars_sol,vars_num] = ...
+        solve_forward_young_laplace_elastic(vars_sol, params_phys, ...
+                                            params_num, vars_num);
+
+    vars_num = update_numerical_grid(vars_sol, vars_num, true);
+
 end
