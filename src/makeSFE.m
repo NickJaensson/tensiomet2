@@ -70,14 +70,8 @@ tr = glob_tr;
 N = length(tr(:,1));
 alpha = params_num.alpha;
 
-% init K and G
-if ~exist('GuessGK','var')
-    K = 1;
-    G = 1;
-else
-    K = GuessGK(2);
-    G = GuessGK(1);
-end
+K = params_num.K_guess;
+G = params_num.G_guess;
 
 % reference state variables and derivatives
 dsds0 = sold(end,ptr2)/sold(end,ptr1);

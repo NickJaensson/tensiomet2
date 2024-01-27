@@ -1,13 +1,6 @@
 
 example_simple; 
-
-% numerical parameters for inverse problem
-params_num.eps_cheb = 1e-3;   % error for describing the shape
-params_num.eps_inv = 1e-4;    % convergence critertion inverse problem
-params_num.sigma_guess = 10;  % guess for interfacial tension value
-params_num.p0_guess = 5;      % guess for pressure
-params_num.alpha = 1.0;       % relaxation parameter in inverse problem
-params_num.maxiter_inv = 100; % maximum number of iteration steps inverse
+parameters_inverse;
 
 % number of points for the synthetic droplet shape (total amount of points
 % will be 2*Nsample-1
