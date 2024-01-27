@@ -18,18 +18,6 @@ sigma_noise = 0.01*params_phys.rneedle;
 rng(1); % set seed for reproducibility
 
 
-% % run the inverse problem on the numerical problem (best case scenario)
-% [st,press,rrlaplace,zzlaplace] = solve_inverse_young_laplace ( ...
-%     vars_sol, params_phys, params_num, vars_num);
-% 
-% disp(['estimated surface tension = ',num2str(st,12)]);
-% 
-% %  run CMD on the numerical problem (best case scenario)
-% [sigmas, sigmap] = makeCMD(params_phys, vars_sol, vars_num);
-% 
-% plot_surface_stress(vars_num.s, sigmas, sigmap, 3);
-
-
 % generate uniform data points with noise
 vars_sol.normals = get_normals(vars_sol, vars_num);
 [rr_noise,zz_noise] = ...
@@ -42,6 +30,9 @@ vars_sol.normals = get_normals(vars_sol, vars_num);
 
 
 % perform inverse Young-Laplace problem
+% NOTE: by replacing vars_sol_fit -> vars_sol and vars_num_fit -> vars_num
+% the the numerical results are used instead of the Cheby fit (giving a 
+% best-case scenario)
 [st,press,rrlaplace,zzlaplace] = solve_inverse_young_laplace ( ...
     vars_sol_fit, params_phys, params_num, vars_num_fit);
 

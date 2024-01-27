@@ -18,25 +18,6 @@ sigma_noise = 1e-4*params_phys.rneedle;
 rng(1); % set seed for reproducibility
 
 
-% %  run CMD on the numerical problem (best case scenario)
-% [sigmas, sigmap] = makeCMD(params_phys, vars_sol, vars_num);
-% 
-% plot_surface_stress(vars_num.s, sigmas, sigmap, 2);
-% 
-% % run the inverse problem on the numerical problem (best case scenario)
-% 
-% [moduliS, lambda_s, lambda_r]  = makeSFE(params_phys.strainmeasure,...
-%     vars_sol_ref, vars_num_ref, vars_sol, vars_num,params_num);
-% 
-% errorG = abs(moduliS(1)-params_phys.Gmod)/params_phys.Gmod;
-% errorK = abs(moduliS(2)-params_phys.Kmod)/params_phys.Kmod;
-% 
-% disp(['Error in G = ', num2str(errorG*100,4), ' %']);
-% disp(['Error in K = ', num2str(errorK*100,4), ' %']);
-% 
-% plot_surface_strain(vars_num.s, lambda_s, lambda_r, 3);
-
-
 % generate uniform data points with noise
 vars_sol_ref.normals = get_normals(vars_sol_ref, vars_num_ref);
 [rr_noise_ref,zz_noise_ref] = ...
@@ -58,6 +39,9 @@ vars_sol_fit.p0 = vars_sol.p0;
 
 
 % perform CMD to find the surface stresses
+% NOTE: by replacing vars_sol_fit -> vars_sol and vars_num_fit -> vars_num
+% the the numerical results are used instead of the Cheby fit (giving a 
+% best-case scenario)
 [vars_sol_ref_fit.sigmas, vars_sol_ref_fit.sigmap] = ...
     makeCMD(params_phys, vars_sol_ref_fit, vars_num_ref_fit);
 
@@ -71,6 +55,9 @@ plot_surface_stress(vars_num_fit.s, vars_sol_fit.sigmas, ...
 
 
 % perform SFE to find the moduli and strains
+% NOTE: by replacing vars_sol_fit -> vars_sol and vars_num_fit -> vars_num
+% the the numerical results are used instead of the Cheby fit (giving a 
+% best-case scenario)
 [moduliS, lambda_s, lambda_r]  = makeSFE(params_phys.strainmeasure,...
     vars_sol_ref_fit, vars_num_ref_fit, vars_sol_fit, vars_num_fit, ...
     params_num);
