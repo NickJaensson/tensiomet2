@@ -1,6 +1,10 @@
 close all; clear
 
-example_parameters; % load the parameters values
+% load the parameter values
+
+parameters_numerical;
+parameters_simple;
+parameters_elastic;
 
 % run test for both Hencky model and Pepicelli model
 

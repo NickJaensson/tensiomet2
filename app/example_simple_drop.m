@@ -3,9 +3,10 @@
 
 close all; clear
 
-% load the parameters values
+% load the parameter values
 
-example_parameters;
+parameters_numerical;
+parameters_simple;
 
 % solve for the droplet shape (Young-Laplace)
 

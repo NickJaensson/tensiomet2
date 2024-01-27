@@ -3,9 +3,11 @@
 
 close all; clear
 
-% load the parameters values
+% load the parameter values
 
-example_parameters; 
+parameters_numerical;
+parameters_simple;
+parameters_elastic;
 
 % solve for the reference state and the deformed state
 
