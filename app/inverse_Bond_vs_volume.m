@@ -28,7 +28,7 @@ params_phys.sigma = 1;      % surface tension
 params_phys.grav = 1;       % gravitational acceleration
 params_phys.rneedle = 1;    % radius of the needle
 
-Bond_all = 0.5:-0.05:0.10;  % Bond number
+Bond_all = 1.0:-0.1:0.10;  % Bond number
 Nu_all   = 2:2:22;          % dimensionless volume (Nu)
 
 % parameters for generating the artificial interface points
