@@ -15,14 +15,14 @@ Nu_all   = 2:2:22;          % dimensionless volume (Nu)
 
 counter = 0;
 
-for iii = Bond_all
+for iii = 1:length(Bond_all)
     
-    for jjj = Nu_all
+    for jjj = 1:length(Nu_all)
                     
         counter = counter + 1;
               
-        params_phys.volume0 = jjj;   % prescribed volume
-        params_phys.deltarho = iii;  % density difference
+        params_phys.volume0 = Nu_all(jjj);   % prescribed volume
+        params_phys.deltarho = Bond_all(iii);  % density difference
         
         % calculate and display the Worthing number
         Wo = params_phys.deltarho*params_phys.grav*params_phys.volume0/...
@@ -63,6 +63,14 @@ for iii = Bond_all
         set(gca,'XTickLabel',[]);
         set(gca,'YTickLabel',[]);
     
+        if iii == length(Bond_all)
+            text(min(xlim), min(ylim)-2.0, sprintf('%1.1f', Nu_all(jjj)),'FontSize',12);
+        end
+
+        if jjj == 1
+            text(min(xlim)-4.0, min(ylim), sprintf('%1.1f', Bond_all(iii)),'FontSize',12);
+        end
+
     end
 
 end
