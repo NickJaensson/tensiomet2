@@ -45,7 +45,7 @@ for iii = 1:length(Bond_all)
     for jjj = 1:length(Nu_all)
 
         try            
-            Nrand = 200; % nunber of random samples
+            Nrand = 20; % nunber of random samples
 
             params_phys.deltarho = Bond_all(iii);  % density difference
             params_phys.volume0 = Nu_all(jjj);   % prescribed volume
@@ -95,6 +95,8 @@ colorbar
 set(gca,'color',1.0*[1,1,1]);
 set(gca,'ColorScale','log');
 set(gca,'YDir','normal');
+set(gca, 'XTick', Nu_all, 'XTickLabel', Nu_all);
+set(gca, 'YTick', fliplr(Bond_all), 'YTickLabel', fliplr(Bond_all));
 
 % figure
 % imagesc(Nu_all, Bond_all, Wo_mat); hold on

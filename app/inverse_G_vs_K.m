@@ -165,6 +165,8 @@ end
 imagesc(K_all, G_all, nr_of_samples);
 colorbar
 set(gca,'YDir','normal');
+set(gca, 'XTick', K_all, 'XTickLabel', K_all);
+set(gca, 'YTick', G_all, 'YTickLabel', G_all);
 
 % plot the errors with the NaNs removed
 figure
@@ -175,6 +177,8 @@ colorbar
 set(gca,'color',1.0*[1,1,1]);
 set(gca,'ColorScale','log');
 set(gca,'YDir','normal');
+set(gca, 'XTick', K_all, 'XTickLabel', K_all);
+set(gca, 'YTick', G_all, 'YTickLabel', G_all);
 
 % plot the errors with the NaNs removed
 figure
@@ -185,3 +189,5 @@ colorbar
 set(gca,'color',1.0*[1,1,1]);
 set(gca,'ColorScale','log');
 set(gca,'YDir','normal');
+set(gca, 'XTick', K_all, 'XTickLabel', K_all);
+set(gca, 'YTick', G_all, 'YTickLabel', G_all);
