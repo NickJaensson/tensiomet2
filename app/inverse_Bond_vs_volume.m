@@ -56,7 +56,7 @@ for iii = 1:length(Bond_all)
 
             Wo_mat(iii,jjj) = params_phys.Wo;
 
-            [vars_num, vars_sol] = gen_single_drop(params_phys, ...
+            [vars_num, vars_sol, params_phys] = gen_single_drop(params_phys, ...
                 params_num, false);
 
             vars_sol.normals = get_normals(vars_sol, vars_num);

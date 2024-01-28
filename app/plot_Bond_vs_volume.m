@@ -40,7 +40,7 @@ for iii = Bond_all
         
         crash = 0;
         try
-            [vars_num, vars_sol] = gen_single_drop(params_phys, ...
+            [vars_num, vars_sol, params_phys] = gen_single_drop(params_phys, ...
                 params_num, false);
         catch
             crash = 1;

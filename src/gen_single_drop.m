@@ -1,4 +1,4 @@
-function [vars_num,vars_sol] = gen_single_drop(params_phys, params_num, verbose)
+function [vars_num,vars_sol,params_phys] = gen_single_drop(params_phys, params_num, verbose)
 
     shape_guess = guess_shape(params_phys, 1000);
     

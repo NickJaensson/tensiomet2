@@ -18,7 +18,7 @@ sigma_noise = 1e-2*params_phys.rneedle; % noise level for sampled points
 
 % solve for the droplet shape (Young-Laplace)
 
-[vars_num, vars_sol] = gen_single_drop(params_phys, params_num, true);
+[vars_num, vars_sol, params_phys] = gen_single_drop(params_phys, params_num, true);
 
 % generate uniform data points with noise
 
