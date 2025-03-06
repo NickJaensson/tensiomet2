@@ -4,4 +4,11 @@ addpath('app/example_parameters/')
 addpath('src/')
 addpath('test/')
 addpath('symbolic/')
-addpath('../chebfun/')
+
+if isfolder('chebfun/')
+    addpath('chebfun/')
+elseif isfolder('../chebfun/')
+    addpath('../chebfun/')
+else
+    error('Chebfun library not found')
+end
