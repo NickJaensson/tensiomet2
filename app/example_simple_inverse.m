@@ -33,8 +33,8 @@ vars_sol.normals = get_normals(vars_sol, vars_num);
 
 % perform inverse Young-Laplace problem
 % NOTE: by replacing vars_sol_fit -> vars_sol and vars_num_fit -> vars_num
-% the the numerical results are used instead of the Cheby fit (giving a 
-% best-case scenario)
+% the noise-free numerical results are used instead of the Cheby fit 
+% (giving a best-case scenario)
 
 [st, press, rrlaplace, zzlaplace] = solve_inverse_young_laplace ( ...
     vars_sol_fit, params_phys, params_num, vars_num_fit, true);
