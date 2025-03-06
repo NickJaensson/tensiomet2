@@ -1,8 +1,22 @@
-function [vars_sol_fit,vars_num_fit] = fit_shape_with_chebfun(rr_noise,zz_noise,params_num)
-
+function [vars_sol_fit, vars_num_fit] = ...
+    fit_shape_with_chebfun(rr_noise, zz_noise, params_num)
+    % FIT_SHAPE_WITH_CHEBFUN Fits noisy shape using Chebyshev polynomials.
+    %
+    % This function interpolates and smooths a noisy shape using Chebyshev
+    % polynomials to obtain a fitted representation.
+    %
+    % INPUTS:
+    %   rr_noise   - Noisy radial coordinate values
+    %   zz_noise   - Noisy axial coordinate values
+    %   params_num - Structure containing numerical parameters
+    %
+    % OUTPUTS:
+    %   vars_sol_fit - Structure with fitted solution variables
+    %   vars_num_fit - Structure with numerical grid parameters
 
     % get continuous s around full shape
-    ds = sqrt((zz_noise(2:end)-zz_noise(1:end-1)).^2+(rr_noise(2:end)-rr_noise(1:end-1)).^2);
+    ds = sqrt((zz_noise(2:end)-zz_noise(1:end-1)).^2 + ...
+              (rr_noise(2:end)-rr_noise(1:end-1)).^2);
     ss_noise = zeros(length(rr_noise),1);
     for i=1:length(ds)
         ss_noise(1+i) = sum(ds(1:i));
@@ -46,7 +60,7 @@ function [vars_sol_fit,vars_num_fit] = fit_shape_with_chebfun(rr_noise,zz_noise,
     dummy.C = 1;
     vars_num_fit = update_numerical_grid(dummy, vars_num_fit, false);
     
-    vars_sol_fit.psi = atan2(vars_num_fit.Ds*vars_sol_fit.z,vars_num_fit.Ds*vars_sol_fit.r);
+    vars_sol_fit.psi = atan2(vars_num_fit.Ds*vars_sol_fit.z, ...
+                             vars_num_fit.Ds*vars_sol_fit.r);
 
 end
-

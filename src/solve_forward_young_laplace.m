@@ -1,30 +1,19 @@
-function [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_num, shape_guess, vars_num, verbose)
-% SOLVE_FORWARD_YOUNG_LAPLACE Solves the Young-Laplace equation for the
-% shape of a drop.
-%
-% This function solves the Young-Laplace equation for a constant surface 
-% tension, using a Newton-Raphson iteration.
-%
-% Usage:
-%   [vars_sol, vars_num] = solve_forward_young_laplace(params_phys, params_num)
-%
-% Inputs:
-%   params_phys - A structure containing physical parameters:
-%                 deltarho (density difference), grav (gravity), volume0 (initial volume),
-%                 sigma (surface tension), rneedle (radius of the needle), 
-%                 Wo (Worhtington number).
-%   params_num - A structure containing numerical parameters:
-%                N (number of points), eps_fw (tolerance for convergence),
-%                maxiter (maximum iterations), alpha (relaxation parameter).
-%
-% Outputs:
-%   vars_sol - A structure containing solution variables:
-%              r, z (coordinates of the interface), psi (angle of the tangent to the interface),
-%              C (stretch parameter), p0 (pressure).
-%   vars_num - A structure containing numerical variables used in the solution:
-%              Differentiation and integration matrices, Chebyshev points, and modified
-%              matrices post-solution (ws, Ds).
-%
+function [vars_sol, vars_num] = ...
+    solve_forward_young_laplace(params_phys, params_num, shape_guess, ...
+                                vars_num, verbose)
+    % SOLVE_FORWARD_YOUNG_LAPLACE Solves the Young-Laplace equation for 
+    % drop shape.
+    %
+    % INPUTS:
+    %   params_phys - Physical parameters
+    %   params_num  - Numerical parameters 
+    %   shape_guess - Initial shape guess for interpolation.
+    %   vars_num    - Numerical structures for differentiation/integration.
+    %   verbose     - Boolean flag for printing iteration info.
+    %
+    % OUTPUTS:
+    %   vars_sol - Structure with solution variables
+    %   vars_num - Updated structure with numerical variables
     
     % interpolate the shape in the Chebyshev points
     r = interp1(shape_guess.s,shape_guess.r,vars_num.s0);

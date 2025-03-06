@@ -1,4 +1,17 @@
-function [vars_num,vars_sol,params_phys] = gen_single_drop(params_phys, params_num, verbose)
+function [vars_num, vars_sol, params_phys] = ...
+    gen_single_drop(params_phys, params_num, verbose)
+    % GEN_SINGLE_DROP Generates a single drop shape by solving 
+    % the Young-Laplace equation.
+    %
+    % INPUTS:
+    %   params_phys - Structure with physical parameters
+    %   params_num  - Structure with numerical parameters
+    %   verbose     - Boolean flag for displaying progress
+    %
+    % OUTPUTS:
+    %   vars_num    - Updated numerical grid
+    %   vars_sol    - Solution variables (shape, pressure, etc.)
+    %   params_phys - Updated physical parameters (including area0)
 
     shape_guess = guess_shape(params_phys, 1000);
     

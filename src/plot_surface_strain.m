@@ -1,4 +1,11 @@
-function [] =     plot_surface_strain(s, lams, lamp, fig_num)
+function [] = plot_surface_strain(s, lams, lamp, fig_num)
+    % PLOT_SURFACE_STRAIN Plots the surface strain components.
+    %
+    % INPUTS:
+    %   s       - Arclength coordinates.
+    %   lams    - Meridional stretch ratio (\lambda_s).
+    %   lamp    - Circumferential stretch ratio (\lambda_\phi).
+    %   fig_num - Figure number for plotting.
 
     % plot the surface stresses
     figure(fig_num); hold on
@@ -11,4 +18,3 @@ function [] =     plot_surface_strain(s, lams, lamp, fig_num)
     ax = gca; ax.FontSize = 24;
 
 end
-

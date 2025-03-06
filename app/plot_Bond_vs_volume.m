@@ -1,3 +1,7 @@
+% plot the shapes for different Bond numbers and volumes. If the shape 
+% cannot be found, nothing is displayed. 
+% Blue shapes: Wo > 0.5, red shapes: Wo <= 0.5
+
 close all; clear
 
 % numerical parameters

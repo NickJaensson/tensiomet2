@@ -1,6 +1,17 @@
-
 function [vars_num, vars_sol] = gen_single_drop_elastic(params_phys, ...
     params_num, vars_num_ref,vars_sol_ref, verbose)
+    % GEN_SINGLE_DROP_ELASTIC Solves for shape of a drop with elasticity.
+    %
+    % INPUTS:
+    %   params_phys  - Structure with physical parameters
+    %   params_num   - Structure with numerical parameters
+    %   vars_num_ref - Reference numerical grid
+    %   vars_sol_ref - Reference solution variables
+    %   verbose      - Boolean flag for displaying progress
+    %
+    % OUTPUTS:
+    %   vars_num     - Updated numerical grid after solving
+    %   vars_sol     - Solution variables (including stresses, strains)
 
     vars_num = vars_num_ref;
     vars_sol = vars_sol_ref;

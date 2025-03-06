@@ -1,9 +1,7 @@
-% calculate the Laplace shape for a given surface tension and given
-% pressure/volume/area
+% perform the inverse estimation of surface tension for shapes generated
+% for different Bond numbers and volumes w/ added noise and plot the error
 
 close all; clear
-
-% load the parameter values
 
 % numerical parameters
 params_num.N = 40;          % grid points for calculation

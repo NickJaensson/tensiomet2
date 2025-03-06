@@ -1,4 +1,17 @@
-function [rr_noise,zz_noise] = generate_noisy_shape(vars_sol,vars_num,Nsample,sigma_noise)
+function [rr_noise, zz_noise] = ...
+    generate_noisy_shape(vars_sol, vars_num, Nsample, sigma_noise)
+    % GENERATE_NOISY_SHAPE Generates full shape w/ added noise from forward 
+    % solution.
+    %
+    % INPUTS:
+    %   vars_sol     - Structure with solution variables (r, z, normals)
+    %   vars_num     - Structure with numerical parameters
+    %   Nsample      - Number of points of forward solution ("half" shape)
+    %   sigma_noise  - Standard deviation of the noise to add
+    %
+    % OUTPUTS:
+    %   rr_noise     - Noisy radial coordinates
+    %   zz_noise     - Noisy axial coordinates
 
     Nsample_full = 2*Nsample-1;
 
@@ -17,4 +30,3 @@ function [rr_noise,zz_noise] = generate_noisy_shape(vars_sol,vars_num,Nsample,si
     end
 
 end
-

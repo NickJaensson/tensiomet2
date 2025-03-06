@@ -1,27 +1,19 @@
 function shape_guess = guess_shape(params_phys, Npoints)
-% GUESS_SHAPE Predicts the initial shape of a droplet based on physical 
-% parameters.
-%
-% This function calculates the initial guess of the shape of a droplet
-% by using two different approaches depending on the Worthinton number (Wo).
-% If Wo > 0.14, an empirical approach based on Nagel's work is used.
-% Else, a quarter period of a cosine function with a similar volume is used.
-%
-% Syntax:
-%   [r, z, s] = guess_shape(params_phys, Npoints)
-%
-% Inputs:
-%   params_phys - A structure containing the physical parameters of the 
-%                 droplet: Wo (Worthinton number), sigma (surface tension), 
-%                 deltarho (density difference), grav (gravity), 
-%                 rneedle (needle radius), and volume0 (initial volume).
-%   Npoints     - The number of points to use in the discretization of the 
-%                 droplet shape.
-%
-% Outputs:
-%   r - Radial coordinate of the droplet interface.
-%   z - Axial coordinate of the droplet interface.
-%   s - Arc length along the droplet interface from the apex.
+    % GUESS_SHAPE Predicts the initial shape of a droplet based on physical 
+    % parameters.
+    %
+    % This function calculates the initial guess of the shape of a droplet
+    % by using two different approaches depending on the Worthinton number: 
+    % if Wo > 0.14, an empirical approach based on Nagel's work.
+    % if Wo <= 0.14: quarter period of a cosine function of similar volume.
+    %
+    % INPUTS:
+    %   params_phys - Structure with physical parameters
+    %   Npoints     - The number of points in discretization of guess shape
+    %
+    % OUTPUTS:
+    %   shape_guess - Structure containing the r-, z- and s-coordinates of
+    %                 the guessed shape
 
     % find the initial guess of the droplet shape
     if  params_phys.Wo > 0.14

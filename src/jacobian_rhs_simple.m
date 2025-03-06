@@ -1,4 +1,15 @@
-function [A,b] = jacobian_rhs_simple(params_phys,vars_sol,vars_num)
+function [A, b] = jacobian_rhs_simple(params_phys, vars_sol, vars_num)
+    % JACOBIAN_RHS_SIMPLE Computes the Jacobian matrix and RHS vector for a 
+    % simple shape problem.
+    %
+    % INPUTS:
+    %   params_phys - Structure with physical parameters
+    %   vars_sol    - Structure with solution variables
+    %   vars_num    - Structure with numerical variables
+    %
+    % OUTPUTS:
+    %   A - Jacobian matrix for the simple shape system
+    %   b - Right-hand side vector for the simple shape system
     
     D = vars_num.D;
     w = vars_num.w;

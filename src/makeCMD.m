@@ -1,6 +1,18 @@
-function [ taus, taup ] = makeCMD(params_phys, vars_sol, vars_num)
-% compute stresses from the shape and a pressure following Danov et al. 
-% Advances in Colloid and Interface Science 233 (2016) 223?239
+function [taus, taup] = makeCMD(params_phys, vars_sol, vars_num)
+    % MAKECMD Computes meridional and circumferential surface stresses.
+    %
+    % Uses force balance and Danov et al.'s method to calculate stresses 
+    % from shape parameters and pressure distribution.
+    % Danov et al. Advances in Colloid and Interface Science 233 (2016).
+    %
+    % INPUTS:
+    %   params_phys - Physical parameters (density difference, gravity).
+    %   vars_num    - Structure with solution variables
+    %   vars_num    - Structure with numerical variables
+    %
+    % OUTPUTS:
+    %   taus - Meridional surface stress
+    %   taup - Circumferential surface stress
 
     psi = vars_sol.psi; 
     r = vars_sol.r;
@@ -28,4 +40,3 @@ function [ taus, taup ] = makeCMD(params_phys, vars_sol, vars_num)
     taup(1) = taus(1);
 
 end
-

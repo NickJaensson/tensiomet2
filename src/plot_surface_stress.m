@@ -1,4 +1,11 @@
 function [] =     plot_surface_stress(s, sigmas, sigmap, fig_num)
+    % PLOT_SURFACE_STRESS Plots the surface stress components.
+    %
+    % INPUTS:
+    %   s       - Arclength coordinates.
+    %   lams    - Meridional stretch ratio (\lambda_s).
+    %   lamp    - Circumferential stretch ratio (\lambda_\phi).
+    %   fig_num - Figure number for plotting.
 
     % plot the surface stresses
     figure(fig_num); hold on
@@ -11,4 +18,3 @@ function [] =     plot_surface_stress(s, sigmas, sigmap, fig_num)
     ax = gca; ax.FontSize = 24;
 
 end
-

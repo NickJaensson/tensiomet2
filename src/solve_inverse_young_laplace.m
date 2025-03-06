@@ -1,7 +1,24 @@
-function [ tension, pcap, rrlaplace, zzlaplace ] = solve_inverse_young_laplace(vars_sol, params_phys, params_num, vars_num, verbose)
-    % makeIso(toplot) = [tension, pstat] fits the shape functions to surface 
-    % tension and pressure. RMS fitting of R using the Schur complement.
-    % toplot specifies if the result is to be plotted.
+function [tension, pcap, rrlaplace, zzlaplace] = ...
+    solve_inverse_young_laplace(vars_sol, params_phys, params_num, ...
+                                vars_num, verbose)
+    % SOLVE_INVERSE_YOUNG_LAPLACE Solves the inverse Young-Laplace equation
+    % for drop shape.
+    %
+    % This function performs an iterative solution for surface tension and 
+    % pressure based on the shape using the Schur complement method.
+    %
+    % INPUTS:
+    %   vars_sol    - Solution variables 
+    %   params_phys - Physical parameters
+    %   params_num  - Numerical parameters
+    %   vars_num    - Numerical variables
+    %   verbose     - Flag to print iteration info.
+    %
+    % OUTPUTS:
+    %   tension     - The calculated surface tension
+    %   pcap        - The calculated capillary pressure
+    %   rrlaplace   - The updated r coordinates after solving
+    %   zzlaplace   - The updated z coordinates after solving
 
     % assign some local variables
     psi = vars_sol.psi;

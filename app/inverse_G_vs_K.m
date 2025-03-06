@@ -1,5 +1,5 @@
-% calculate the Laplace shape for a given surface tension and given
-% pressure/volume/area
+% perform the inverse estimation of K and G for shapes generated
+% for different values of K and G w/ added noise and plot the error
 
 close all; clear
 

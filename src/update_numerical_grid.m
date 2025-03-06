@@ -1,4 +1,14 @@
 function [vars_num] = update_numerical_grid(vars_sol, vars_num, elastic)
+    % UPDATE_NUMERICAL_GRID Updates numerical grid and matrices based on 
+    % solution state.
+    %
+    % INPUTS:
+    %   vars_sol  - Solution variables
+    %   vars_num  - Numerical variables
+    %   elastic   - Boolean flag indicating whether the system is elastic.
+    %
+    % OUTPUTS:
+    %   vars_num  - Updated numerical variables
 
     % the integration and differentation matrices in the solution state
     if ~elastic
@@ -7,7 +17,6 @@ function [vars_num] = update_numerical_grid(vars_sol, vars_num, elastic)
         vars_num.s = vars_num.s0/vars_sol.C;
         vars_num.wsmat = vars_num.wmat/vars_sol.C;
         vars_num.C = vars_sol.C;
-
     else
         % the integration and differentation matrices in the deformed state
         % NOTE: this construction of Ds is simlar to first applying D*f/C,

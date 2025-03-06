@@ -1,4 +1,11 @@
-function [] =     plot_curvature(z, kappas, kappap, fig_num)
+function [] = plot_curvature(z, kappas, kappap, fig_num)
+    % PLOT_CURVATURE Plots curvatures versus the z-coordinate.
+    %
+    % INPUTS:
+    %   z       - z-coordinates.
+    %   kappas  - Meridional curvature.
+    %   kappap  - Azimuthal curvature.
+    %   fig_num - Figure number for plotting.
 
     % plot the curvatures versus the z-coordinate
     figure(fig_num); hold on
@@ -13,4 +20,3 @@ function [] =     plot_curvature(z, kappas, kappap, fig_num)
     ax = gca; ax.FontSize = 24;
 
 end
-
