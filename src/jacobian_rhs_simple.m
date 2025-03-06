@@ -11,8 +11,8 @@ function [A, b] = jacobian_rhs_simple(params_phys, vars_sol, vars_num)
     %   A - Jacobian matrix for the simple shape system
     %   b - Right-hand side vector for the simple shape system
     
-    D = vars_num.D;
-    w = vars_num.w;
+    D = vars_num.D0;
+    w = vars_num.w0;
     r = vars_sol.r;
     z = vars_sol.z;
     psi = vars_sol.psi;

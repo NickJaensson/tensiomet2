@@ -19,7 +19,7 @@ function [vars_sol, vars_num] = ...
     r = interp1(shape_guess.s,shape_guess.r,vars_num.s0);
     z = interp1(shape_guess.s,shape_guess.z,vars_num.s0);
     
-    psi = atan2(vars_num.D*z,vars_num.D*r);   % intial psi value 
+    psi = atan2(vars_num.D0*z,vars_num.D0*r);   % intial psi value 
     C = 1;                                % initial stretch parameter
     p0 = 2*params_phys.sigma/params_phys.rneedle;   % initial pressure
     u = ones(3*params_num.N+2,1);             % initial solution vector

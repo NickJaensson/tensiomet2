@@ -11,8 +11,13 @@ function [A, b] = jacobian_rhs_elastic(params_phys, vars_sol, vars_num)
     %   A - Jacobian matrix for the elastic system
     %   b - Right-hand side vector for the elastic system
 
-    D = vars_num.D;
-    w = vars_num.w;
+    % local copy of diffmat and intmat
+    % NOTE: D and w are wrt to the numerical reference domain (described by
+    % s0, but we use D and w here for convenience
+    D = vars_num.D0;
+    w = vars_num.w0;
+
+    % local copy of other variables
     r = vars_sol.r;
     z = vars_sol.z;
     psi = vars_sol.psi;

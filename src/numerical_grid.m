@@ -20,15 +20,10 @@ function [vars_num] = numerical_grid(params_num, domain)
     %                N   - Number of grid points.
 
     % diffmat, introw and chebpts are defined in the Chebfun package
-    vars_num.D = diffmat(params_num.N,1,domain);
-    vars_num.DD = diffmat(params_num.N,2,domain);
-    vars_num.wmat = intmat(params_num.N,1,domain);
-    vars_num.w = introw(params_num.N,domain);
+    vars_num.D0 = diffmat(params_num.N,1,domain);
+    vars_num.w0 = introw(params_num.N,domain);
+    vars_num.wmat0 = intmat(params_num.N,1,domain);
     vars_num.s0 = chebpts(params_num.N,domain);
-
-    vars_num.D0 = vars_num.D;
-    vars_num.w0 = vars_num.w;
-    vars_num.wmat0 = vars_num.wmat;
 
     vars_num.N = params_num.N; % copy for convenvience
 

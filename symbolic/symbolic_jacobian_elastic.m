@@ -10,6 +10,9 @@ kappat = sin(psi)/r;
 kappas = C*psi_prime/lams;
 J = lams*lamp;
 
+% NOTE: the prime denotes derivatives on the numerical reference grid
+%       (thus with respect to s0)
+
 f{1} = C*r_prime/lams - cos(psi);
 f{2} = C*z_prime/lams - sin(psi);
 f{3} = (kappat*sigmap+kappas*sigmas) - P + rho*g*z;
