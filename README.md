@@ -12,15 +12,15 @@ same directory, or one directory above.
 ## Usage
 To initialize, set all the paths by running `set_paths.m` from the
 project directory (`gen-pendant-drop/`). Example scripts are available in the 
-`app/` directory.
+`examples/` directory.
 
 There are generally four ways of using the software:
-1. Forward problem for a simple interface: `app/example_simple.m`
-2. Forward problem for an elastic interface: `app/example_elastic.m`
+1. Forward problem for a simple interface: `example_simple.m`
+2. Forward problem for an elastic interface: `example_elastic.m`
 3. Inverse problem for simple interface (tensiometry): 
-   `app/example_simple_inverse.m`
+   `example_simple_inverse.m`
 4. Inverse problem for an elastic interface (elastometry): 
-   `app/example_elastic_inverse.m`
+   `example_elastic_inverse.m`
 
 Details on the numerical implementation can be found here: XXX. Here, we list
 the most important Matlab structures that are used in the code.
