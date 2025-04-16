@@ -30,3 +30,5 @@ plot_surface_strain(vars_num.s, vars_sol.lams, vars_sol.lamp, 3);
 [kappas, kappap] = find_curvature(vars_sol, vars_num);
 
 plot_curvature(vars_sol.z, kappas, kappap, 4);
+
+plot_surface_deformation(vars_num.s, vars_sol.lams, vars_sol.lamp, 5);
