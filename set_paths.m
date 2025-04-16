@@ -1,4 +1,4 @@
-% run this script from the gen-pendant-drop/ folder
+% run this script from the tensiomet2/ folder
 addpath('examples/')
 addpath('examples/example_parameters/')
 addpath('src/')
