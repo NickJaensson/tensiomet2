@@ -22,11 +22,17 @@ function [rr_noise, zz_noise] = ...
     [s_plot_full,r_plot_full,z_plot_full,normals_plot_full] = ...
         mirror_shape(s_plot,r_plot,z_plot,normals_plot);
     
+    % add noise on all points, except the first and last point
     tmp = normrnd(0,sigma_noise,[Nsample_full,1]);
     rr_noise = zeros(Nsample_full,1); zz_noise = rr_noise;
-    for i=1:Nsample_full
+    for i=2:Nsample_full-1
         rr_noise(i) = r_plot_full(i) + tmp(i)*normals_plot_full(i,1);
         zz_noise(i) = z_plot_full(i) + tmp(i)*normals_plot_full(i,2);
     end
+    rr_noise(1) = r_plot_full(1);
+    zz_noise(1) = z_plot_full(1);
+    rr_noise(Nsample_full) = r_plot_full(Nsample_full);
+    zz_noise(Nsample_full) = z_plot_full(Nsample_full);
 
 end
+
