@@ -5,6 +5,10 @@ addpath('src/')
 addpath('test/')
 addpath('symbolic/')
 
+addpath('manuscript_results/')
+addpath('manuscript_results/example_parameters/')
+addpath('manuscript_results/src_pp/')
+
 if isfolder('chebfun/')
     addpath('chebfun/')
 elseif isfolder('../chebfun/')
