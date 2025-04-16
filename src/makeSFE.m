@@ -189,11 +189,17 @@ function [GK, lams, lamr] = ...
         
         iter = iter+1;
         
+    try
         % reassess s in r(s) in lambda^r, sigma^s and sigma^r
         sprime = Itg*(1./lams);
         r0 = interp1(sold(:,ptr2)*sprime(end)/sold(end,ptr2),rold(:,ptr1),sprime,'spline');
         s1 = interp1(sold(:,ptr2)*sprime(end)/sold(end,ptr2),ts(:,ptr1),sprime,'spline');
         s2 = interp1(sold(:,ptr2)*sprime(end)/sold(end,ptr2),tr(:,ptr1),sprime,'spline');
+    catch
+        disp('Warning: fail in makeSFE');
+        GK = [-1,-1];        
+        return
+    end
         
     % re-evaluate lambda^r
         lamr = rold(:,ptr2)./r0;
