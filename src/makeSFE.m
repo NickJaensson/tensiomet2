@@ -197,7 +197,7 @@ function [GK, lams, lamr] = ...
         s2 = interp1(sold(:,ptr2)*sprime(end)/sold(end,ptr2),tr(:,ptr1),sprime,'spline');
     catch
         disp('Warning: fail in makeSFE');
-        GK = [-1,-1];        
+        G = -1; K = -1; % NOTE: output variable GK remains undefined        
         return
     end
         
