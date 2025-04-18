@@ -197,26 +197,29 @@ savefolder = strcat('Results_Noise/Wo=',num2str(params_phys.Wo_paper),'_Ar=',num
     '_K=',num2str(params_phys.Kmod_dimal), '_G=',num2str(params_phys.Gmod_dimal),'_StrainM=',params_phys.strainmeasure,'_Strain=', num2str(params_phys.frac),...
     '_Noise=', num2str(dimless_noise), '_NumChebPolys=', num2str(num_ChebPolys), '/');
 
-mkdir(savefolder);
-delete(strcat(savefolder, 'params_num.mat'));
+if ~exist(savefolder, 'dir')
+    mkdir(savefolder);
+end
+
+delete_if_exists(strcat(savefolder, 'params_num.mat'));
 save(strcat(savefolder, 'params_num.mat'), 'params_num');
-delete(strcat(savefolder, 'params_phys.mat'));
+delete_if_exists(strcat(savefolder, 'params_phys.mat'));
 save(strcat(savefolder, 'params_phys.mat'), 'params_phys');
-delete(strcat(savefolder, 'vars_num.mat'));
+delete_if_exists(strcat(savefolder, 'vars_num.mat'));
 save(strcat(savefolder, 'vars_num.mat'), 'vars_num');
-delete(strcat(savefolder, 'vars_num_fit.mat'));
+delete_if_exists(strcat(savefolder, 'vars_num_fit.mat'));
 save(strcat(savefolder, 'vars_num_fit.mat'), 'vars_num_fit');
-delete(strcat(savefolder, 'vars_num_ref.mat'));
+delete_if_exists(strcat(savefolder, 'vars_num_ref.mat'));
 save(strcat(savefolder, 'vars_num_ref.mat'), 'vars_num_ref');
-delete(strcat(savefolder, 'vars_num_ref_fit.mat'));
+delete_if_exists(strcat(savefolder, 'vars_num_ref_fit.mat'));
 save(strcat(savefolder, 'vars_num_ref_fit.mat'), 'vars_num_ref_fit');
-delete(strcat(savefolder, 'vars_sol.mat'));
+delete_if_exists(strcat(savefolder, 'vars_sol.mat'));
 save(strcat(savefolder, 'vars_sol.mat'), 'vars_sol');
-delete(strcat(savefolder, 'vars_sol_fit.mat'));
+delete_if_exists(strcat(savefolder, 'vars_sol_fit.mat'));
 save(strcat(savefolder, 'vars_sol_fit.mat'), 'vars_sol_fit');
-delete(strcat(savefolder, 'vars_sol_ref.mat'));
+delete_if_exists(strcat(savefolder, 'vars_sol_ref.mat'));
 save(strcat(savefolder, 'vars_sol_ref.mat'), 'vars_sol_ref');
-delete(strcat(savefolder, 'vars_sol_ref_fit.mat'));
+delete_if_exists(strcat(savefolder, 'vars_sol_ref_fit.mat'));
 save(strcat(savefolder, 'vars_sol_ref_fit.mat'), 'vars_sol_ref_fit');
 
 
@@ -258,4 +261,10 @@ for kk = 1:Num_Simuls
         savefig(fullfile(savefolder, 'Drop_Shapes.fig'));
     end
 
+end
+
+function delete_if_exists(filePath)
+    if exist(filePath, 'file')
+        delete(filePath);
+    end
 end
