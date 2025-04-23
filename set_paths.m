@@ -8,6 +8,8 @@ addpath('symbolic/')
 addpath('manuscript_results/')
 addpath('manuscript_results/example_parameters/')
 addpath('manuscript_results/src_pp/')
+addpath('manuscript_results/Results/')
+addpath('manuscript_results/Results_Noise/')
 
 if isfolder('chebfun/')
     addpath('chebfun/')
