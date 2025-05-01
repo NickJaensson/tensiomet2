@@ -13,8 +13,12 @@ function [vars_num, vars_sol, params_phys] = ...
     %   vars_sol    - Solution variables (shape, pressure, etc.)
     %   params_phys - Updated physical parameters (including area0)
 
-    shape_guess = guess_shape(params_phys, 1000);
-    
+    % shape_guess = guess_shape(params_phys, 1000);
+
+    shape_guess.z = zeros(1000,1);
+    shape_guess.r = linspace(0,params_phys.rneedle,1000);
+    shape_guess.s = linspace(0,params_phys.rneedle,1000);
+
     vars_num = numerical_grid(params_num, [0,shape_guess.s(end)]);
     
     vars_sol = solve_forward_young_laplace(params_phys, params_num, ...
