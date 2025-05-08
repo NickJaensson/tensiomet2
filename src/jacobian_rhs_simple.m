@@ -60,19 +60,21 @@ function [A, b] = jacobian_rhs_simple(params_phys, vars_sol, vars_num)
     A14(1) = 0;
     b1(1) = -r(1);
     
-    % % boundary condition z(s0) = 0
-    % A22(1,:) = fliplr(IDL); 
-    % A23(1,:) = ZL; 
-    % A24(1) = 0;
-    % b2(1) = -z(end);
-    
-    % boundary condition psi(s0) = 0
-    A31(2,:) = ZL; 
-    A32(2,:) = ZL; 
-    A33(2,:) = fliplr(IDL); 
-    A34(2,:) = 0; 
-    A35(2,:) = 0;
-    b3(2) = -psi(end);
+    if params_phys.impose_contact_angle    
+        % boundary condition psi(s0) = contact_angle
+        A31(2,:) = ZL; 
+        A32(2,:) = ZL; 
+        A33(2,:) = fliplr(IDL); 
+        A34(2,:) = 0; 
+        A35(2,:) = 0;
+        b3(2) = params_phys.contact_angle-psi(end);
+    else
+        % boundary condition z(s0) = 0
+        A22(1,:) = fliplr(IDL); 
+        A23(1,:) = ZL; 
+        A24(1) = 0;
+        b2(1) = -z(end);
+    end
 
     % boundary condition phi(0) = 0
     A31(1,:) = ZL; 

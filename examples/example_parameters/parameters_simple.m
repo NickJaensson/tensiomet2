@@ -6,6 +6,9 @@ params_phys.volume0 = 0;   % prescribed volume
 params_phys.deltarho = -1.1; % density difference
 params_phys.a = -40;
 params_phys.b = 0.2;
+params_phys.impose_contact_angle = 1; % 0: set z=0 at wall
+                                      % 1: set psi=contact_angle at wall
+params_phys.contact_angle = 0;  
 
 % Worthington number (needed for initial shape guess)
 params_phys.Wo = params_phys.deltarho*params_phys.grav*...
