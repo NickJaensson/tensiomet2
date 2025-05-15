@@ -4,7 +4,7 @@ params_phys.grav = 1.2;     % gravitational acceleration
 params_phys.rneedle = 10;  % radius of the needle
 params_phys.volume0 = 0;   % prescribed volume
 params_phys.deltarho = -1.1; % density difference
-params_phys.a = -40;
+params_phys.a = 40;
 params_phys.b = 0.2;
 params_phys.impose_contact_angle = 1; % 0: set z=0 at wall
                                       % 1: set psi=contact_angle at wall

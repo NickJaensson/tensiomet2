@@ -15,7 +15,7 @@ p_r = a*exp(-r^2/(2*b^2));
 
 f{1} = C*r_prime - cos(psi);
 f{2} = C*z_prime - sin(psi);
-f{3} = -P+rho*g*z+sigma*(C*kappas+kappap)+p_r;
+f{3} = -P+rho*g*z+sigma*(C*kappas+kappap)-p_r;
 
 f{5} = int*(2*pi*r*z*cos(psi)) - C*V;
 

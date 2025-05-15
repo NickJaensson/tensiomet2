@@ -35,14 +35,14 @@ function [A, b] = jacobian_rhs_simple(params_phys, vars_sol, vars_num)
     a = params_phys.a;
     b = params_phys.b;
     A31 = -params_phys.sigma*diag(sin(psi)./r.^2) ...
-          -diag((a*r.*exp(-r.^2/(2*b^2)))/b^2);
+          +diag((a*r.*exp(-r.^2/(2*b^2)))/b^2);
     A32 = params_phys.grav*params_phys.deltarho*diag(ones(vars_num.N,1));
     A33 = C*params_phys.sigma*D + params_phys.sigma*diag(cos(psi)./r);
     A34 = params_phys.sigma*(D*psi);
     A35 = -ones(vars_num.N,1);
     b3 = p0-params_phys.grav*params_phys.deltarho*z...
         -params_phys.sigma*(C*D*psi+sin(psi)./r) ...
-        - a*exp(-r.^2/(2*b^2));
+        +a*exp(-r.^2/(2*b^2));
     
     % impose the needle radius as a BC (imposes the domain length)
     A41 = fliplr(IDL); b4 = (params_phys.rneedle-r(end));
