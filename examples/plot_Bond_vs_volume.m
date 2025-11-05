@@ -15,17 +15,17 @@ params_phys.grav = 1;       % gravitational acceleration
 params_phys.rneedle = 1;    % radius of the needle
 
 Bond_all = 1.0:-0.1:0.10;  % Bond number
-Nu_all   = 2:2:22;          % dimensionless volume (Nu)
+nu_all   = 2:2:22;          % dimensionless volume (nu)
 
 counter = 0;
 
 for iii = 1:length(Bond_all)
     
-    for jjj = 1:length(Nu_all)
+    for jjj = 1:length(nu_all)
                     
         counter = counter + 1;
               
-        params_phys.volume0 = Nu_all(jjj);   % prescribed volume
+        params_phys.volume0 = nu_all(jjj);   % prescribed volume
         params_phys.deltarho = Bond_all(iii);  % density difference
         
         % calculate and display the Worthing number
@@ -33,14 +33,16 @@ for iii = 1:length(Bond_all)
             (2*pi*params_phys.sigma*params_phys.rneedle);
         
         disp(['Worthington number = ',num2str(Wo)]);
-        
-        params_phys.Wo = Wo;
-        
-        Bo = params_phys.grav*params_phys.rneedle^2/params_phys.sigma;
+                
+        Bo = params_phys.deltarho*params_phys.grav*params_phys.rneedle^2/params_phys.sigma;
         disp(['Bond number = ',num2str(Bo)]);
         
-        Nu = params_phys.volume0/params_phys.rneedle^3;
-        disp(['Vol number = ',num2str(Nu)]);
+        nu = params_phys.volume0/params_phys.rneedle^3;
+        disp(['Vol number = ',num2str(nu)]);
+
+        params_phys.Wo = Wo;
+        params_phys.Bo = Bo;
+        params_phys.nu = nu;
         
         crash = 0;
         try
@@ -51,7 +53,7 @@ for iii = 1:length(Bond_all)
         end
         
         % plot the final shape
-        figure(1); subplot(length(Bond_all),length(Nu_all),counter);
+        figure(1); subplot(length(Bond_all),length(nu_all),counter);
         
         if ~crash
             if Wo > 0.5
@@ -68,7 +70,7 @@ for iii = 1:length(Bond_all)
         set(gca,'YTickLabel',[]);
     
         if iii == length(Bond_all)
-            text(min(xlim), min(ylim)-2.0, sprintf('%1.1f', Nu_all(jjj)),'FontSize',12);
+            text(min(xlim), min(ylim)-2.0, sprintf('%1.1f', nu_all(jjj)),'FontSize',12);
         end
 
         if jjj == 1
