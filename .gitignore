@@ -4,3 +4,4 @@
 chebfun
 *.fig
 *.mat
+*.csv
